@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "958405343407",
+    "project_id": "talkbuddy-33d19",
+    "storage_bucket": "talkbuddy-33d19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:958405343407:android:b73e0e5901d89e37d3bc5a",
+        "android_client_info": {
+          "package_name": "com.dwarsh.webrtcsample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "958405343407-4t8ocqqt9v5i2igqlgglhraqhm2hutma.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-QXJOsEg7dcmB2oIpGdcyw0V97CypRyQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "958405343407-4t8ocqqt9v5i2igqlgglhraqhm2hutma.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
