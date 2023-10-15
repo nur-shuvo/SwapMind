@@ -140,17 +140,17 @@ class RTCActivity : AppCompatActivity() {
                         Log.e(TAG, "onIceConnectionReceivingChange: $p0")
                     }
 
-                    override fun onConnectionChange(newState: PeerConnection.PeerConnectionState?) {
-                        Log.e(TAG, "onConnectionChange: $newState")
-                    }
+//                    override fun onConnectionChange(newState: PeerConnection.PeerConnectionState?) {
+//                        Log.e(TAG, "onConnectionChange: $newState")
+//                    }
 
                     override fun onDataChannel(p0: DataChannel?) {
                         Log.e(TAG, "onDataChannel: $p0")
                     }
 
-                    override fun onStandardizedIceConnectionChange(newState: PeerConnection.IceConnectionState?) {
-                        Log.e(TAG, "onStandardizedIceConnectionChange: $newState")
-                    }
+//                    override fun onStandardizedIceConnectionChange(newState: PeerConnection.IceConnectionState?) {
+//                        Log.e(TAG, "onStandardizedIceConnectionChange: $newState")
+//                    }
 
                     override fun onAddTrack(p0: RtpReceiver?, p1: Array<out MediaStream>?) {
                         Log.e(TAG, "onAddTrack: $p0 \n $p1")

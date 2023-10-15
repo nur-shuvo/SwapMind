@@ -14,8 +14,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start)
+
         Constants.isIntiatedNow = true
         Constants.isCallEnded = true
+
         start_meeting.setOnClickListener {
             if (meeting_id.text.toString().trim().isNullOrEmpty())
                 meeting_id.error = "Please enter meeting id"
