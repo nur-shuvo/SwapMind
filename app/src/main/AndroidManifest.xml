@@ -3,9 +3,9 @@
     package="com.developerspace.webrtcsample">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
         android:allowBackup="true"
@@ -14,18 +14,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WebRTCSample">
-        <activity android:name="com.developerspace.webrtcsample.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.FullScreen">
+        <activity
+            android:name=".SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LaunchActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.developerspace.webrtcsample.RTCActivity"
+        <activity
+            android:name=".ChatMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.FullScreen"/>
+            android:theme="@style/Theme.FullScreen">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".RTCActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.FullScreen" />
     </application>
 
 </manifest>

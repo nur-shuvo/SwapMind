@@ -50,5 +50,9 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+        only_chat.setOnClickListener {
+            val intent = Intent(this@MainActivity, ChatMainActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

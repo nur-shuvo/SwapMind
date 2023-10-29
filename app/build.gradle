@@ -28,6 +28,9 @@ android {
     dataBinding {
         enabled = true
     }
+    buildFeatures {
+        viewBinding true
+    }
 
     packagingOptions {
         exclude("META-INF/kotlinx-io.kotlin_module")
@@ -68,4 +71,19 @@ dependencies {
     implementation("io.ktor:ktor-client-websocket:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-gson:$ktor_version")
+
+    // Google Sign In SDK
+    implementation("com.google.android.gms:play-services-auth:20.5.0")
+
+    // Firebase SDK
+    implementation(platform("com.google.firebase:firebase-bom:29.3.1"))
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    // Firebase UI Library
+    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
+    implementation("com.firebaseui:firebase-ui-database:8.0.2")
+
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
 }

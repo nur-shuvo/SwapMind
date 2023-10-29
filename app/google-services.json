@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "958405343407-4t8ocqqt9v5i2igqlgglhraqhm2hutma.apps.googleusercontent.com",
+          "client_id": "958405343407-t16so4m16p1a3hv0btffrm0t43qsa71p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dwarsh.webrtcsample",
+            "certificate_hash": "1447cb0ae8a228b9957b148b76a283ea808d165a"
+          }
+        },
+        {
+          "client_id": "958405343407-e7cvh7qs9s72pltcvobqen9fv79dbm77.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
