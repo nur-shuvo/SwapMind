@@ -25,7 +25,7 @@ class ChatMainActivity : AppCompatActivity() {
         auth = Firebase.auth
         db = Firebase.database
 
-        val messagesRef = db.reference.child(MESSAGES_CHILD)
+        val messagesRef = db.reference.child(ROOT).child(MESSAGES_CHILD)
 
         // The FirebaseRecyclerAdapter class and options come from the FirebaseUI library
         // See: https://github.com/firebase/FirebaseUI-Android
@@ -52,8 +52,8 @@ class ChatMainActivity : AppCompatActivity() {
                 getPhotoUrl(),
                 null
             )
-            db.reference.child(MESSAGES_CHILD).push().setValue(friendlyMessage)
-            messageEditText.setText("")
+           db.reference.child(ROOT).child(MESSAGES_CHILD).push().setValue(friendlyMessage)
+           messageEditText.setText("")
         }
     }
 
@@ -82,6 +82,7 @@ class ChatMainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "ChatMainActivity"
         const val MESSAGES_CHILD = "messages"
+        const val ROOT = "root"
         const val ANONYMOUS = "anonymous"
         private const val LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif"
     }

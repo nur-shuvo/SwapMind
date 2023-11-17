@@ -3,6 +3,11 @@ package com.developerspace.webrtcsample
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import com.developerspace.webrtcsample.model.User
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_start.*
@@ -10,6 +15,8 @@ import kotlinx.android.synthetic.main.activity_start.*
 class MainActivity : AppCompatActivity() {
 
     val db = Firebase.firestore
+    private val realTimeDb = Firebase.database
+    private val auth = Firebase.auth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,21 +30,21 @@ class MainActivity : AppCompatActivity() {
                 meeting_id.error = "Please enter meeting id"
             else {
                 db.collection("calls")
-                        .document(meeting_id.text.toString())
-                        .get()
-                        .addOnSuccessListener {
-                            if (it["type"]=="OFFER" || it["type"]=="ANSWER" || it["type"]=="END_CALL") {
-                                meeting_id.error = "Please enter new meeting ID"
-                            } else {
-                                val intent = Intent(this@MainActivity, RTCActivity::class.java)
-                                intent.putExtra("meetingID",meeting_id.text.toString())
-                                intent.putExtra("isJoin",false)
-                                startActivity(intent)
-                            }
-                        }
-                        .addOnFailureListener {
+                    .document(meeting_id.text.toString())
+                    .get()
+                    .addOnSuccessListener {
+                        if (it["type"] == "OFFER" || it["type"] == "ANSWER" || it["type"] == "END_CALL") {
                             meeting_id.error = "Please enter new meeting ID"
+                        } else {
+                            val intent = Intent(this@MainActivity, RTCActivity::class.java)
+                            intent.putExtra("meetingID", meeting_id.text.toString())
+                            intent.putExtra("isJoin", false)
+                            startActivity(intent)
                         }
+                    }
+                    .addOnFailureListener {
+                        meeting_id.error = "Please enter new meeting ID"
+                    }
             }
         }
         join_meeting.setOnClickListener {
@@ -45,8 +52,8 @@ class MainActivity : AppCompatActivity() {
                 meeting_id.error = "Please enter meeting id"
             else {
                 val intent = Intent(this@MainActivity, RTCActivity::class.java)
-                intent.putExtra("meetingID",meeting_id.text.toString())
-                intent.putExtra("isJoin",true)
+                intent.putExtra("meetingID", meeting_id.text.toString())
+                intent.putExtra("isJoin", true)
                 startActivity(intent)
             }
         }
@@ -54,5 +61,39 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, ChatMainActivity::class.java)
             startActivity(intent)
         }
+
+        active_users.setOnClickListener {
+
+        }
+
+        sign_out.setOnClickListener {
+            signOut()
+        }
+
+        // Coming to mainActivity indicates user is online now
+        realTimeDb.reference.child(ChatMainActivity.ROOT).child(ONLINE_USER_LIST_CHILD).child(auth.uid.toString())
+            .setValue(User(auth.uid.toString(), auth.currentUser?.displayName, true))
+            .addOnFailureListener {
+                Log.i("MainActivity", it.message.toString())
+            }
+    }
+
+    private fun signOut() {
+        AuthUI.getInstance().signOut(this)
+        startActivity(Intent(this, SignInActivity::class.java))
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // user is offline now
+        realTimeDb.reference.child(ChatMainActivity.ROOT).child(ONLINE_USER_LIST_CHILD).child(auth.uid.toString())
+            .setValue(User(auth.uid.toString(), auth.currentUser?.displayName, false))
+            .addOnFailureListener {
+                Log.i("MainActivity", it.message.toString())
+            }
+    }
+    companion object {
+        const val ONLINE_USER_LIST_CHILD = "onlineuserlist"
     }
 }

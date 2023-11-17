@@ -24,6 +24,17 @@
         android:layout_height="wrap_content"
         android:text="Only Chat"
         android:layout_alignTop="@id/image"/>
+    <Button
+        android:id="@+id/sign_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SignOut"
+        android:layout_alignRight="@id/image"/>
+    <Button
+        android:id="@+id/active_users"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Active Users" />
     <com.google.android.material.card.MaterialCardView
         android:layout_below="@+id/image"
         android:layout_width="match_parent"

@@ -21,6 +21,7 @@ class LaunchActivity : AppCompatActivity() {
             return
         } else {
             goToMainActivity()
+            finish()
             return
         }
         // setContentView(R.layout.activity_launch)
