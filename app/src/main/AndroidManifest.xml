@@ -41,8 +41,11 @@
         </activity>
         <activity
             android:name=".RTCActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activeUsers.ui.ActiveUserActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.FullScreen" />
+            android:label="Active Users"/>
     </application>
 
 </manifest>

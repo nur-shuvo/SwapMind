@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.developerspace.webrtcsample.activeUsers.ui.ActiveUserActivity
 import com.developerspace.webrtcsample.model.User
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.ktx.auth
@@ -63,7 +64,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         active_users.setOnClickListener {
-
+            val intent = Intent(this@MainActivity, ActiveUserActivity::class.java)
+            startActivity(intent)
         }
 
         sign_out.setOnClickListener {
@@ -72,10 +74,22 @@ class MainActivity : AppCompatActivity() {
 
         // Coming to mainActivity indicates user is online now
         realTimeDb.reference.child(ChatMainActivity.ROOT).child(ONLINE_USER_LIST_CHILD).child(auth.uid.toString())
-            .setValue(User(auth.uid.toString(), auth.currentUser?.displayName, true))
+            .setValue(User(auth.uid.toString(), getUserName(), getPhotoUrl(), true))
             .addOnFailureListener {
                 Log.i("MainActivity", it.message.toString())
             }
+    }
+
+    private fun getPhotoUrl(): String? {
+        val user = auth.currentUser
+        return user?.photoUrl?.toString()
+    }
+
+    private fun getUserName(): String? {
+        val user = auth.currentUser
+        return if (user != null) {
+            user.displayName
+        } else ChatMainActivity.ANONYMOUS
     }
 
     private fun signOut() {
@@ -88,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         // user is offline now
         realTimeDb.reference.child(ChatMainActivity.ROOT).child(ONLINE_USER_LIST_CHILD).child(auth.uid.toString())
-            .setValue(User(auth.uid.toString(), auth.currentUser?.displayName, false))
+            .setValue(User(auth.uid.toString(), auth.currentUser?.displayName, getPhotoUrl(), false))
             .addOnFailureListener {
                 Log.i("MainActivity", it.message.toString())
             }
