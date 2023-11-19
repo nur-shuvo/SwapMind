@@ -24,8 +24,9 @@ class ChatMainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat_main)
         auth = Firebase.auth
         db = Firebase.database
+        val receiverUserID = intent.getStringExtra("receiverUserID").toString()
 
-        val messagesRef = db.reference.child(ROOT).child(MESSAGES_CHILD)
+        val messagesRef = db.reference.child(ROOT).child(MESSAGES_CHILD).child(getSmallerUserID(auth.uid.toString(), receiverUserID))
 
         // The FirebaseRecyclerAdapter class and options come from the FirebaseUI library
         // See: https://github.com/firebase/FirebaseUI-Android
@@ -37,10 +38,10 @@ class ChatMainActivity : AppCompatActivity() {
         manager = LinearLayoutManager(this)
         manager.stackFromEnd = true
         messageRecyclerView.layoutManager = manager
-        messageRecyclerView.adapter = adapter
+         messageRecyclerView.adapter = adapter
 
-        // Scroll down when a new message arrives
-        // See MyScrollToBottomObserver for details
+//         Scroll down when a new message arrives
+//         See MyScrollToBottomObserver for details
         adapter.registerAdapterDataObserver(
             MyScrollToBottomObserver(messageRecyclerView, adapter, manager)
         )
@@ -52,9 +53,17 @@ class ChatMainActivity : AppCompatActivity() {
                 getPhotoUrl(),
                 null
             )
-           db.reference.child(ROOT).child(MESSAGES_CHILD).push().setValue(friendlyMessage)
+           db.reference.child(ROOT).child(MESSAGES_CHILD)
+               .child(getSmallerUserID(auth.uid.toString(), receiverUserID))
+               .push()
+               .setValue(friendlyMessage)
            messageEditText.setText("")
         }
+    }
+
+    private fun getSmallerUserID(x: String, y: String): String {
+        if (x < y) return x
+        return y
     }
 
     public override fun onPause() {

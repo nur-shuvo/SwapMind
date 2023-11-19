@@ -2,6 +2,7 @@ package com.developerspace.webrtcsample.activeUsers.ui
 
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.developerspace.webrtcsample.ChatMainActivity
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.model.User
 import java.util.*
@@ -48,7 +50,9 @@ class ItemAdapter(private val itemList: MutableList<User>) : RecyclerView.Adapte
 //        }
 
         holder.parentView.setOnClickListener {
-
+            val intent = Intent(context, ChatMainActivity::class.java)
+            intent.putExtra("receiverUserID", itemList[position].userID)
+            context.startActivity(intent)
         }
     }
 

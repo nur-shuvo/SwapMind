@@ -9,6 +9,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class LaunchActivity : AppCompatActivity() {
+
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,7 +17,7 @@ class LaunchActivity : AppCompatActivity() {
         auth = Firebase.auth
         if (auth.currentUser == null) {
             // Not signed in, launch the Sign In activity
-            startActivity(Intent(this, SignInActivity::class.java))
+            gotoSignInActivity()
             finish()
             return
         } else {
@@ -24,7 +25,6 @@ class LaunchActivity : AppCompatActivity() {
             finish()
             return
         }
-        // setContentView(R.layout.activity_launch)
     }
 
     override fun onStart() {
@@ -37,22 +37,8 @@ class LaunchActivity : AppCompatActivity() {
         }
     }
 
-    private fun getPhotoUrl(): String? {
-        val user = auth.currentUser
-        return user?.photoUrl?.toString()
-    }
-
-    private fun getUserName(): String? {
-        val user = auth.currentUser
-        return if (user != null) {
-            user.displayName
-        } else "anonymous"
-    }
-
-    private fun signOut() {
-        AuthUI.getInstance().signOut(this)
+    private fun gotoSignInActivity() {
         startActivity(Intent(this, SignInActivity::class.java))
-        finish()
     }
 
     private fun goToMainActivity() {

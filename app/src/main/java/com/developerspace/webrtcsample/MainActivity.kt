@@ -59,8 +59,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
         only_chat.setOnClickListener {
-            val intent = Intent(this@MainActivity, ChatMainActivity::class.java)
-            startActivity(intent)
+            // Need to think the flow
+//            val intent = Intent(this@MainActivity, ChatMainActivity::class.java)
+//            startActivity(intent)
         }
 
         active_users.setOnClickListener {
@@ -93,9 +94,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun signOut() {
-        AuthUI.getInstance().signOut(this)
+        AuthUI.getInstance().signOut(this).addOnSuccessListener {
+            gotoSignInActivity()
+            finish()
+        }
+    }
+
+    private fun gotoSignInActivity() {
         startActivity(Intent(this, SignInActivity::class.java))
-        finish()
     }
 
     override fun onDestroy() {
