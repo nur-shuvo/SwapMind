@@ -96,12 +96,12 @@ class MainActivity : AppCompatActivity() {
     private fun signOut() {
         AuthUI.getInstance().signOut(this).addOnSuccessListener {
             gotoSignInActivity()
-            finish()
         }
     }
 
     private fun gotoSignInActivity() {
         startActivity(Intent(this, SignInActivity::class.java))
+        finish()
     }
 
     override fun onDestroy() {
