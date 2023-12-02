@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +22,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.main.activity_chat_main.*
 
 class ChatMainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -32,9 +33,22 @@ class ChatMainActivity : AppCompatActivity() {
         uri?.let { onImageSelected(it) }
     }
 
+    private var progressBar: ProgressBar? = null
+    private var messageRecyclerView: RecyclerView? = null
+    private var sendButton: ImageView? = null
+    private var messageEditText: EditText? = null
+    private var addMessageImageView: ImageView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_main)
+
+        progressBar = findViewById(R.id.progressBar)
+        messageRecyclerView = findViewById(R.id.messageRecyclerView)
+        sendButton = findViewById(R.id.sendButton)
+        messageEditText = findViewById(R.id.messageEditText)
+        addMessageImageView = findViewById(R.id.addMessageImageView)
+
         auth = Firebase.auth
         db = Firebase.database
         receiverUserID = intent.getStringExtra("receiverUserID").toString()
@@ -47,21 +61,21 @@ class ChatMainActivity : AppCompatActivity() {
             .setQuery(messagesRef, FriendlyMessage::class.java)
             .build()
         adapter = FriendlyMessageAdapter(options, getUserName())
-        progressBar.visibility = ProgressBar.INVISIBLE
+        progressBar?.visibility = ProgressBar.INVISIBLE
         manager = WrapContentLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         manager.stackFromEnd = true
-        messageRecyclerView.layoutManager = manager
-         messageRecyclerView.adapter = adapter
+        messageRecyclerView?.layoutManager = manager
+         messageRecyclerView?.adapter = adapter
 
 //         Scroll down when a new message arrives
 //         See MyScrollToBottomObserver for details
         adapter.registerAdapterDataObserver(
-            MyScrollToBottomObserver(messageRecyclerView, adapter, manager)
+            MyScrollToBottomObserver(messageRecyclerView!!, adapter, manager)
         )
 
-       sendButton.setOnClickListener {
+       sendButton?.setOnClickListener {
             val friendlyMessage = FriendlyMessage(
-                messageEditText.text.toString(),
+                messageEditText!!.text.toString(),
                 getUserName(),
                 getPhotoUrl(),
                 null
@@ -70,10 +84,10 @@ class ChatMainActivity : AppCompatActivity() {
                .child(getSmallerUserID(auth.uid.toString(), receiverUserID))
                .push()
                .setValue(friendlyMessage)
-           messageEditText.setText("")
+           messageEditText?.setText("")
         }
 
-        addMessageImageView.setOnClickListener {
+        addMessageImageView?.setOnClickListener {
             openDocument.launch(arrayOf("image/*"))
         }
     }

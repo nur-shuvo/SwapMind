@@ -6,13 +6,13 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_start.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.webrtc.*
 import java.util.*
@@ -50,9 +50,28 @@ class RTCActivity : AppCompatActivity() {
         }
     }
 
+    private var audio_output_button: ImageView? = null
+    private var switch_camera_button: ImageView? = null
+    private var video_button: ImageView? = null
+    private var mic_button: ImageView? = null
+    private var end_call_button: ImageView? = null
+    private var local_view: SurfaceViewRenderer? = null
+    private var remote_view: SurfaceViewRenderer? = null
+    private var remote_view_loading: ProgressBar? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        audio_output_button = findViewById(R.id.audio_output_button)
+        switch_camera_button = findViewById(R.id.switch_camera_button)
+        video_button = findViewById(R.id.video_button)
+        mic_button = findViewById(R.id.mic_button)
+        end_call_button = findViewById(R.id.end_call_button)
+        local_view = findViewById(R.id.local_view)
+        remote_view = findViewById(R.id.remote_view)
+        remote_view_loading = findViewById(R.id.remote_view_loading)
+
 
         if (intent.hasExtra("meetingID"))
             meetingID = intent.getStringExtra("meetingID")!!
@@ -61,44 +80,44 @@ class RTCActivity : AppCompatActivity() {
 
         checkCameraAndAudioPermission()
         audioManager.selectAudioDevice(RTCAudioManager.AudioDevice.SPEAKER_PHONE)
-        switch_camera_button.setOnClickListener {
+        switch_camera_button?.setOnClickListener {
             rtcClient.switchCamera()
         }
 
-        audio_output_button.setOnClickListener {
+        audio_output_button?.setOnClickListener {
             if (inSpeakerMode) {
                 inSpeakerMode = false
-                audio_output_button.setImageResource(R.drawable.ic_baseline_hearing_24)
+                audio_output_button?.setImageResource(R.drawable.ic_baseline_hearing_24)
                 audioManager.setDefaultAudioDevice(RTCAudioManager.AudioDevice.EARPIECE)
             } else {
                 inSpeakerMode = true
-                audio_output_button.setImageResource(R.drawable.ic_baseline_speaker_up_24)
+                audio_output_button?.setImageResource(R.drawable.ic_baseline_speaker_up_24)
                 audioManager.setDefaultAudioDevice(RTCAudioManager.AudioDevice.SPEAKER_PHONE)
             }
         }
-        video_button.setOnClickListener {
+        video_button?.setOnClickListener {
             if (isVideoPaused) {
                 isVideoPaused = false
-                video_button.setImageResource(R.drawable.ic_baseline_videocam_off_24)
+                video_button?.setImageResource(R.drawable.ic_baseline_videocam_off_24)
             } else {
                 isVideoPaused = true
-                video_button.setImageResource(R.drawable.ic_baseline_videocam_24)
+                video_button?.setImageResource(R.drawable.ic_baseline_videocam_24)
             }
             rtcClient.enableVideo(isVideoPaused)
         }
-        mic_button.setOnClickListener {
+        mic_button?.setOnClickListener {
             if (isMute) {
                 isMute = false
-                mic_button.setImageResource(R.drawable.ic_baseline_mic_off_24)
+                mic_button?.setImageResource(R.drawable.ic_baseline_mic_off_24)
             } else {
                 isMute = true
-                mic_button.setImageResource(R.drawable.ic_baseline_mic_24)
+                mic_button?.setImageResource(R.drawable.ic_baseline_mic_24)
             }
             rtcClient.enableAudio(isMute)
         }
-        end_call_button.setOnClickListener {
+        end_call_button?.setOnClickListener {
             rtcClient.endCall(meetingID)
-            remote_view.isGone = false
+            remote_view?.isGone = false
             Constants.isCallEnded = true
             finish()
             startActivity(Intent(this@RTCActivity, MainActivity::class.java))
@@ -162,9 +181,9 @@ class RTCActivity : AppCompatActivity() {
                 }
         )
 
-        rtcClient.initSurfaceView(remote_view)
-        rtcClient.initSurfaceView(local_view)
-        rtcClient.startLocalVideoCapture(local_view)
+        rtcClient.initSurfaceView(remote_view!!)
+        rtcClient.initSurfaceView(local_view!!)
+        rtcClient.startLocalVideoCapture(local_view!!)
         signallingClient =  SignalingClient(meetingID,createSignallingClientListener())
         if (!isJoin)
             rtcClient.call(sdpObserver,meetingID)
@@ -172,20 +191,20 @@ class RTCActivity : AppCompatActivity() {
 
     private fun createSignallingClientListener() = object : SignalingClientListener {
         override fun onConnectionEstablished() {
-            end_call_button.isClickable = true
+            end_call_button?.isClickable = true
         }
 
         override fun onOfferReceived(description: SessionDescription) {
             rtcClient.onRemoteSessionReceived(description)
             Constants.isIntiatedNow = false
             rtcClient.answer(sdpObserver,meetingID)
-            remote_view_loading.isGone = true
+            remote_view_loading?.isGone = true
         }
 
         override fun onAnswerReceived(description: SessionDescription) {
             rtcClient.onRemoteSessionReceived(description)
             Constants.isIntiatedNow = false
-            remote_view_loading.isGone = true
+            remote_view_loading?.isGone = true
         }
 
         override fun onIceCandidateReceived(iceCandidate: IceCandidate) {
