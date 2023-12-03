@@ -5,8 +5,8 @@ plugins {
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 34
+    buildToolsVersion "34.0.0"
 
     defaultConfig {
         applicationId "com.dwarsh.webrtcsample"
@@ -49,6 +49,8 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    namespace "com.developerspace.webrtcsample"
 }
 
 dependencies {
