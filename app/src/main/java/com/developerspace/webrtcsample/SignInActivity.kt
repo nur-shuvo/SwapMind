@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import com.developerspace.webrtcsample.compose.ComposeMainActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
@@ -64,6 +65,6 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, ComposeMainActivity::class.java))
     }
 }
