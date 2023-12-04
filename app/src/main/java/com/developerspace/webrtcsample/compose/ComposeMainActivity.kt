@@ -5,6 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.developerspace.webrtcsample.compose.ui.screens.ActiveUsersScreen
 import com.developerspace.webrtcsample.compose.ui.screens.MainScreen
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 
@@ -14,7 +15,7 @@ class ComposeMainActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MainScreen()
+                ActiveUsersScreen()
             }
         }
     }
