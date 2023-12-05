@@ -67,6 +67,7 @@ dependencies {
     implementation 'org.webrtc:google-webrtc:1.0.23995'
     implementation platform('com.google.firebase:firebase-bom:27.0.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'androidx.navigation:navigation-compose:2.7.5'
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-firestore-ktx'
