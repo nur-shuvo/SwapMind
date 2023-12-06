@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.developerspace.webrtcsample.ChatMainActivity
 import com.developerspace.webrtcsample.MainActivity
+import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.model.User
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
@@ -34,6 +35,7 @@ class ActiveUserViewModel: ViewModel() {
                     }
                 }
                 _userListState.value = resultList
+                AppLevelCache.userProfiles = resultList
                 Log.i(TAG, "total users - ${resultList.size}")
             }
     }
