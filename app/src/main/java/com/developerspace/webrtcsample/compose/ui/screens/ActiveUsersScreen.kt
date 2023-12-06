@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -40,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
@@ -57,7 +57,7 @@ fun ActiveUsersScreen(viewModel: ActiveUserViewModel = viewModel()) {
     val context  = LocalContext.current
     val userListState by viewModel.userListState.collectAsState()
     val navController = rememberNavController()
-    Scaffold(topBar = { AppBar {
+    Scaffold(topBar = { AppBar("Active Users") {
         navController.navigateUp()
     } }) { innerPadding ->
         Surface(
@@ -82,7 +82,7 @@ fun ActiveUsersScreen(viewModel: ActiveUserViewModel = viewModel()) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(onBackKeyClicked: () -> Unit) {
+fun AppBar(text: String, onBackKeyClicked: () -> Unit) {
     TopAppBar(
         navigationIcon = {
             Icon(
@@ -93,7 +93,7 @@ fun AppBar(onBackKeyClicked: () -> Unit) {
                 },
             )
         },
-        title = { Text("Active users") }
+        title = { Text(text) }
     )
 }
 
@@ -130,7 +130,7 @@ fun MessageSection(onCLickMessage: () -> Unit) {
 }
 
 @Composable
-fun ProfilePicture(user: User) {
+fun ProfilePicture(user: User, size: Dp = 72.dp) {
     Card(
         shape = CircleShape,
         border = BorderStroke(
@@ -148,7 +148,7 @@ fun ProfilePicture(user: User) {
                     transformations(CircleCropTransformation())
                 },
             ),
-            modifier = Modifier.size(72.dp),
+            modifier = Modifier.size(size),
             contentScale = ContentScale.Crop,
             contentDescription = ""
         )
@@ -156,19 +156,20 @@ fun ProfilePicture(user: User) {
 }
 
 @Composable
-fun ProfileContent(user: User) {
+fun ProfileContent(user: User, horizontalAlignment: Alignment.Horizontal = Alignment.Start) {
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .wrapContentWidth()
+            .wrapContentWidth(),
+        horizontalAlignment = horizontalAlignment
     ) {
         Text(
             text = user.userName!!,
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodyMedium
         )
         Text(
             text = "Active now",
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodySmall
         )
     }
 }

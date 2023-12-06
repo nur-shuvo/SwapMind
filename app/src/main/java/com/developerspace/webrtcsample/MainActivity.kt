@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import com.developerspace.webrtcsample.activeUsers.ui.ActiveUserActivity
+import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
 import com.developerspace.webrtcsample.model.User
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.button.MaterialButton
@@ -90,11 +91,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Coming to mainActivity indicates user is online now
-        realTimeDb.reference.child(ChatMainActivity.ROOT).child(ONLINE_USER_LIST_CHILD).child(auth.uid.toString())
-            .setValue(User(auth.uid.toString(), getUserName(), getPhotoUrl(), true))
-            .addOnFailureListener {
-                Log.i("MainActivity", it.message.toString())
-            }
+        UserUpdateRemoteUtil().makeUserOnlineRemote(Firebase.database, Firebase.auth)
     }
 
     private fun getPhotoUrl(): String? {
@@ -121,13 +118,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         // user is offline now
-        realTimeDb.reference.child(ChatMainActivity.ROOT).child(ONLINE_USER_LIST_CHILD).child(auth.uid.toString())
-            .setValue(User(auth.uid.toString(), auth.currentUser?.displayName, getPhotoUrl(), false))
-            .addOnFailureListener {
-                Log.i("MainActivity", it.message.toString())
-            }
+        UserUpdateRemoteUtil().makeUserOfflineRemote(Firebase.database, Firebase.auth)
+        super.onDestroy()
     }
     companion object {
         const val ONLINE_USER_LIST_CHILD = "onlineuserlist"
