@@ -7,12 +7,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.developerspace.webrtcsample.compose.ui.screens.ActiveUsersScreen
+import com.developerspace.webrtcsample.compose.ui.screens.MainScreen
 import com.developerspace.webrtcsample.compose.ui.screens.UserDetailScreen
+import com.google.accompanist.pager.ExperimentalPagerApi
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TopLevelNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "active_users_screen") {
+    NavHost(navController = navController, startDestination = "main_screen") {
+        composable("main_screen") {
+            MainScreen(navController)
+        }
         composable("active_users_screen") {
             ActiveUsersScreen(navController)
         }

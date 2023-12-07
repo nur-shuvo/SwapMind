@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,8 +43,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.developerspace.webrtcsample.ChatMainActivity
@@ -56,13 +53,11 @@ import com.developerspace.webrtcsample.compose.ui.viewmodel.ActiveUserViewModel
 import com.developerspace.webrtcsample.model.User
 
 @Composable
-fun ActiveUsersScreen(navController: NavHostController? = null) {
-    val context  = LocalContext.current
+fun ActiveUsersScreen(navController: NavController? = null) {
+    val context = LocalContext.current
     val viewModel: ActiveUserViewModel = viewModel()
     val userListState by viewModel.userListState.collectAsState()
-    Scaffold(topBar = { AppBar("Active Users") {
-        navController?.navigateUp()
-    } }) { innerPadding ->
+    Scaffold(topBar = { AppBar("Active Users") }) { innerPadding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -72,9 +67,9 @@ fun ActiveUsersScreen(navController: NavHostController? = null) {
                 itemsIndexed(userListState) { index, it ->
                     ProfileCard(it,
                         onClickCard = {
-                          navController?.navigate("user_detail_screen/${index}")
+                            navController?.navigate("user_detail_screen/${index}")
                         },
-                        onCLickMessage =  {
+                        onCLickMessage = {
                             // Go to chat screen
                             val intent = Intent(context, ChatMainActivity::class.java)
                             intent.putExtra("receiverUserID", it.userID)
@@ -88,23 +83,12 @@ fun ActiveUsersScreen(navController: NavHostController? = null) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(text: String, onBackKeyClicked: () -> Unit) {
-    TopAppBar(
-        navigationIcon = {
-            Icon(
-                Icons.Default.ArrowBack,
-                contentDescription = "",
-                modifier = Modifier.padding(horizontal = 12.dp).clickable {
-                    onBackKeyClicked.invoke()
-                },
-            )
-        },
-        title = { Text(text) }
-    )
+fun AppBar(text: String) {
+    TopAppBar(title = { Text(text) })
 }
 
 @Composable
-fun ProfileCard(user: User, onClickCard:  () -> Unit, onCLickMessage: () -> Unit) {
+fun ProfileCard(user: User, onClickCard: () -> Unit, onCLickMessage: () -> Unit) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
@@ -128,12 +112,18 @@ fun ProfileCard(user: User, onClickCard:  () -> Unit, onCLickMessage: () -> Unit
 
 @Composable
 fun MessageSection(onCLickMessage: () -> Unit) {
-    Image(painter = painterResource(id = R.drawable.baseline_textsms_24),
+    Image(
+        painter = painterResource(id = R.drawable.baseline_textsms_24),
         contentDescription = "",
-        modifier = Modifier.width(50.dp).height(50.dp).clickable {
-            onCLickMessage.invoke()
-        }.padding(end = 10.dp),
-        alignment = Alignment.CenterEnd)
+        modifier = Modifier
+            .width(50.dp)
+            .height(50.dp)
+            .clickable {
+                onCLickMessage.invoke()
+            }
+            .padding(end = 10.dp),
+        alignment = Alignment.CenterEnd
+    )
 }
 
 @Composable

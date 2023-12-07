@@ -10,6 +10,7 @@ import com.developerspace.webrtcsample.compose.ui.screens.ActiveUsersScreen
 import com.developerspace.webrtcsample.compose.ui.screens.MainScreen
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -37,6 +38,6 @@ class ComposeMainActivity: AppCompatActivity() {
 @Composable
 fun DefaultPreview() {
     MyTheme {
-        MainScreen()
+        // MainScreen()
     }
 }

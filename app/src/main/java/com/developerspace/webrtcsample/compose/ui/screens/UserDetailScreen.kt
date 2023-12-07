@@ -3,6 +3,7 @@ package com.developerspace.webrtcsample.compose.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +15,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,10 +40,10 @@ import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.model.User
 
 @Composable
-fun UserDetailScreen(userProfileID: Int, navController: NavController ?= null) {
+fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
     val userProfile = AppLevelCache.userProfiles?.get(userProfileID) ?: User()
     Scaffold(topBar = {
-        AppBar(userProfile.userName!!) {
+        AppBarWithBack(userProfile.userName!!) {
             navController?.navigateUp()
         }
     }) { padding ->
@@ -71,16 +77,29 @@ fun UserDetailScreen(userProfileID: Int, navController: NavController ?= null) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppBarWithBack(text: String, onBackPressed: () -> Unit) {
+    TopAppBar(title = { Text(text) }, navigationIcon = {
+        Icon(
+            Icons.Default.ArrowBack,
+            contentDescription = "",
+            modifier = Modifier.padding(horizontal = 12.dp).clickable {
+                onBackPressed.invoke()
+            },
+        )
+    })
+}
+
 @Composable
 fun ProfileSection(type: String, isEditable: Boolean) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        val drawable: Int
-        if (type == "Name") {
-            drawable = R.drawable.user_person
+        val drawable: Int = if (type == "Name") {
+            R.drawable.user_person
         } else if (type == "About") {
-            drawable = R.drawable.info_24px
+            R.drawable.info_24px
         } else {
-            drawable = R.drawable.call_24px
+            R.drawable.call_24px
         }
         Image(painter = painterResource(id = drawable), contentDescription = "")
         InnerComponent(
@@ -110,21 +129,17 @@ fun InnerComponent(topText: String, middleText: String, bottomText: String, modi
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview1() {
-    MyTheme {
-        UserDetailScreen(0)
-    }
-}
-
 fun getBottomText(type: String): String {
-    return if (type == "Name") {
-        "This is not your username or pin. It is just displayed in your profile"
-    } else if (type == "About") {
-        "Only visible to your friends" // TODO user bio
-    } else {
-        ""
+    return when (type) {
+        "Name" -> {
+            "This is not your username or pin. It is just displayed in your profile"
+        }
+        "About" -> {
+            "Only visible to your friends" // TODO user bio
+        }
+        else -> {
+            ""
+        }
     }
 }
 
@@ -135,5 +150,13 @@ fun getMiddleText(type: String): String {
         "Doing nothing is great" // TODO user bio
     } else {
         "8801537227217"
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview1() {
+    MyTheme {
+        UserDetailScreen(0)
     }
 }
