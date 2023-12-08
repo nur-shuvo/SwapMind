@@ -121,7 +121,7 @@ fun TabsContent(pagerState: PagerState, navController: NavController?) {
         when (page) {
             0 -> HomeScreen(data = "Welcome to Swap Mind! Let's share thoughts")
             1 -> ActiveUsersScreen(navController)
-            2 -> ChatListScreen(data = "Welcome to Chat screen")
+            2 -> ChatListScreen()
             3 -> HomeScreen(data = "Welcome to Settings Screen")
         }
     }

@@ -67,8 +67,7 @@ class ChatMainActivity : AppCompatActivity() {
         messageRecyclerView?.layoutManager = manager
          messageRecyclerView?.adapter = adapter
 
-//         Scroll down when a new message arrives
-//         See MyScrollToBottomObserver for details
+//         Scroll down when a new message arrives, See MyScrollToBottomObserver for details
         adapter.registerAdapterDataObserver(
             MyScrollToBottomObserver(messageRecyclerView!!, adapter, manager)
         )
