@@ -1,6 +1,8 @@
 package com.developerspace.webrtcsample.compose.ui.screens
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,11 +21,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.developerspace.webrtcsample.ChatMainActivity
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.viewmodel.ChatListViewModel
 import com.developerspace.webrtcsample.compose.ui.viewmodel.RecentMessage
@@ -46,8 +50,14 @@ fun ChatListScreen() {
 
 @Composable
 fun ChatListItem(recentMessage: RecentMessage) {
+    val context = LocalContext.current
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable {
+            // Go to chat screen
+            val intent = Intent(context, ChatMainActivity::class.java)
+            intent.putExtra("receiverUserID", recentMessage.toUserId)
+            context.startActivity(intent)
+        },
         horizontalArrangement = Arrangement.Start
     ) {
         ProfilePicture(user = User(photoUrl = recentMessage.friendlyMessage.photoUrl), 45.dp)
