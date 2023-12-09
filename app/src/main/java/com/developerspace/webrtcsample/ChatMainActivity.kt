@@ -53,7 +53,7 @@ class ChatMainActivity : AppCompatActivity() {
         db = Firebase.database
         receiverUserID = intent.getStringExtra("receiverUserID").toString()
 
-        val messagesRef = db.reference.child(ROOT).child(MESSAGES_CHILD).child(getSmallerUserID(auth.uid.toString(), receiverUserID))
+        val messagesRef = db.reference.child(ROOT).child(MESSAGES_CHILD).child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))
 
         // The FirebaseRecyclerAdapter class and options come from the FirebaseUI library
         // See: https://github.com/firebase/FirebaseUI-Android
@@ -77,12 +77,26 @@ class ChatMainActivity : AppCompatActivity() {
                 messageEditText!!.text.toString(),
                 getUserName(),
                 getPhotoUrl(),
-                null
+                null,
+                time = System.currentTimeMillis().toString()
             )
+           // message
            db.reference.child(ROOT).child(MESSAGES_CHILD)
-               .child(getSmallerUserID(auth.uid.toString(), receiverUserID))
+               .child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))
                .push()
                .setValue(friendlyMessage)
+           messageEditText?.setText("")
+
+           // recent messages
+           db.reference.child(ROOT).child(MESSAGES_CHILD).child(RECENT_MESSAGES_CHILD)
+               .child(auth.uid.toString())
+               .child(receiverUserID)
+               .setValue(friendlyMessage)
+           db.reference.child(ROOT).child(MESSAGES_CHILD).child(RECENT_MESSAGES_CHILD)
+               .child(receiverUserID)
+               .child(auth.uid.toString())
+               .setValue(friendlyMessage)
+
            messageEditText?.setText("")
         }
 
@@ -91,9 +105,9 @@ class ChatMainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getSmallerUserID(x: String, y: String): String {
-        if (x < y) return x
-        return y
+    private fun getUniqueIDForMessage(x: String, y: String): String {
+        if (x < y) return "$x:$y"
+        return "$y:$x"
     }
 
     public override fun onPause() {
@@ -124,7 +138,7 @@ class ChatMainActivity : AppCompatActivity() {
         val tempMessage = FriendlyMessage(null, getUserName(), getPhotoUrl(), LOADING_IMAGE_URL)
 
         db.reference.child(ROOT).child(MESSAGES_CHILD)
-            .child(getSmallerUserID(auth.uid.toString(), receiverUserID))
+            .child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))
             .push()
             .setValue(
                 tempMessage,
@@ -159,7 +173,7 @@ class ChatMainActivity : AppCompatActivity() {
                         val friendlyMessage =
                             FriendlyMessage(null, getUserName(), getPhotoUrl(), uri.toString())
                         db.reference.child(ROOT).child(MESSAGES_CHILD)
-                            .child(getSmallerUserID(auth.uid.toString(), receiverUserID))
+                            .child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))
                             .child(key!!)
                             .setValue(friendlyMessage)
                     }
@@ -193,6 +207,7 @@ class ChatMainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "ChatMainActivity"
         const val MESSAGES_CHILD = "messages"
+        const val RECENT_MESSAGES_CHILD = "recentmessages"
         const val ROOT = "root"
         const val ANONYMOUS = "anonymous"
         private const val LOADING_IMAGE_URL = "https://www.google.com/images/spin-32.gif"

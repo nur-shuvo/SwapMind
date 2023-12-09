@@ -9,44 +9,53 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
+import com.developerspace.webrtcsample.compose.ui.viewmodel.ChatListViewModel
+import com.developerspace.webrtcsample.compose.ui.viewmodel.RecentMessage
 import com.developerspace.webrtcsample.model.User
 
 @Composable
 fun ChatListScreen() {
-    Column(
+    val viewModel: ChatListViewModel = viewModel()
+    val recentMessageList by viewModel.recentMessageListState.collectAsState()
+
+    LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top
     ) {
-        ChatListItem()
-        ChatListItem()
-        ChatListItem()
-        ChatListItem()
-        ChatListItem()
+        items(recentMessageList) { recentMessage ->
+            ChatListItem(recentMessage)
+        }
     }
 }
 
 @Composable
-fun ChatListItem() {
+fun ChatListItem(recentMessage: RecentMessage) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start
     ) {
-        ProfilePicture(user = User(), 45.dp)
+        ProfilePicture(user = User(photoUrl = recentMessage.friendlyMessage.photoUrl), 45.dp)
         NameAndLastText(
             Modifier
                 .fillMaxWidth(0.80f)
-                .height(80.dp)
+                .height(80.dp),
+            recentMessage
         )
         Spacer(Modifier.weight(1f))
         TimeAndUnreadIcon(
@@ -58,11 +67,11 @@ fun ChatListItem() {
 }
 
 @Composable
-fun NameAndLastText(modifier: Modifier) {
+fun NameAndLastText(modifier: Modifier, recentMessage: RecentMessage) {
     Column(verticalArrangement = Arrangement.Center, modifier = modifier) {
-        Text("Mr Asad")
+        Text(recentMessage.toUserName)
         Text(
-            "Why are you so busy? Please add me in the group that is in front of you",
+            recentMessage.friendlyMessage.text!!,
             maxLines = 1,
             style = TextStyle(Color.Gray, fontSize = 12.sp)
         )
