@@ -1,8 +1,8 @@
 package com.developerspace.webrtcsample.model
 
 data class User(
-    val userID: String? = null,
-    val userName: String? = null,
-    val photoUrl: String? = null,
-    val onlineStatus: Boolean? = false
+    var userID: String? = "",
+    var userName: String? = "",
+    var photoUrl: String? = "",
+    var onlineStatus: Boolean? = false
 )

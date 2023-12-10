@@ -1,5 +1,7 @@
 package com.developerspace.webrtcsample.compose.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,24 +26,38 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
 import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
+import com.developerspace.webrtcsample.compose.ui.viewmodel.UserDetailViewModel
 import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.util.MyOpenDocumentContract
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
-    val userProfile = AppLevelCache.userProfiles?.get(userProfileID) ?: User()
+    val activity = LocalContext.current as AppCompatActivity
+    val viewmodel: UserDetailViewModel = viewModel()
+    val userProfile by viewmodel.userProfileState.collectAsState()
+    viewmodel.setUserProfile(AppLevelCache.userProfiles?.get(userProfileID) ?: User())
+    val openDocument = rememberLauncherForActivityResult(contract = MyOpenDocumentContract(),
+        onResult = { viewmodel.onProfileImageEditSelected(activity, it!!) })
+
     Scaffold(topBar = {
         AppBarWithBack(userProfile.userName!!) {
             navController?.navigateUp()
@@ -59,14 +75,19 @@ fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
             ) {
                 Box {
                     ProfilePicture(userProfile, 240.dp)
-                    Image(
-                        painterResource(id = R.drawable.photo_camera_24px), "",
-                        Modifier
-                            .background(color = lightGreen, shape = RoundedCornerShape(12.dp))
-                            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
-                            .padding(5.dp)
-                            .align(Alignment.BottomCenter), alignment = Alignment.BottomCenter
-                    )
+                    if (userProfile.userID == Firebase.auth.uid) {
+                        Image(
+                            painterResource(id = R.drawable.photo_camera_24px), "",
+                            Modifier
+                                .clickable {
+                                    openDocument.launch(arrayOf("image/*"))
+                                }
+                                .background(color = lightGreen, shape = RoundedCornerShape(12.dp))
+                                .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+                                .padding(5.dp)
+                                .align(Alignment.BottomCenter), alignment = Alignment.BottomCenter
+                        )
+                    }
                 }
                 ProfileContent(userProfile, Alignment.CenterHorizontally)
                 ProfileSection("Name", true)
@@ -84,9 +105,11 @@ fun AppBarWithBack(text: String, onBackPressed: () -> Unit) {
         Icon(
             Icons.Default.ArrowBack,
             contentDescription = "",
-            modifier = Modifier.padding(horizontal = 12.dp).clickable {
-                onBackPressed.invoke()
-            },
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .clickable {
+                    onBackPressed.invoke()
+                },
         )
     })
 }
@@ -134,9 +157,11 @@ fun getBottomText(type: String): String {
         "Name" -> {
             "This is not your username or pin. It is just displayed in your profile"
         }
+
         "About" -> {
             "Only visible to your friends" // TODO user bio
         }
+
         else -> {
             ""
         }
