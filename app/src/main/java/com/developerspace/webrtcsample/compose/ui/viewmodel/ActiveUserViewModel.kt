@@ -6,6 +6,7 @@ import com.developerspace.webrtcsample.ChatMainActivity
 import com.developerspace.webrtcsample.MainActivity
 import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.model.User
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
@@ -30,8 +31,13 @@ class ActiveUserViewModel: ViewModel() {
         db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD).get()
             .addOnSuccessListener { snapShot->
                 snapShot.getValue<MutableMap<String, User>>()?.let {
+                    var cnt = 0
                     it.forEach { entry ->
                         resultList.add(entry.value)
+                        if (entry.key == Firebase.auth.uid) {
+                            AppLevelCache.currentUserItemKey = cnt
+                        }
+                        cnt++
                     }
                 }
                 _userListState.value = resultList

@@ -32,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -124,14 +125,19 @@ fun MessageSection(onCLickMessage: () -> Unit) {
 }
 
 @Composable
-fun ProfilePicture(user: User, size: Dp = 72.dp) {
+fun ProfilePicture(
+    user: User, size: Dp = 72.dp, color: Color = lightGreen,
+    borderStroke: Dp = 2.dp, onClicked: () -> Unit = {}
+) {
     Card(
         shape = CircleShape,
         border = BorderStroke(
-            width = 2.dp,
-            color = lightGreen
+            width = borderStroke,
+            color = color
         ),
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .padding(16.dp)
+            .clickable { onClicked.invoke() },
     ) {
         Image(
             painter = rememberImagePainter(

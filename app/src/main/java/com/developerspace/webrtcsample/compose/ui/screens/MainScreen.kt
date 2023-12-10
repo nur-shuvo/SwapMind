@@ -3,7 +3,10 @@ package com.developerspace.webrtcsample.compose.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.Tab
@@ -33,11 +36,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.greenColor
+import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
+import com.developerspace.webrtcsample.model.User
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 @ExperimentalPagerApi
@@ -48,19 +55,28 @@ fun MainScreen(navController: NavController? = null) {
         modifier = Modifier.background(Color.White)
     ) {
         TopAppBar(backgroundColor = greenColor) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Center
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 20.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Swap Mind",
-                    style = TextStyle(color = Color.White, fontStyle = FontStyle.Italic, fontFamily = FontFamily.Cursive),
+                    style = TextStyle(
+                        color = Color.White,
+                        fontStyle = FontStyle.Italic,
+                        fontFamily = FontFamily.Cursive
+                    ),
                     fontWeight = FontWeight.W900,
                     fontSize = 18.sp,
                     modifier = Modifier.padding(all = 5.dp),
                     textAlign = TextAlign.Center
                 )
+                Spacer(Modifier.weight(1.0f))
+                ProfilePicture(user = User(photoUrl = getPhotoUrl()), 25.dp, Color.White, 0.5.dp) {
+                    navController?.navigate("account_profile_screen/${AppLevelCache.currentUserItemKey}")
+                }
             }
         }
         Tabs(pagerState = pagerState)
@@ -94,7 +110,10 @@ fun Tabs(pagerState: PagerState) {
         list.forEachIndexed { index, _ ->
             Tab(
                 icon = {
-                    if (index == 3)  Icon(painterResource(id = R.drawable.live_cast_24px), contentDescription = null)
+                    if (index == 3) Icon(
+                        painterResource(id = R.drawable.live_cast_24px),
+                        contentDescription = null
+                    )
                     else Icon(imageVector = list[index].second, contentDescription = null)
                 },
                 text = {
@@ -126,6 +145,12 @@ fun TabsContent(pagerState: PagerState, navController: NavController?) {
         }
     }
 }
+
+private fun getPhotoUrl(): String? {
+    val user = Firebase.auth.currentUser
+    return user?.photoUrl?.toString()
+}
+
 
 @OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true)
