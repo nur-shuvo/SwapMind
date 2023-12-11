@@ -7,7 +7,10 @@ import com.developerspace.webrtcsample.MainActivity
 import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.model.User
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
@@ -27,23 +30,31 @@ class ActiveUserViewModel: ViewModel() {
     }
 
     private fun fetchAllUsers() {
-        val resultList: MutableList<User> = mutableListOf()
-        db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD).get()
-            .addOnSuccessListener { snapShot->
-                snapShot.getValue<MutableMap<String, User>>()?.let {
-                    var cnt = 0
-                    it.forEach { entry ->
-                        resultList.add(entry.value)
-                        if (entry.key == Firebase.auth.uid) {
-                            AppLevelCache.currentUserItemKey = cnt
+        db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD).addValueEventListener(
+            object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.getValue<MutableMap<String, User>>()?.let {
+                        var cnt = 0
+                        val resultList: MutableList<User> = mutableListOf()
+                        it.forEach { entry ->
+                            resultList.add(entry.value)
+                            if (entry.key == Firebase.auth.uid) {
+                                AppLevelCache.currentUserItemKey = cnt
+                            }
+                            cnt++
                         }
-                        cnt++
+                        _userListState.value = resultList
+                        AppLevelCache.userProfiles = resultList
+                        Log.i(TAG, "total users - ${resultList.size}")
                     }
                 }
-                _userListState.value = resultList
-                AppLevelCache.userProfiles = resultList
-                Log.i(TAG, "total users - ${resultList.size}")
+
+                override fun onCancelled(error: DatabaseError) {
+                    // TODO("Not yet implemented")
+                }
+
             }
+        )
     }
 
     companion object {
