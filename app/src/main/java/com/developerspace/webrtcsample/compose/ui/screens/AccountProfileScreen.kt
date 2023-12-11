@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
 import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
+import com.developerspace.webrtcsample.compose.ui.viewmodel.AccountProfileViewModel
 import com.developerspace.webrtcsample.compose.ui.viewmodel.UserDetailViewModel
 import com.developerspace.webrtcsample.model.User
 import com.developerspace.webrtcsample.util.MyOpenDocumentContract
@@ -38,11 +39,15 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun AccountProfileScreen(userProfileID: Int, navController: NavController? = null) {
     val activity = LocalContext.current as AppCompatActivity
-    val viewmodel: UserDetailViewModel = viewModel()
+    val viewmodel: AccountProfileViewModel = viewModel()
     val userProfile by viewmodel.userProfileState.collectAsState()
     viewmodel.setUserProfile(AppLevelCache.userProfiles?.get(userProfileID) ?: User())
     val openDocument = rememberLauncherForActivityResult(contract = MyOpenDocumentContract(),
-        onResult = { viewmodel.onProfileImageEditSelected(activity, it!!) })
+        onResult = {
+            if (it != null) {
+                viewmodel.onProfileImageEditSelected(activity, it)
+            }
+        })
 
     Scaffold(topBar = {
         AppBarWithBack(userProfile.userName!!) {
@@ -76,9 +81,13 @@ fun AccountProfileScreen(userProfileID: Int, navController: NavController? = nul
                     }
                 }
                 ProfileContent(userProfile, Alignment.CenterHorizontally)
-                ProfileSection("Name", true)
-                ProfileSection("About", true)
-                ProfileSection("Phone Number or Email", false)
+                ProfileSection("Name", true, userProfile) {
+                    navController?.navigate("account_profile_edit_screen/name")
+                }
+                ProfileSection("About", true, userProfile) {
+
+                }
+                ProfileSection("Phone Number or Email", false, userProfile)
             }
         }
     }

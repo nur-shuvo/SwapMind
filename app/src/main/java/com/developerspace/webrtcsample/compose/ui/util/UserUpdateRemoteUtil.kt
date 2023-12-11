@@ -28,6 +28,22 @@ class UserUpdateRemoteUtil {
             }
     }
 
+    fun modifyUserName(realTimeDb: FirebaseDatabase, auth: FirebaseAuth, newName: String) {
+        realTimeDb.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD).child(auth.uid.toString())
+            .setValue(User(auth.uid.toString(), newName, getPhotoUrl(auth), false))
+            .addOnFailureListener {
+                Log.i("MainActivity", it.message.toString())
+            }
+    }
+
+    fun modifyUserProfileUrl(realTimeDb: FirebaseDatabase, auth: FirebaseAuth, newProfileUrl: String) {
+        realTimeDb.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD).child(auth.uid.toString())
+            .setValue(User(auth.uid.toString(), getUserName(auth), newProfileUrl, false))
+            .addOnFailureListener {
+                Log.i("MainActivity", it.message.toString())
+            }
+    }
+
     private fun getPhotoUrl(auth: FirebaseAuth): String? {
         val user = auth.currentUser
         return user?.photoUrl?.toString()

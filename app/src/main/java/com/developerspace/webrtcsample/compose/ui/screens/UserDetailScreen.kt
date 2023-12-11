@@ -90,9 +90,9 @@ fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
                     }
                 }
                 ProfileContent(userProfile, Alignment.CenterHorizontally)
-                ProfileSection("Name", true)
-                ProfileSection("About", true)
-                ProfileSection("Phone Number or Email", false)
+                ProfileSection("Name", true, userProfile)
+                ProfileSection("About", true, userProfile)
+                ProfileSection("Phone Number or Email", false, userProfile)
             }
         }
     }
@@ -115,7 +115,7 @@ fun AppBarWithBack(text: String, onBackPressed: () -> Unit) {
 }
 
 @Composable
-fun ProfileSection(type: String, isEditable: Boolean) {
+fun ProfileSection(type: String, isEditable: Boolean, user: User, onClicked: () -> Unit = {}) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         val drawable: Int = if (type == "Name") {
             R.drawable.user_person
@@ -126,13 +126,15 @@ fun ProfileSection(type: String, isEditable: Boolean) {
         }
         Image(painter = painterResource(id = drawable), contentDescription = "")
         InnerComponent(
-            type, getMiddleText(type), getBottomText(type),
+            type, getMiddleText(type, user), getBottomText(type),
             Modifier
                 .fillMaxWidth(0.8f)
                 .padding(20.dp)
         )
         if (!type.contains("Phone")) {
-            Image(painter = painterResource(id = R.drawable.edit_24px), contentDescription = "")
+            Image(painter = painterResource(id = R.drawable.edit_24px), contentDescription = "", modifier = Modifier.clickable {
+                onClicked.invoke()
+            })
         } else {
             Spacer(
                 modifier = Modifier
@@ -168,9 +170,9 @@ fun getBottomText(type: String): String {
     }
 }
 
-fun getMiddleText(type: String): String {
+fun getMiddleText(type: String, user: User): String {
     return if (type == "Name") {
-        "Zayeng Kenn"
+        user.userName!!
     } else if (type == "About") {
         "Doing nothing is great" // TODO user bio
     } else {

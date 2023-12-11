@@ -5,11 +5,18 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import com.developerspace.webrtcsample.ChatMainActivity
+import com.developerspace.webrtcsample.MainActivity
+import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
 import com.developerspace.webrtcsample.model.User
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
@@ -17,14 +24,32 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class UserDetailViewModel : ViewModel() {
+class AccountProfileViewModel : ViewModel() {
 
     // ui state
     private val _userProfileState = MutableStateFlow(User())
     val userProfileState: StateFlow<User> = _userProfileState.asStateFlow()
 
+    init {
+        Firebase.database.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD)
+            .child(Firebase.auth.uid.toString()).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.getValue<User>()?.let {
+                        val newUser = User(it.userID, it.userName, it.photoUrl, it.onlineStatus)
+                        _userProfileState.value = newUser
+                        AppLevelCache.userProfiles?.set(AppLevelCache.currentUserItemKey, newUser)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // TODO("Not yet implemented")
+                }
+            })
+    }
+
     fun setUserProfile(user: User) {
         _userProfileState.value = user
+        AppLevelCache.userProfiles?.set(AppLevelCache.currentUserItemKey, user)
     }
 
     fun onProfileImageEditSelected(activity: Activity, uri: Uri) {
@@ -63,6 +88,7 @@ class UserDetailViewModel : ViewModel() {
             val newUser = User(_userProfileState.value.userID, _userProfileState.value.userName,
                 uri.toString(), _userProfileState.value.onlineStatus)
             _userProfileState.value = newUser
+            AppLevelCache.userProfiles?.set(AppLevelCache.currentUserItemKey, newUser)
 
             // update photo url in user remote
             UserUpdateRemoteUtil().modifyUserProfileUrl(Firebase.database, Firebase.auth, uri.toString())

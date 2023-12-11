@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.developerspace.webrtcsample.compose.ui.screens.AccountProfileEditScreen
 import com.developerspace.webrtcsample.compose.ui.screens.AccountProfileScreen
 import com.developerspace.webrtcsample.compose.ui.screens.ActiveUsersScreen
 import com.developerspace.webrtcsample.compose.ui.screens.MainScreen
@@ -36,6 +37,13 @@ fun TopLevelNavigation() {
             })
         ) { navBackStackEntry ->
             AccountProfileScreen(navBackStackEntry.arguments!!.getInt("profileID"), navController)
+        }
+        composable("account_profile_edit_screen/{type}",
+            arguments = listOf(navArgument("type") {
+                type = NavType.StringType
+            })
+        ) { navBackStackEntry ->
+            AccountProfileEditScreen(navBackStackEntry.arguments!!.getString("type") ?: "", navController)
         }
     }
 }
