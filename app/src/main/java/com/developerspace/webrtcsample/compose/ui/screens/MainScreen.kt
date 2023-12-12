@@ -1,11 +1,9 @@
 package com.developerspace.webrtcsample.compose.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
@@ -138,10 +136,10 @@ fun Tabs(pagerState: PagerState) {
 fun TabsContent(pagerState: PagerState, navController: NavController?) {
     HorizontalPager(state = pagerState) { page ->
         when (page) {
-            0 -> HomeScreen(data = "Welcome to Swap Mind! Let's share thoughts")
+            0 -> HomeScreen()
             1 -> ActiveUsersScreen(navController)
             2 -> ChatListScreen()
-            3 -> HomeScreen(data = "Welcome to Settings Screen")
+            3 -> HomeScreen()
         }
     }
 }

@@ -127,7 +127,8 @@ fun MessageSection(onCLickMessage: () -> Unit) {
 @Composable
 fun ProfilePicture(
     user: User, size: Dp = 72.dp, color: Color = lightGreen,
-    borderStroke: Dp = 2.dp, onClicked: () -> Unit = {}
+    borderStroke: Dp = 2.dp,
+    modifier: Modifier = Modifier, onClicked: () -> Unit = {}
 ) {
     Card(
         shape = CircleShape,
@@ -137,7 +138,8 @@ fun ProfilePicture(
         ),
         modifier = Modifier
             .padding(16.dp)
-            .clickable { onClicked.invoke() },
+            .clickable { onClicked.invoke() }
+            .then(modifier),
     ) {
         Image(
             painter = rememberImagePainter(
