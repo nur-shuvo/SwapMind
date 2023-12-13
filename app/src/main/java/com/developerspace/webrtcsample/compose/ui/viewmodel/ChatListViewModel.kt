@@ -21,12 +21,14 @@ import kotlinx.coroutines.flow.asStateFlow
 data class RecentMessage(
     var toUserId: String = "",
     var toUserName: String = "",
+    var toPhotoUrl: String = "",
     var friendlyMessage: FriendlyMessage = FriendlyMessage()
 )
 
 class ChatListViewModel : ViewModel() {
     private var auth: FirebaseAuth = Firebase.auth
     val uidVsUserName: MutableMap<String, String> = mutableMapOf()
+    val uidVsPhotoUrl: MutableMap<String, String> = mutableMapOf()
 
     // ui states
     private val _recentMessageListState =
@@ -41,9 +43,10 @@ class ChatListViewModel : ViewModel() {
         // TODO optimize by using AppLevelCache
         db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD).get()
             .addOnSuccessListener { snapShot ->
-                snapShot.getValue<MutableMap<String, User>>()?.let { it ->
+                snapShot.getValue<MutableMap<String, User>>()?.let {
                     it.forEach { entry ->
                         uidVsUserName[entry.key] = entry.value.userName!!
+                        uidVsPhotoUrl[entry.key] = entry.value.photoUrl!!
                     }
                     // observe now
                     observeForRecentChanges()
@@ -63,6 +66,7 @@ class ChatListViewModel : ViewModel() {
                     recentMessageTemp.friendlyMessage = entry.value
                     recentMessageTemp.toUserName =
                         uidVsUserName[recentMessageTemp.toUserId]!!
+                    recentMessageTemp.toPhotoUrl = uidVsPhotoUrl[recentMessageTemp.toUserId]!!
                     recentMessages.add(recentMessageTemp)
                     _recentMessageListState.value = recentMessages
                 }

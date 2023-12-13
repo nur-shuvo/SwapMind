@@ -60,7 +60,7 @@ fun ChatListItem(recentMessage: RecentMessage) {
         },
         horizontalArrangement = Arrangement.Start
     ) {
-        ProfilePicture(user = User(photoUrl = recentMessage.friendlyMessage.photoUrl), 45.dp)
+        ProfilePicture(user = User(photoUrl = recentMessage.toPhotoUrl), 45.dp)
         NameAndLastText(
             Modifier
                 .fillMaxWidth(0.80f)
