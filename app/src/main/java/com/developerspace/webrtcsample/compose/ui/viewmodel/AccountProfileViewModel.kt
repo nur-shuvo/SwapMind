@@ -1,15 +1,20 @@
 package com.developerspace.webrtcsample.compose.ui.viewmodel
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import com.developerspace.webrtcsample.ChatMainActivity
 import com.developerspace.webrtcsample.MainActivity
+import com.developerspace.webrtcsample.SignInActivity
 import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
 import com.developerspace.webrtcsample.model.User
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -95,6 +100,18 @@ class AccountProfileViewModel : ViewModel() {
         }?.addOnFailureListener {
             Log.e(TAG, "updateProfile image error")
         }
+    }
+
+    fun signOut(context: Context) {
+        AuthUI.getInstance().signOut(context).addOnSuccessListener {
+            gotoSignInActivity(context)
+        }
+    }
+
+    private fun gotoSignInActivity(context: Context) {
+        context.startActivity(Intent(context, SignInActivity::class.java))
+        // finishing compose activity
+        (context as AppCompatActivity).finish()
     }
 
     companion object {

@@ -9,12 +9,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,14 +26,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.developerspace.webrtcsample.R
+import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
 import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.compose.ui.viewmodel.AccountProfileViewModel
-import com.developerspace.webrtcsample.compose.ui.viewmodel.UserDetailViewModel
 import com.developerspace.webrtcsample.model.User
 import com.developerspace.webrtcsample.util.MyOpenDocumentContract
 import com.google.firebase.auth.ktx.auth
@@ -88,7 +92,22 @@ fun AccountProfileScreen(userProfileID: Int, navController: NavController? = nul
 
                 }
                 ProfileSection("Phone Number or Email", false, userProfile)
+                Spacer(Modifier.weight(1.0f))
+                Button(onClick = {
+                    viewmodel.signOut(activity)
+                }, modifier = Modifier.padding(bottom = 15.dp)) {
+                    Text("Sign Out")
+                }
             }
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreviewAccountProfile() {
+    MyTheme {
+        AccountProfileScreen(0)
+    }
+}
+
