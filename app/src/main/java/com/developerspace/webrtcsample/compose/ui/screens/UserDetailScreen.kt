@@ -48,6 +48,7 @@ import com.developerspace.webrtcsample.model.User
 import com.developerspace.webrtcsample.util.MyOpenDocumentContract
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlin.math.sqrt
 
 @Composable
 fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
@@ -57,6 +58,11 @@ fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
     viewmodel.setUserProfile(AppLevelCache.userProfiles?.get(userProfileID) ?: User())
     val openDocument = rememberLauncherForActivityResult(contract = MyOpenDocumentContract(),
         onResult = { viewmodel.onProfileImageEditSelected(activity, it!!) })
+
+    // profile image container size calculation
+    val imageBoxSize = 200;
+    val profileImageSize  = imageBoxSize
+    val innerBoxSize  = (imageBoxSize / sqrt(2.00))
 
     Scaffold(topBar = {
         AppBarWithBack(userProfile.userName!!) {
@@ -73,20 +79,31 @@ fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                Box {
-                    ProfilePicture(userProfile, 240.dp)
-                    if (userProfile.userID == Firebase.auth.uid) {
-                        Image(
-                            painterResource(id = R.drawable.photo_camera_24px), "",
-                            Modifier
-                                .clickable {
-                                    openDocument.launch(arrayOf("image/*"))
-                                }
-                                .background(color = lightGreen, shape = RoundedCornerShape(12.dp))
-                                .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
-                                .padding(5.dp)
-                                .align(Alignment.BottomCenter), alignment = Alignment.BottomCenter
-                        )
+                Box(
+                    modifier = Modifier
+                        .height(imageBoxSize.dp)
+                        .width(imageBoxSize.dp)
+                ) {
+                    ProfilePicture(userProfile, profileImageSize.dp)
+                    Box(
+                        modifier = Modifier
+                            .height(innerBoxSize.dp)
+                            .width(innerBoxSize.dp)
+                            .align(Alignment.Center)
+                    ) {
+                        if (userProfile.userID == Firebase.auth.uid) {
+                            Image(
+                                painterResource(id = R.drawable.photo_camera_24px), "",
+                                Modifier
+                                    .clickable {
+                                        openDocument.launch(arrayOf("image/*"))
+                                    }
+                                    .background(color = lightGreen, shape = RoundedCornerShape(12.dp))
+                                    .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+                                    .padding(5.dp)
+                                    .align(Alignment.BottomEnd)
+                            )
+                        }
                     }
                 }
                 ProfileContent(userProfile, Alignment.CenterHorizontally)
