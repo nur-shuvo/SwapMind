@@ -107,8 +107,8 @@ fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
                     }
                 }
                 ProfileContent(userProfile, Alignment.CenterHorizontally)
-                ProfileSection("Name", true, userProfile)
-                ProfileSection("About", true, userProfile)
+                ProfileSection("Name", false, userProfile)
+                ProfileSection("About", false, userProfile)
                 ProfileSection("Phone Number or Email", false, userProfile)
             }
         }
