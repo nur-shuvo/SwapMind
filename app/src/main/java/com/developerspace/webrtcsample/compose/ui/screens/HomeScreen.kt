@@ -12,14 +12,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,23 +46,16 @@ import com.developerspace.webrtcsample.model.User
 @Composable
 fun HomeScreen() {
     val viewmodel: HomeScreenViewModel = viewModel()
-    val cntState = viewmodel.countState.collectAsState()
+    // viewmodel.countState.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(10.dp)
     ) {
+        DividerText(text = "Top stories")
         ListOfStory()
-        Text(
-            "Top topics that you want to discuss",
-            modifier = Modifier.padding(5.dp),
-            style = TextStyle(
-                fontStyle = FontStyle.Italic,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.Bold
-            )
-        )
-        ListOfTopCategoryCards(cntState.value)
+        DividerText(text = "Top topics that you want to discuss")
+        ListOfTopCategoryCards()
     }
 }
 
@@ -115,29 +110,31 @@ fun StoryCard(onClickCard: () -> Unit) {
 }
 
 @Composable
-fun ListOfTopCategoryCards(cnt: Int) {
+fun ListOfTopCategoryCards() {
     LazyColumn {
         items(6) {
-            CategoryCardTuple(cnt)
+            CategoryCardTuple()
+            Divider(modifier = Modifier.fillMaxWidth(), 2.dp)
         }
     }
 }
 
 @Composable
-fun CategoryCardTuple(cnt: Int) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-        if (cnt % 2 == 0) {
-            TopicCard(cnt)
-        } else {
-            TopicCard(cnt)
-        }
-        TopicCard(cnt)
-        TopicCard(cnt)
+fun CategoryCardTuple() {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        TopicCard()
+        TopicCard()
+        TopicCard()
     }
 }
 
 @Composable
-fun TopicCard(cnt: Int, color: Color = Color.White) {
+fun TopicCard(color: Color = Color.White) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
@@ -149,22 +146,40 @@ fun TopicCard(cnt: Int, color: Color = Color.White) {
             containerColor = color,
         )
     ) {
-        if (cnt % 2 == 0) {
-            Image(
-                painterResource(id = R.drawable.childhood),
+        Column {
+            Image(painterResource(id = R.drawable.childhood),
                 modifier = Modifier
                     .width(100.dp)
-                    .height(140.dp),
+                    .height(100.dp),
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
             )
-        } else {
-            Text(modifier = Modifier.fillMaxSize(),
+            Text(modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(),
                 text = "Childhood",
-                fontSize = 20.sp
+                fontSize = 15.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
+}
+
+@Composable
+fun DividerText(text: String) {
+    Text(text,
+        modifier = Modifier
+            .padding(bottom = 5.dp)
+            .fillMaxWidth()
+            .wrapContentWidth(),
+        style = TextStyle(
+            fontStyle = FontStyle.Italic,
+            fontFamily = FontFamily.Serif,
+            fontWeight = FontWeight.Bold,
+            fontSize = 15.sp
+        )
+    )
 }
 
 @Preview(showBackground = true)
