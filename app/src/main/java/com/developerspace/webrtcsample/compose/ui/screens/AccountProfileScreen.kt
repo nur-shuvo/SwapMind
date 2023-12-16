@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -39,6 +42,7 @@ import com.developerspace.webrtcsample.model.User
 import com.developerspace.webrtcsample.util.MyOpenDocumentContract
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlin.math.sqrt
 
 @Composable
 fun AccountProfileScreen(userProfileID: Int, navController: NavController? = null) {
@@ -52,6 +56,16 @@ fun AccountProfileScreen(userProfileID: Int, navController: NavController? = nul
                 viewmodel.onProfileImageEditSelected(activity, it)
             }
         })
+
+    // profile image container size calculation
+    val profileImageSize = 200
+    val imagePickerIconSize = profileImageSize / 7
+    val imagePickerIconPadding = imagePickerIconSize / 5
+    val imagePickerIconBorder = imagePickerIconPadding / 5
+    val imageBoxSize = profileImageSize;
+    val offset =
+        (imagePickerIconSize / 2) + imagePickerIconPadding + imagePickerIconBorder + (profileImageSize / 12)
+    val innerBoxSize = (imageBoxSize / sqrt(2.00)) + offset
 
     Scaffold(topBar = {
         AppBarWithBack(userProfile.userName!!) {
@@ -69,19 +83,27 @@ fun AccountProfileScreen(userProfileID: Int, navController: NavController? = nul
                 verticalArrangement = Arrangement.Top
             ) {
                 Box {
-                    ProfilePicture(userProfile, 240.dp)
-                    if (userProfile.userID == Firebase.auth.uid) {
-                        Image(
-                            painterResource(id = R.drawable.photo_camera_24px), "",
-                            Modifier
-                                .clickable {
-                                    openDocument.launch(arrayOf("image/*"))
-                                }
-                                .background(color = lightGreen, shape = RoundedCornerShape(12.dp))
-                                .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
-                                .padding(5.dp)
-                                .align(Alignment.BottomCenter), alignment = Alignment.BottomCenter
-                        )
+                    ProfilePicture(userProfile, profileImageSize.dp)
+                    Box(
+                        modifier = Modifier
+                            .height(innerBoxSize.dp)
+                            .width(innerBoxSize.dp)
+                            .align(Alignment.Center)
+                    ) {
+                        if (userProfile.userID == Firebase.auth.uid) {
+                            Image(
+                                painterResource(id = R.drawable.photo_camera_24px), "",
+                                Modifier
+                                    .clickable {
+                                        openDocument.launch(arrayOf("image/*"))
+                                    }
+                                    .background(color = lightGreen, shape = RoundedCornerShape(12.dp))
+                                    .border(imagePickerIconBorder.dp, Color.Black, RoundedCornerShape(12.dp))
+                                    .padding(imagePickerIconPadding.dp)
+                                    .size(imagePickerIconSize.dp)
+                                    .align(Alignment.BottomEnd)
+                            )
+                        }
                     }
                 }
                 ProfileContent(userProfile, Alignment.CenterHorizontally)

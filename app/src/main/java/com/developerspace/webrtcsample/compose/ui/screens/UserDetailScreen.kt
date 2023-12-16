@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -60,9 +61,14 @@ fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
         onResult = { viewmodel.onProfileImageEditSelected(activity, it!!) })
 
     // profile image container size calculation
-    val imageBoxSize = 200;
-    val profileImageSize  = imageBoxSize
-    val innerBoxSize  = (imageBoxSize / sqrt(2.00))
+    val profileImageSize = 200
+    val imagePickerIconSize = profileImageSize / 7
+    val imagePickerIconPadding = imagePickerIconSize / 5
+    val imagePickerIconBorder = imagePickerIconPadding / 5
+    val imageBoxSize = profileImageSize;
+    val offset =
+        (imagePickerIconSize / 2) + imagePickerIconPadding + imagePickerIconBorder + (profileImageSize / 12)
+    val innerBoxSize = (imageBoxSize / sqrt(2.00)) + offset
 
     Scaffold(topBar = {
         AppBarWithBack(userProfile.userName!!) {
@@ -79,11 +85,7 @@ fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                Box(
-                    modifier = Modifier
-                        .height(imageBoxSize.dp)
-                        .width(imageBoxSize.dp)
-                ) {
+                Box {
                     ProfilePicture(userProfile, profileImageSize.dp)
                     Box(
                         modifier = Modifier
@@ -99,8 +101,9 @@ fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
                                         openDocument.launch(arrayOf("image/*"))
                                     }
                                     .background(color = lightGreen, shape = RoundedCornerShape(12.dp))
-                                    .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
-                                    .padding(5.dp)
+                                    .border(imagePickerIconBorder.dp, Color.Black, RoundedCornerShape(12.dp))
+                                    .padding(imagePickerIconPadding.dp)
+                                    .size(imagePickerIconSize.dp)
                                     .align(Alignment.BottomEnd)
                             )
                         }
