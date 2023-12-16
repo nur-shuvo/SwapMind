@@ -125,7 +125,7 @@ fun CategoryCardTuple() {
         Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         TopicCard()
         TopicCard()

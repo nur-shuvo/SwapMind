@@ -52,7 +52,7 @@ fun MainScreen(navController: NavController? = null) {
     Column(
         modifier = Modifier.background(Color.White)
     ) {
-        TopAppBar(backgroundColor = greenColor) {
+        TopAppBar(backgroundColor = Color.White) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -62,7 +62,7 @@ fun MainScreen(navController: NavController? = null) {
                 Text(
                     text = "Swap Mind",
                     style = TextStyle(
-                        color = Color.White,
+                        color = Color.Blue,
                         fontStyle = FontStyle.Italic,
                         fontFamily = FontFamily.Cursive
                     ),
@@ -95,13 +95,13 @@ fun Tabs(pagerState: PagerState) {
     val scope = rememberCoroutineScope()
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = greenColor,
-        contentColor = Color.White,
+        backgroundColor = Color.White,
+        contentColor = Color.Black,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
                 height = 2.dp,
-                color = Color.White
+                color = Color.Blue
             )
         }
     ) {
@@ -117,7 +117,7 @@ fun Tabs(pagerState: PagerState) {
                 text = {
                     Text(
                         list[index].first,
-                        color = if (pagerState.currentPage == index) Color.White else Color.LightGray
+                        color = if (pagerState.currentPage == index) Color.Blue else Color.Black
                     )
                 },
                 selected = pagerState.currentPage == index,
