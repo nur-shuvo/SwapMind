@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -50,13 +52,13 @@ import kotlinx.coroutines.launch
 fun MainScreen(navController: NavController? = null) {
     val pagerState = rememberPagerState(pageCount = 4)
     Column(
-        modifier = Modifier.background(Color.White)
+        modifier = Modifier
+            .background(Color.White)
     ) {
         TopAppBar(backgroundColor = Color.White) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 20.dp),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -72,7 +74,13 @@ fun MainScreen(navController: NavController? = null) {
                     textAlign = TextAlign.Center
                 )
                 Spacer(Modifier.weight(1.0f))
-                ProfilePicture(user = User(photoUrl = getPhotoUrl()), 25.dp, Color.White, 0.5.dp) {
+                ProfilePicture(
+                    user = User(photoUrl = getPhotoUrl()),
+                    25.dp,
+                    Color.Blue,
+                    1.dp,
+                    modifier = Modifier.padding(end = 16.dp)
+                ) {
                     navController?.navigate("account_profile_screen/${AppLevelCache.currentUserItemKey}")
                 }
             }
@@ -155,6 +163,6 @@ private fun getPhotoUrl(): String? {
 @Composable
 fun DefaultPreview2() {
     MyTheme {
-        MainScreen()
+        ProfileCard(User(), {}, {})
     }
 }

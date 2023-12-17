@@ -11,6 +11,8 @@ val teal200 = Color(0xFF03DAC5)
 val veryLightGrey = Color(0x60DCDCDC)
 val lightGreen200 = Color(0x9932CD32)
 
+val lightBlue = Color(0xFF7B82F7)
+
 val lightGreen: Color
     @Composable
     get() = lightGreen200

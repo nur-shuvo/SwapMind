@@ -47,15 +47,20 @@ import com.developerspace.webrtcsample.model.User
 fun HomeScreen() {
     val viewmodel: HomeScreenViewModel = viewModel()
     // viewmodel.countState.collectAsState()
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        DividerText(text = "Top stories")
-        ListOfStory()
-        DividerText(text = "Top topics that you want to discuss")
-        ListOfTopCategoryCards()
+        item {
+            DividerText(text = "Top stories")
+            ListOfStory()
+            DividerText(text = "Top topics that you want to discuss")
+        }
+        items(6) {
+            CategoryCardTuple()
+            Divider(modifier = Modifier.fillMaxWidth(), 2.dp)
+        }
     }
 }
 
@@ -73,10 +78,10 @@ fun StoryCard(onClickCard: () -> Unit) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
-            .width(100.dp)
+            .width(130.dp)
             .height(180.dp)
             .padding(2.dp)
-            .border(2.dp, lightGreen, RoundedCornerShape(15.dp))
+            .border(2.dp, Color.Blue, RoundedCornerShape(15.dp))
             .clickable { onClickCard.invoke() }
     ) {
         Box {
@@ -110,16 +115,6 @@ fun StoryCard(onClickCard: () -> Unit) {
 }
 
 @Composable
-fun ListOfTopCategoryCards() {
-    LazyColumn {
-        items(6) {
-            CategoryCardTuple()
-            Divider(modifier = Modifier.fillMaxWidth(), 2.dp)
-        }
-    }
-}
-
-@Composable
 fun CategoryCardTuple() {
     Row(
         Modifier
@@ -141,7 +136,7 @@ fun TopicCard(color: Color = Color.White) {
             .width(100.dp)
             .height(140.dp)
             .padding(2.dp)
-            .border(2.dp, lightGreen, RoundedCornerShape(15.dp)),
+            .border(2.dp, Color.Blue, RoundedCornerShape(15.dp)),
         colors = CardDefaults.cardColors(
             containerColor = color,
         )

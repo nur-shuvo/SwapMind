@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.developerspace.webrtcsample.ChatMainActivity
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
+import com.developerspace.webrtcsample.compose.ui.theming.lightBlue
 import com.developerspace.webrtcsample.compose.ui.viewmodel.ChatListViewModel
 import com.developerspace.webrtcsample.compose.ui.viewmodel.RecentMessage
 import com.developerspace.webrtcsample.model.User
@@ -102,11 +103,11 @@ fun UnreadIcon() {
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(
             width = 1.dp,
-            color = Color.Blue
+            color = Color.White
         ),
-        backgroundColor = Color.Green
+        backgroundColor = lightBlue
     ) {
-        Text(text = "Unread", Modifier.padding(4.dp), fontSize = 8.sp, color = Color.Blue)
+        Text(text = "Unread", Modifier.padding(4.dp), fontSize = 8.sp, color = Color.White)
     }
 }
 
