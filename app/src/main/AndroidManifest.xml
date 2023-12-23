@@ -9,6 +9,7 @@
 
     <application
         android:allowBackup="true"
+        android:name=".SwapMindApp"
         android:icon="@mipmap/swap_mind_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/swap_mind_launcher"

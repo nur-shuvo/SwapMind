@@ -13,11 +13,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.webrtc.*
 import java.util.*
 
 @ExperimentalCoroutinesApi
+@AndroidEntryPoint
 class RTCActivity : AppCompatActivity() {
 
     companion object {
