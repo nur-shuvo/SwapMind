@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample.util
+package com.developerspace.webrtcsample.util.misc
 
 import android.content.Context
 import android.content.Intent

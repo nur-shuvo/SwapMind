@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.developerspace.webrtcsample
+package com.developerspace.webrtcsample.legacy
 
 import android.graphics.Color
 import android.util.Log
@@ -24,7 +24,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.developerspace.webrtcsample.ChatMainActivity.Companion.ANONYMOUS
+import com.developerspace.webrtcsample.R
+import com.developerspace.webrtcsample.legacy.ChatMainActivity.Companion.ANONYMOUS
 import com.developerspace.webrtcsample.databinding.ImageMessageBinding
 import com.developerspace.webrtcsample.databinding.MessageBinding
 import com.developerspace.webrtcsample.model.FriendlyMessage

@@ -19,11 +19,11 @@
             android:name=".compose.ComposeMainActivity"
             android:exported="false" />
         <activity
-            android:name=".SignInActivity"
+            android:name=".legacy.SignInActivity"
             android:exported="false"
             android:theme="@style/Theme.WebRTCSample"/>
         <activity
-            android:name=".LaunchActivity"
+            android:name=".legacy.LaunchActivity"
             android:exported="true"
             android:theme="@style/Theme.WebRTCSample">
             <intent-filter>
@@ -33,11 +33,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChatMainActivity"
+            android:name=".legacy.ChatMainActivity"
             android:exported="false"
             android:theme="@style/Theme.WebRTCSample"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".legacy.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.FullScreen">
             <!--            <intent-filter>-->
@@ -47,11 +47,11 @@
             <!--            </intent-filter>-->
         </activity>
         <activity
-            android:name=".RTCActivity"
+            android:name=".legacy.RTCActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.WebRTCSample"/>
         <activity
-            android:name=".activeUsers.ui.ActiveUserActivity"
+            android:name=".legacy.activeUsers.ui.ActiveUserActivity"
             android:screenOrientation="portrait"
             android:label="Active Users"
             android:theme="@style/Theme.WebRTCSample"/>

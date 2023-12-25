@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample
+package com.developerspace.webrtcsample.legacy
 
 import android.Manifest
 import android.content.Intent
@@ -13,10 +13,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
+import com.developerspace.webrtcsample.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.webrtc.*
-import java.util.*
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -129,7 +129,7 @@ class RTCActivity : AppCompatActivity() {
     private fun checkCameraAndAudioPermission() {
         if ((ContextCompat.checkSelfPermission(this, CAMERA_PERMISSION)
                     != PackageManager.PERMISSION_GRANTED) &&
-            (ContextCompat.checkSelfPermission(this,AUDIO_PERMISSION)
+            (ContextCompat.checkSelfPermission(this, AUDIO_PERMISSION)
                     != PackageManager.PERMISSION_GRANTED)) {
             requestCameraAndAudioPermission()
         } else {

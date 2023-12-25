@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample
+package com.developerspace.webrtcsample.legacy
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ComposeMainActivity
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract

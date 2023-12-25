@@ -1,24 +1,18 @@
-package com.developerspace.webrtcsample.activeUsers.ui
+package com.developerspace.webrtcsample.legacy.activeUsers.ui
 
-import android.app.TimePickerDialog
-import android.content.Context
 import android.content.Intent
-import android.graphics.Typeface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.developerspace.webrtcsample.ChatMainActivity
+import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.model.User
-import java.util.*
 
 class ItemAdapter(private val itemList: MutableList<User>) : RecyclerView.Adapter<ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

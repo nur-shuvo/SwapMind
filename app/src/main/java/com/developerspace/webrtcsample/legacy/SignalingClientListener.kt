@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample
+package com.developerspace.webrtcsample.legacy
 
 import org.webrtc.IceCandidate
 import org.webrtc.SessionDescription

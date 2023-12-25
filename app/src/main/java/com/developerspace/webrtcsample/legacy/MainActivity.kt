@@ -1,14 +1,13 @@
-package com.developerspace.webrtcsample
+package com.developerspace.webrtcsample.legacy
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import com.developerspace.webrtcsample.activeUsers.ui.ActiveUserActivity
+import com.developerspace.webrtcsample.R
+import com.developerspace.webrtcsample.legacy.activeUsers.ui.ActiveUserActivity
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
-import com.developerspace.webrtcsample.model.User
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.ktx.auth

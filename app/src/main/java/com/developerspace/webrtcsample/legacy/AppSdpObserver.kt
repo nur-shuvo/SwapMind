@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample
+package com.developerspace.webrtcsample.legacy
 
 import org.webrtc.SdpObserver
 import org.webrtc.SessionDescription

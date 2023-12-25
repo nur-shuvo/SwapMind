@@ -1,11 +1,11 @@
-package com.developerspace.webrtcsample.activeUsers.ui
+package com.developerspace.webrtcsample.legacy.activeUsers.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.developerspace.webrtcsample.ChatMainActivity
-import com.developerspace.webrtcsample.MainActivity
+import com.developerspace.webrtcsample.legacy.ChatMainActivity
+import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.model.User
 import com.google.firebase.database.FirebaseDatabase

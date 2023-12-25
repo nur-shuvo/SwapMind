@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample
+package com.developerspace.webrtcsample.legacy
 
 import android.app.Application
 import android.content.Context

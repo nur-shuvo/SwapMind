@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample
+package com.developerspace.webrtcsample.legacy
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,6 +12,7 @@ import android.os.Build
 import android.preference.PreferenceManager
 import android.util.Log
 import androidx.annotation.Nullable
+import com.developerspace.webrtcsample.R
 import org.webrtc.ThreadUtils
 import java.util.*
 import kotlin.collections.HashSet
@@ -90,7 +91,8 @@ class RTCAudioManager(context: Context) {
             val state = intent.getIntExtra("state", STATE_UNPLUGGED)
             val microphone = intent.getIntExtra("microphone", HAS_NO_MIC)
             val name = intent.getStringExtra("name")
-            Log.d(TAG, "WiredHeadsetReceiver.onReceive"
+            Log.d(
+                TAG, "WiredHeadsetReceiver.onReceive"
                     + ": " + "a=" + intent.action.toString() + ", s=" +
                     (if (state == STATE_UNPLUGGED) "unplugged" else "plugged").toString()
                     + ", m=" + (if (microphone == HAS_MIC) "mic" else "no mic").toString()

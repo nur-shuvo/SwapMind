@@ -1,8 +1,8 @@
 package com.developerspace.webrtcsample.compose.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.developerspace.webrtcsample.ChatMainActivity
-import com.developerspace.webrtcsample.MainActivity
+import com.developerspace.webrtcsample.legacy.ChatMainActivity
+import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.model.FriendlyMessage
 import com.developerspace.webrtcsample.model.User
 import com.google.firebase.auth.FirebaseAuth

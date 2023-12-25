@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample
+package com.developerspace.webrtcsample.legacy
 
 import android.util.Log
 import com.google.firebase.firestore.ktx.firestore

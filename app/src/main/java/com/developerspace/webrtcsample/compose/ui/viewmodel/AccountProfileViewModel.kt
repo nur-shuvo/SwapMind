@@ -8,9 +8,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
-import com.developerspace.webrtcsample.ChatMainActivity
-import com.developerspace.webrtcsample.MainActivity
-import com.developerspace.webrtcsample.SignInActivity
+import com.developerspace.webrtcsample.legacy.ChatMainActivity
+import com.developerspace.webrtcsample.legacy.MainActivity
+import com.developerspace.webrtcsample.legacy.SignInActivity
 import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
 import com.developerspace.webrtcsample.model.User
