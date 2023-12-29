@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample.di
+package com.developerspace.webrtcsample.util.db.di
 
 import android.content.Context
 import androidx.room.Room
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object AppDatabaseModule {
 
     @Singleton
     @Provides

@@ -42,6 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
@@ -56,7 +57,7 @@ import com.developerspace.webrtcsample.model.User
 @Composable
 fun ActiveUsersScreen(navController: NavController? = null) {
     val context = LocalContext.current
-    val viewModel: ActiveUserViewModel = viewModel()
+    val viewModel: ActiveUserViewModel = hiltViewModel()
     val userListState by viewModel.userListState.collectAsState()
     Scaffold(topBar = { AppBar("Active Users") }) { innerPadding ->
         Surface(
@@ -162,7 +163,11 @@ fun ProfilePicture(
 }
 
 @Composable
-fun ProfileContent(user: User, horizontalAlignment: Alignment.Horizontal = Alignment.Start, tStyle: TextStyle = MaterialTheme.typography.headlineMedium) {
+fun ProfileContent(
+    user: User,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    tStyle: TextStyle = MaterialTheme.typography.headlineMedium
+) {
     Column(
         modifier = Modifier
             .padding(8.dp)

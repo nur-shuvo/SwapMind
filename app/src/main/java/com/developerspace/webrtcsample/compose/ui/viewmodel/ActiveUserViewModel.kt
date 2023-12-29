@@ -2,6 +2,8 @@ package com.developerspace.webrtcsample.compose.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.developerspace.webrtcsample.compose.repository.UserListRepository
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
@@ -14,47 +16,33 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ActiveUserViewModel: ViewModel() {
+@HiltViewModel
+class ActiveUserViewModel @Inject constructor(
+    private val userListRepository: UserListRepository
+) : ViewModel() {
+
     // ui states
-    private val _userListState = MutableStateFlow<MutableList<User>>(mutableListOf())
-    val userListState: StateFlow<MutableList<User>> = _userListState.asStateFlow()
-
-    private var db: FirebaseDatabase = Firebase.database
+    val userListState = userListRepository.getUserListFromDbFlow().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = mutableListOf(),
+    )
 
     init {
-        fetchAllUsers()
-    }
-
-    private fun fetchAllUsers() {
-        db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD).addValueEventListener(
-            object: ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.getValue<MutableMap<String, User>>()?.let {
-                        var cnt = 0
-                        val resultList: MutableList<User> = mutableListOf()
-                        it.forEach { entry ->
-                            resultList.add(entry.value)
-                            if (entry.key == Firebase.auth.uid) {
-                                AppLevelCache.currentUserItemKey = cnt
-                            }
-                            cnt++
-                        }
-                        _userListState.value = resultList
-                        AppLevelCache.userProfiles = resultList
-                        Log.i(TAG, "total users - ${resultList.size}")
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    // TODO("Not yet implemented")
-                }
-
-            }
-        )
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "fetchAllUsersRemote start")
+            userListRepository.fetchAllUsersRemote()
+        }
     }
 
     companion object {
