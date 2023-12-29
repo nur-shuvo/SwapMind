@@ -32,9 +32,9 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
     }
 
     fun getUserListFromDbFlow(): Flow<List<User>> {
-        return userDao.getAllUser().map {
-            it.map {
-                User(it.userId, it.userName, it.profileUrl, it.onlineStatus)
+        return userDao.getAllUser().map { userDataList ->
+            userDataList.map { userData ->
+                User(userData.userId, userData.userName, userData.profileUrl, userData.onlineStatus)
             }
         }
     }
