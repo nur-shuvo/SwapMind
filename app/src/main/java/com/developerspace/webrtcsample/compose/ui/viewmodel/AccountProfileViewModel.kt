@@ -8,6 +8,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.developerspace.webrtcsample.compose.repository.UserListRepository
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.legacy.SignInActivity
@@ -25,24 +27,29 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AccountProfileViewModel : ViewModel() {
+@HiltViewModel
+class AccountProfileViewModel @Inject constructor(private val userListRepository: UserListRepository) :
+    ViewModel() {
 
     // ui state
     private val _userProfileState = MutableStateFlow(User())
     val userProfileState: StateFlow<User> = _userProfileState.asStateFlow()
 
     init {
-        Firebase.database.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD)
+        Firebase.database.reference.child(ChatMainActivity.ROOT)
+            .child(MainActivity.ONLINE_USER_LIST_CHILD)
             .child(Firebase.auth.uid.toString()).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     snapshot.getValue<User>()?.let {
                         val newUser = User(it.userID, it.userName, it.photoUrl, it.onlineStatus)
                         _userProfileState.value = newUser
-                        AppLevelCache.userProfiles?.set(AppLevelCache.currentUserItemKey, newUser)
                     }
                 }
 
@@ -52,9 +59,13 @@ class AccountProfileViewModel : ViewModel() {
             })
     }
 
-    fun setUserProfile(user: User) {
-        _userProfileState.value = user
-        AppLevelCache.userProfiles?.set(AppLevelCache.currentUserItemKey, user)
+    fun setUserProfile(userID: String) {
+        viewModelScope.launch {
+            userListRepository.getUserByUserID(userID).collect {
+                _userProfileState.value =
+                    User(it.userId, it.userName, it.profileUrl, it.onlineStatus)
+            }
+        }
     }
 
     fun onProfileImageEditSelected(activity: Activity, uri: Uri) {
@@ -90,13 +101,18 @@ class AccountProfileViewModel : ViewModel() {
             Log.i(TAG, "updateProfile image successful")
             Toast.makeText(activity, "Profile image updated!", Toast.LENGTH_LONG).show()
 
-            val newUser = User(_userProfileState.value.userID, _userProfileState.value.userName,
-                uri.toString(), _userProfileState.value.onlineStatus)
+            val newUser = User(
+                _userProfileState.value.userID, _userProfileState.value.userName,
+                uri.toString(), _userProfileState.value.onlineStatus
+            )
             _userProfileState.value = newUser
-            AppLevelCache.userProfiles?.set(AppLevelCache.currentUserItemKey, newUser)
 
             // update photo url in user remote
-            UserUpdateRemoteUtil().modifyUserProfileUrl(Firebase.database, Firebase.auth, uri.toString())
+            UserUpdateRemoteUtil().modifyUserProfileUrl(
+                Firebase.database,
+                Firebase.auth,
+                uri.toString()
+            )
         }?.addOnFailureListener {
             Log.e(TAG, "updateProfile image error")
         }

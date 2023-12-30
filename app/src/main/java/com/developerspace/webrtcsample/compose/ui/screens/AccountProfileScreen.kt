@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.developerspace.webrtcsample.R
@@ -45,11 +46,11 @@ import com.google.firebase.ktx.Firebase
 import kotlin.math.sqrt
 
 @Composable
-fun AccountProfileScreen(userProfileID: Int, navController: NavController? = null) {
+fun AccountProfileScreen(profileUserID: String, navController: NavController? = null) {
     val activity = LocalContext.current as AppCompatActivity
-    val viewmodel: AccountProfileViewModel = viewModel()
+    val viewmodel: AccountProfileViewModel = hiltViewModel()
     val userProfile by viewmodel.userProfileState.collectAsState()
-    viewmodel.setUserProfile(AppLevelCache.userProfiles?.get(userProfileID) ?: User())
+    viewmodel.setUserProfile(profileUserID)
     val openDocument = rememberLauncherForActivityResult(contract = MyOpenDocumentContract(),
         onResult = {
             if (it != null) {
@@ -129,7 +130,7 @@ fun AccountProfileScreen(userProfileID: Int, navController: NavController? = nul
 @Composable
 fun DefaultPreviewAccountProfile() {
     MyTheme {
-        AccountProfileScreen(0)
+        AccountProfileScreen("")
     }
 }
 

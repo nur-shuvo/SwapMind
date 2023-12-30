@@ -24,19 +24,19 @@ fun TopLevelNavigation() {
         composable("active_users_screen") {
             ActiveUsersScreen(navController)
         }
-        composable("user_detail_screen/{profileID}",
-            arguments = listOf(navArgument("profileID") {
-                type = NavType.IntType
+        composable("user_detail_screen/{profileUserID}",
+            arguments = listOf(navArgument("profileUserID") {
+                type = NavType.StringType
             })
         ) { navBackStackEntry ->
-            UserDetailScreen(navBackStackEntry.arguments!!.getInt("profileID"), navController)
+            UserDetailScreen(navBackStackEntry.arguments!!.getString("profileUserID")!!, navController)
         }
-        composable("account_profile_screen/{profileID}",
-            arguments = listOf(navArgument("profileID") {
-                type = NavType.IntType
+        composable("account_profile_screen/{profileUserID}",
+            arguments = listOf(navArgument("profileUserID") {
+                type = NavType.StringType
             })
         ) { navBackStackEntry ->
-            AccountProfileScreen(navBackStackEntry.arguments!!.getInt("profileID"), navController)
+            AccountProfileScreen(navBackStackEntry.arguments!!.getString("profileUserID")!!, navController)
         }
         composable("account_profile_edit_screen/{type}",
             arguments = listOf(navArgument("type") {

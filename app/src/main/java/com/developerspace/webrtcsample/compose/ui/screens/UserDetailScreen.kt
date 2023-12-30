@@ -38,12 +38,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
-import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.compose.ui.viewmodel.UserDetailViewModel
 import com.developerspace.webrtcsample.model.User
 import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
@@ -52,11 +51,11 @@ import com.google.firebase.ktx.Firebase
 import kotlin.math.sqrt
 
 @Composable
-fun UserDetailScreen(userProfileID: Int, navController: NavController? = null) {
+fun UserDetailScreen(userProfileID: String, navController: NavController? = null) {
     val activity = LocalContext.current as AppCompatActivity
-    val viewmodel: UserDetailViewModel = viewModel()
+    val viewmodel: UserDetailViewModel = hiltViewModel()
     val userProfile by viewmodel.userProfileState.collectAsState()
-    viewmodel.setUserProfile(AppLevelCache.userProfiles?.get(userProfileID) ?: User())
+    viewmodel.setUserProfile(userProfileID)
     val openDocument = rememberLauncherForActivityResult(contract = MyOpenDocumentContract(),
         onResult = { viewmodel.onProfileImageEditSelected(activity, it!!) })
 
@@ -204,6 +203,6 @@ fun getMiddleText(type: String, user: User): String {
 @Composable
 fun DefaultPreview1() {
     MyTheme {
-        UserDetailScreen(0)
+        UserDetailScreen("")
     }
 }
