@@ -43,15 +43,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
-import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
 import com.developerspace.webrtcsample.compose.ui.viewmodel.ActiveUserViewModel
+import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.model.User
 
 @Composable
@@ -69,7 +68,7 @@ fun ActiveUsersScreen(navController: NavController? = null) {
                 itemsIndexed(userListState) { index, it ->
                     ProfileCard(it,
                         onClickCard = {
-                            navController?.navigate("user_detail_screen/${index}")
+                            navController?.navigate("user_detail_screen/${it.userID}")
                         },
                         onCLickMessage = {
                             // Go to chat screen
@@ -105,7 +104,9 @@ fun ProfileCard(user: User, onClickCard: () -> Unit, onCLickMessage: () -> Unit)
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            ProfilePicture(user)
+            ProfilePicture(user) {
+                onClickCard.invoke()
+            }
             ProfileContent(user, tStyle = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.weight(1f))
             MessageSection(onCLickMessage)

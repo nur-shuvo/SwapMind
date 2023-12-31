@@ -81,7 +81,7 @@ fun MainScreen(navController: NavController? = null) {
                     1.dp,
                     modifier = Modifier.padding(end = 16.dp)
                 ) {
-                    navController?.navigate("account_profile_screen/${AppLevelCache.currentUserItemKey}")
+                    navController?.navigate("account_profile_screen/${getCurrentUserID()}")
                 }
             }
         }
@@ -156,6 +156,8 @@ private fun getPhotoUrl(): String? {
     val user = Firebase.auth.currentUser
     return user?.photoUrl?.toString()
 }
+
+private fun getCurrentUserID() = Firebase.auth.currentUser!!.uid
 
 
 @OptIn(ExperimentalPagerApi::class)

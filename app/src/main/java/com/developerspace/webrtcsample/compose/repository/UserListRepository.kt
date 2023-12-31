@@ -39,24 +39,22 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
         }
     }
 
+     fun getUserByUserID(userID: String): Flow<UserData> {
+        return userDao.getUserProfileData(userID)
+    }
+
     suspend fun fetchAllUsersRemote() {
         db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD)
             .addValueEventListener(
                 object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         snapshot.getValue<MutableMap<String, User>>()?.let {
-                            var cnt = 0
                             val resultList: MutableList<User> = mutableListOf()
                             it.forEach { entry ->
                                 val user = entry.value
                                 resultList.add(user)
                                 saveUserInDb(user)
-                                if (entry.key == Firebase.auth.uid) {
-                                    AppLevelCache.currentUserItemKey = cnt
-                                }
-                                cnt++
                             }
-                            AppLevelCache.userProfiles = resultList
                             Log.i(TAG, "total users - ${resultList.size}")
                         }
                     }
