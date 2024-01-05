@@ -67,6 +67,7 @@ fun HomeScreen() {
     val activity = LocalContext.current as AppCompatActivity
     val viewModel: HomeScreenViewModel = hiltViewModel()
     val remoteStories = viewModel.remoteStoryList.collectAsState()
+    val userMap = viewModel.userMap.collectAsState()
 
     val openDocument = rememberLauncherForActivityResult(contract = MyOpenDocumentContract(),
         onResult = {
@@ -81,7 +82,7 @@ fun HomeScreen() {
     ) {
         item {
             DividerText(text = "Top stories")
-            ListOfStory(remoteStories.value) {
+            ListOfStory(userMap.value, remoteStories.value) {
                 // Add story clicked
                 openDocument.launch(arrayOf("image/*"))
             }
@@ -95,13 +96,17 @@ fun HomeScreen() {
 }
 
 @Composable
-fun ListOfStory(remoteStoryList: List<RemoteStory>, onClickCard: () -> Unit = {}) {
+fun ListOfStory(
+    userMap: Map<String, User>,
+    remoteStoryList: List<RemoteStory>,
+    onClickCard: () -> Unit = {}
+) {
     LazyRow {
         item {
             AddStoryCard(onClickCard)
         }
         items(remoteStoryList) {
-            StoryCard(it) {}
+            StoryCard(userMap, it) {}
         }
     }
 }
@@ -118,7 +123,9 @@ fun AddStoryCard(onClickCard: () -> Unit = {}) {
             .clickable { onClickCard.invoke() }
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().background(Color.White),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -133,7 +140,7 @@ fun AddStoryCard(onClickCard: () -> Unit = {}) {
 }
 
 @Composable
-fun StoryCard(remoteStory: RemoteStory, onClickCard: () -> Unit) {
+fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard: () -> Unit) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
@@ -144,6 +151,7 @@ fun StoryCard(remoteStory: RemoteStory, onClickCard: () -> Unit) {
             .clickable { onClickCard.invoke() }
     ) {
         Box {
+            val user = userMap[remoteStory.userID!!]!!
             Image(
                 painter = rememberImagePainter(
                     data = remoteStory.storyUrl,
@@ -156,7 +164,7 @@ fun StoryCard(remoteStory: RemoteStory, onClickCard: () -> Unit) {
                 contentDescription = ""
             )
             Text(
-                "My name",
+                text = user.userName!!,
                 fontSize = 10.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
@@ -165,7 +173,7 @@ fun StoryCard(remoteStory: RemoteStory, onClickCard: () -> Unit) {
                     .padding(bottom = 5.dp)
             )
             ProfilePicture(
-                user = User(),
+                user = user,
                 size = 20.dp,
                 modifier = Modifier.align(Alignment.TopStart)
             )
