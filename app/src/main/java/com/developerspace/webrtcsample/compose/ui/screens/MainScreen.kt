@@ -147,9 +147,14 @@ fun TabsContent(pagerState: PagerState, navController: NavController?) {
             0 -> HomeScreen()
             1 -> ActiveUsersScreen(navController)
             2 -> ChatListScreen()
-            3 -> HomeScreen()
+            3 -> EmptyScreen()
         }
     }
+}
+
+@Composable
+fun EmptyScreen() {
+    Text("Under development", textAlign = TextAlign.Center)
 }
 
 private fun getPhotoUrl(): String? {
@@ -165,6 +170,6 @@ private fun getCurrentUserID() = Firebase.auth.currentUser!!.uid
 @Composable
 fun DefaultPreview2() {
     MyTheme {
-        ProfileCard(User(), {}, {})
+        EmptyScreen()
     }
 }

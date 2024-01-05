@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -175,7 +177,8 @@ fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard:
             ProfilePicture(
                 user = user,
                 size = 20.dp,
-                modifier = Modifier.align(Alignment.TopStart)
+                modifier = Modifier.align(Alignment.TopStart),
+                borderStroke = 0.5.dp
             )
         }
     }
@@ -200,7 +203,7 @@ fun TopicCard(color: Color = Color.White) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
-            .width(100.dp)
+            .width(120.dp)
             .height(140.dp)
             .padding(2.dp)
             .border(2.dp, Color.Blue, RoundedCornerShape(15.dp)),
@@ -212,15 +215,16 @@ fun TopicCard(color: Color = Color.White) {
             Image(
                 painterResource(id = R.drawable.childhood),
                 modifier = Modifier
-                    .width(100.dp)
+                    .width(120.dp)
                     .height(100.dp),
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
             )
             Text(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(),
+                    .fillMaxSize()
+                    .wrapContentSize()
+                    .padding(bottom = 1.5.dp),
                 text = "Childhood",
                 fontSize = 15.sp,
                 maxLines = 1,
