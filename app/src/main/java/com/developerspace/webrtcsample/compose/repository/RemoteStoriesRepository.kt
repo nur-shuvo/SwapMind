@@ -30,14 +30,15 @@ class RemoteStoriesRepository @Inject constructor() {
                             var myRemoteStory: RemoteStory? = null
                             Firebase.auth.uid?.let {
                                 myRemoteStory = returnedMap[Firebase.auth.uid!!]
-                                resultListStory.add(myRemoteStory!!)
+                                myRemoteStory?.let { my -> resultListStory.add(my) }
                             }
                             returnedMap.entries.forEach {
                                 if (it.key != Firebase.auth.uid) {
-                                    resultListStory.add(myRemoteStory!!)
+                                    resultListStory.add(it.value)
                                 }
                             }
                             callback.invoke(resultListStory)
+                            resultListStory.clear()
                         }
                     }
 
