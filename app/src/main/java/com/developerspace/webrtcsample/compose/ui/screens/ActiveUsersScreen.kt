@@ -56,15 +56,6 @@ import com.developerspace.webrtcsample.model.User
 
 @Composable
 fun ActiveUsersScreen(navController: NavController? = null) {
-
-
-
-
-
-
-
-
-
     val context = LocalContext.current
     val viewModel: ActiveUserViewModel = hiltViewModel()
     val userListState by viewModel.userListState.collectAsState()

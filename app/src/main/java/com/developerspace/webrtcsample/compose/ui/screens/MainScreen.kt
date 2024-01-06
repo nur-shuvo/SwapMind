@@ -4,11 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
+import androidx.compose.material.Surface
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -147,14 +149,9 @@ fun TabsContent(pagerState: PagerState, navController: NavController?) {
             0 -> HomeScreen()
             1 -> ActiveUsersScreen(navController)
             2 -> ChatListScreen()
-            3 -> EmptyScreen()
+            3 -> LiveStreamScreen()
         }
     }
-}
-
-@Composable
-fun EmptyScreen() {
-    Text("Under development", textAlign = TextAlign.Center)
 }
 
 private fun getPhotoUrl(): String? {
@@ -170,6 +167,6 @@ private fun getCurrentUserID() = Firebase.auth.currentUser!!.uid
 @Composable
 fun DefaultPreview2() {
     MyTheme {
-        EmptyScreen()
+        LiveStreamScreen()
     }
 }
