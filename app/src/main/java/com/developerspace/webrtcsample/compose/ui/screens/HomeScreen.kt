@@ -1,6 +1,9 @@
 package com.developerspace.webrtcsample.compose.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,20 +14,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -34,19 +42,29 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
-import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
 import com.developerspace.webrtcsample.compose.ui.viewmodel.HomeScreenViewModel
+import com.developerspace.webrtcsample.model.RemoteStory
 import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
 
 @Composable
 fun HomeScreen() {
-    val viewmodel: HomeScreenViewModel = viewModel()
-    // viewmodel.countState.collectAsState()
+    val activity = LocalContext.current as AppCompatActivity
+    val viewModel: HomeScreenViewModel = hiltViewModel()
+    val remoteStories = viewModel.remoteStoryList.collectAsState()
+    val userMap = viewModel.userMap.collectAsState()
+
+    val openDocument = rememberLauncherForActivityResult(contract = MyOpenDocumentContract(),
+        onResult = {
+            if (it != null) {
+                viewModel.onAddStoryImageSelected(activity, it)
+            }
+        })
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -54,7 +72,10 @@ fun HomeScreen() {
     ) {
         item {
             DividerText(text = "Top stories")
-            ListOfStory()
+            ListOfStory(userMap.value, remoteStories.value) {
+                // Add story clicked
+                openDocument.launch(arrayOf("image/*"))
+            }
             DividerText(text = "Top topics that you want to discuss")
         }
         items(6) {
@@ -65,16 +86,51 @@ fun HomeScreen() {
 }
 
 @Composable
-fun ListOfStory() {
+fun ListOfStory(
+    userMap: Map<String, User>,
+    remoteStoryList: List<RemoteStory>,
+    onClickCard: () -> Unit = {}
+) {
     LazyRow {
-        items(10) {
-            StoryCard {}
+        item {
+            AddStoryCard(onClickCard)
+        }
+        items(remoteStoryList) {
+            StoryCard(userMap, it) {}
         }
     }
 }
 
 @Composable
-fun StoryCard(onClickCard: () -> Unit) {
+fun AddStoryCard(onClickCard: () -> Unit = {}) {
+    Card(
+        shape = RoundedCornerShape(15.dp),
+        modifier = Modifier
+            .width(130.dp)
+            .height(180.dp)
+            .padding(2.dp)
+            .border(2.dp, Color.Blue, RoundedCornerShape(15.dp))
+            .clickable { onClickCard.invoke() }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CircularButton()
+            Text(
+                text = "Add story",
+                modifier = Modifier.padding(8.dp),
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+@Composable
+fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard: () -> Unit) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
@@ -85,9 +141,10 @@ fun StoryCard(onClickCard: () -> Unit) {
             .clickable { onClickCard.invoke() }
     ) {
         Box {
+            val user = userMap[remoteStory.userID!!]!!
             Image(
                 painter = rememberImagePainter(
-                    data = "https://images.unsplash.com/photo-1485290334039-a3c69043e517?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+                    data = remoteStory.storyUrl,
                     builder = {
                         transformations(RoundedCornersTransformation())
                     },
@@ -97,7 +154,7 @@ fun StoryCard(onClickCard: () -> Unit) {
                 contentDescription = ""
             )
             Text(
-                "My name",
+                text = user.userName!!,
                 fontSize = 10.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
@@ -106,9 +163,10 @@ fun StoryCard(onClickCard: () -> Unit) {
                     .padding(bottom = 5.dp)
             )
             ProfilePicture(
-                user = User(),
+                user = user,
                 size = 20.dp,
-                modifier = Modifier.align(Alignment.TopStart)
+                modifier = Modifier.align(Alignment.TopStart),
+                borderStroke = 0.5.dp
             )
         }
     }
@@ -133,7 +191,7 @@ fun TopicCard(color: Color = Color.White) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
-            .width(100.dp)
+            .width(120.dp)
             .height(140.dp)
             .padding(2.dp)
             .border(2.dp, Color.Blue, RoundedCornerShape(15.dp)),
@@ -142,16 +200,19 @@ fun TopicCard(color: Color = Color.White) {
         )
     ) {
         Column {
-            Image(painterResource(id = R.drawable.childhood),
+            Image(
+                painterResource(id = R.drawable.childhood),
                 modifier = Modifier
-                    .width(100.dp)
+                    .width(120.dp)
                     .height(100.dp),
                 contentScale = ContentScale.Crop,
                 contentDescription = ""
             )
-            Text(modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(),
+            Text(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
+                    .padding(bottom = 1.5.dp),
                 text = "Childhood",
                 fontSize = 15.sp,
                 maxLines = 1,
@@ -163,7 +224,8 @@ fun TopicCard(color: Color = Color.White) {
 
 @Composable
 fun DividerText(text: String) {
-    Text(text,
+    Text(
+        text,
         modifier = Modifier
             .padding(bottom = 5.dp)
             .fillMaxWidth()
@@ -177,10 +239,20 @@ fun DividerText(text: String) {
     )
 }
 
+@Composable
+fun CircularButton() {
+    Image(
+        painterResource(id = R.drawable.ic_action_add_circle_outline),
+        contentScale = ContentScale.FillBounds,
+        contentDescription = "",
+        modifier = Modifier.size(30.dp)
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreviewHome() {
     MyTheme {
-        HomeScreen()
+        AddStoryCard()
     }
 }

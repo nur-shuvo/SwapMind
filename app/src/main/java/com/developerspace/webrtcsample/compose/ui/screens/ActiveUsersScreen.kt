@@ -3,6 +3,7 @@ package com.developerspace.webrtcsample.compose.ui.screens
 import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,25 +59,33 @@ fun ActiveUsersScreen(navController: NavController? = null) {
     val context = LocalContext.current
     val viewModel: ActiveUserViewModel = hiltViewModel()
     val userListState by viewModel.userListState.collectAsState()
-    Scaffold(topBar = { AppBar("Active Users") }) { innerPadding ->
-        Surface(
+
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .background(Color.White)
         ) {
-            LazyColumn {
-                itemsIndexed(userListState) { index, it ->
-                    ProfileCard(it,
-                        onClickCard = {
-                            navController?.navigate("user_detail_screen/${it.userID}")
-                        },
-                        onCLickMessage = {
-                            // Go to chat screen
-                            val intent = Intent(context, ChatMainActivity::class.java)
-                            intent.putExtra("receiverUserID", it.userID)
-                            context.startActivity(intent)
-                        })
-                }
+            item {
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(12.dp))
+            }
+            itemsIndexed(userListState) { index, it ->
+                ProfileCard(it,
+                    onClickCard = {
+                        navController?.navigate("user_detail_screen/${it.userID}")
+                    },
+                    onCLickMessage = {
+                        // Go to chat screen
+                        val intent = Intent(context, ChatMainActivity::class.java)
+                        intent.putExtra("receiverUserID", it.userID)
+                        context.startActivity(intent)
+                    })
             }
         }
     }
@@ -94,15 +103,19 @@ fun ProfileCard(user: User, onClickCard: () -> Unit, onCLickMessage: () -> Unit)
         elevation = CardDefaults.cardElevation(2.dp, 2.dp, 2.dp, 2.dp),
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
-            .padding(16.dp)
+            .background(Color.White)
+            .padding(8.dp)
             .fillMaxWidth()
-            .border(2.dp, Color.Blue, RoundedCornerShape(15.dp))
+            .border(1.dp, Color.Blue, RoundedCornerShape(15.dp))
             .clickable { onClickCard.invoke() }
+
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.Start,
         ) {
             ProfilePicture(user) {
                 onClickCard.invoke()
