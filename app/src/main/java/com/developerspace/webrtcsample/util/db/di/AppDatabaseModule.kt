@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.developerspace.webrtcsample.util.Constants.APP_DATABASE_NAME
 import com.developerspace.webrtcsample.util.db.AppDatabase
+import com.developerspace.webrtcsample.util.db.dao.RecentChatDao
 import com.developerspace.webrtcsample.util.db.dao.UserDao
 import dagger.Module
 import dagger.Provides
@@ -30,5 +31,11 @@ object AppDatabaseModule {
     @Provides
     fun provideUserDao(db: AppDatabase): UserDao {
         return db.userDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRecentChatDao(db: AppDatabase): RecentChatDao {
+        return db.recentChatDao()
     }
 }

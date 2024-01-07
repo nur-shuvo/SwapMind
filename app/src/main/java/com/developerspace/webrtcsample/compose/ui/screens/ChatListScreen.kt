@@ -26,17 +26,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightBlue
 import com.developerspace.webrtcsample.compose.ui.viewmodel.ChatListViewModel
-import com.developerspace.webrtcsample.compose.ui.viewmodel.RecentMessage
+import com.developerspace.webrtcsample.model.RecentMessage
 import com.developerspace.webrtcsample.model.User
 
 @Composable
 fun ChatListScreen() {
-    val viewModel: ChatListViewModel = viewModel()
+    val viewModel: ChatListViewModel = hiltViewModel()
     val recentMessageList by viewModel.recentMessageListState.collectAsState()
 
     LazyColumn(
@@ -70,6 +70,7 @@ fun ChatListItem(recentMessage: RecentMessage) {
         )
         Spacer(Modifier.weight(1f))
         TimeAndUnreadIcon(
+            time = recentMessage.friendlyMessage.time,
             modifier = Modifier
                 .height(80.dp)
                 .padding(end = 8.dp)
@@ -82,7 +83,7 @@ fun NameAndLastText(modifier: Modifier, recentMessage: RecentMessage) {
     Column(verticalArrangement = Arrangement.Center, modifier = modifier) {
         Text(recentMessage.toUserName)
         Text(
-            recentMessage.friendlyMessage.text!!,
+            recentMessage.friendlyMessage.text?:"",
             maxLines = 1,
             style = TextStyle(Color.Gray, fontSize = 12.sp)
         )
@@ -90,9 +91,15 @@ fun NameAndLastText(modifier: Modifier, recentMessage: RecentMessage) {
 }
 
 @Composable
-fun TimeAndUnreadIcon(modifier: Modifier) {
+fun TimeAndUnreadIcon(
+    time: String?,
+    modifier: Modifier
+) {
     Column(verticalArrangement = Arrangement.SpaceEvenly, modifier = modifier) {
-        Text("03:21", style = TextStyle(Color.Gray, fontSize = 10.sp))
+        Text(
+            time ?: "",
+            style = TextStyle(Color.Gray, fontSize = 10.sp)
+        )
         UnreadIcon()
     }
 }
