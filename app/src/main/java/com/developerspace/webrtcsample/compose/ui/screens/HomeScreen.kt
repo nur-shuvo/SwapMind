@@ -141,7 +141,7 @@ fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard:
             .clickable { onClickCard.invoke() }
     ) {
         Box {
-            val user = userMap[remoteStory.userID!!]!!
+            val user = userMap[remoteStory.userID!!] ?: User()
             Image(
                 painter = rememberImagePainter(
                     data = remoteStory.storyUrl,
