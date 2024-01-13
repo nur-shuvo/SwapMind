@@ -47,7 +47,7 @@ class FcmUtil @Inject constructor(
                             // create headers
                             val headerMap: MutableMap<String, String> = mutableMapOf()
                             headerMap["Content-Type"] = "application/json"
-                            headerMap["Authorization"] = "Bearer $receiverDeviceToken"
+                            headerMap["Authorization"] = "Bearer $token"
 
                             // create request body
                             val gson = Gson()
