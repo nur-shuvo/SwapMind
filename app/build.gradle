@@ -43,6 +43,7 @@ android {
         exclude("META-INF/atomicfu.kotlin_module")
         exclude("META-INF/kotlinx-coroutines-io.kotlin_module")
         exclude("META-INF/kotlinx-coroutines-core.kotlin_module")
+        exclude("META-INF/DEPENDENCIES")
     }
 
     compileOptions {
@@ -90,6 +91,7 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.4.0'
 
     // Firebase UI Library
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
@@ -144,4 +146,7 @@ dependencies {
 
     //okhttp
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+
+    // Google Auth Lib (https://github.com/googleapis/google-auth-library-java)
+    implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
 }

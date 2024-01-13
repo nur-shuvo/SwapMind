@@ -3,7 +3,11 @@ package com.developerspace.webrtcsample.network
 import com.developerspace.webrtcsample.network.annotation.Format
 import com.developerspace.webrtcsample.network.annotation.ResponseFormat
 import com.developerspace.webrtcsample.network.responseVO.DogResponse
+import com.squareup.okhttp.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.HeaderMap
+import retrofit2.http.POST
 import retrofit2.http.Url
 
 interface RestApiService {
@@ -12,4 +16,12 @@ interface RestApiService {
     @ResponseFormat(Format.JSON)
     @GET
     suspend fun getRandomDogImageUrl(@Url fullUrl: String): DogResponse
+
+    @ResponseFormat(Format.JSON)
+    @POST
+    suspend fun sendFcmMessageByDeviceToken(
+        @Url fullUrl: String,
+        @HeaderMap headerMap: Map<String, String>,
+        @Body body: RequestBody
+    )
 }

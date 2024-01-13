@@ -84,6 +84,7 @@ fun ActiveUsersScreen(navController: NavController? = null) {
                         // Go to chat screen
                         val intent = Intent(context, ChatMainActivity::class.java)
                         intent.putExtra("receiverUserID", it.userID)
+                        intent.putExtra("receiverUserName", it.userName)
                         context.startActivity(intent)
                     })
             }

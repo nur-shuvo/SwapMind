@@ -32,14 +32,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
-import com.developerspace.webrtcsample.compose.ui.util.AppLevelCache
 import com.developerspace.webrtcsample.compose.ui.viewmodel.AccountProfileViewModel
-import com.developerspace.webrtcsample.model.User
 import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

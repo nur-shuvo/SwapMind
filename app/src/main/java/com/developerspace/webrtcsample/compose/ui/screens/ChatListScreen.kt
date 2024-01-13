@@ -57,6 +57,7 @@ fun ChatListItem(recentMessage: RecentMessage) {
             // Go to chat screen
             val intent = Intent(context, ChatMainActivity::class.java)
             intent.putExtra("receiverUserID", recentMessage.toUserId)
+            intent.putExtra("receiverUserName", recentMessage.toUserName)
             context.startActivity(intent)
         },
         horizontalArrangement = Arrangement.Start
