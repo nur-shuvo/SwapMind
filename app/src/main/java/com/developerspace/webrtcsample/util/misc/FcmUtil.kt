@@ -50,8 +50,7 @@ class FcmUtil @Inject constructor(
                             headerMap["Authorization"] = "Bearer $token"
 
                             // create request body
-                            val gson = Gson()
-                            val json = gson.toJson(
+                            val reqBody =
                                 FcmMessageRequestBody(
                                     message = Message(
                                         token = receiverDeviceToken, notification = Notification(
@@ -60,14 +59,11 @@ class FcmUtil @Inject constructor(
                                         )
                                     )
                                 )
-                            )
-                            val requestBody =
-                                RequestBody.create(MediaType.parse("application/json"), json)
 
                             apiService.sendFcmMessageByDeviceToken( // talkbuddy-33d19 - (Firebase project ID)
                                 "https://fcm.googleapis.com/v1/projects/talkbuddy-33d19/messages:send",
                                 headerMap,
-                                requestBody
+                                reqBody
                             )
                         }
                     }
