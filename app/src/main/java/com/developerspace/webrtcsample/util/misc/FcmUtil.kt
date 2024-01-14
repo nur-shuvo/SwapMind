@@ -32,7 +32,12 @@ class FcmUtil @Inject constructor(
 
     private val workerScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    fun sendPushNotificationToReceiver(receiverUserID: String, receiverUserName: String) {
+    fun sendPushNotificationToReceiver(
+        receiverUserID: String,
+        receiverUserName: String,
+        messageText: String = "",
+        isImageType: Boolean = false
+    ) {
         workerScope.launch(Dispatchers.IO) {
             val token = FcmV1ApiToken.getAccessToken(context)
             Log.i(TAG, "access-token $token")
@@ -54,7 +59,7 @@ class FcmUtil @Inject constructor(
                                 FcmMessageRequestBody(
                                     message = Message(
                                         token = receiverDeviceToken, notification = Notification(
-                                            body = "Sent a new message",
+                                            body = if (isImageType) "Sent a photo" else messageText,
                                             title = receiverUserName
                                         )
                                     )

@@ -95,12 +95,12 @@ class ChatMainActivity : AppCompatActivity() {
                 null,
                 time = System.currentTimeMillis().toString()
             )
+
             // message
             db.reference.child(ROOT).child(MESSAGES_CHILD)
                 .child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))
                 .push()
                 .setValue(friendlyMessage)
-            messageEditText?.setText("")
 
             // recent messages
             db.reference.child(ROOT).child(MESSAGES_CHILD).child(RECENT_MESSAGES_CHILD)
@@ -113,8 +113,13 @@ class ChatMainActivity : AppCompatActivity() {
                 .setValue(friendlyMessage)
 
             messageEditText?.setText("")
-            // notification send
-            fcmUtil.sendPushNotificationToReceiver(receiverUserID, receiverUserName)
+
+            // notification send to device
+            fcmUtil.sendPushNotificationToReceiver(
+                receiverUserID,
+                receiverUserName,
+                friendlyMessage.text.toString()
+            )
         }
 
         addMessageImageView?.setOnClickListener {

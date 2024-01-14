@@ -8,9 +8,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MyFirebaseMessagingService @Inject constructor(
-    private val appPref: AppPref
-): FirebaseMessagingService() {
+class MyFirebaseMessagingService : FirebaseMessagingService() {
+
+    @Inject
+    lateinit var appPref: AppPref
     override fun onNewToken(token: String) {
         super.onNewToken(token)
 
