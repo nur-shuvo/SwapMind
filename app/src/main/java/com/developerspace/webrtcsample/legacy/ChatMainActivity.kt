@@ -47,9 +47,6 @@ class ChatMainActivity : AppCompatActivity() {
     private var addMessageImageView: ImageView? = null
 
     @Inject
-    lateinit var apiService: RestApiService
-
-    @Inject
     lateinit var fcmUtil: FcmUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {

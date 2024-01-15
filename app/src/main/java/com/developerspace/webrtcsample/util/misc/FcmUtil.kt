@@ -12,9 +12,6 @@ import com.developerspace.webrtcsample.network.requestVO.Notification
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
-import com.squareup.okhttp.MediaType
-import com.squareup.okhttp.RequestBody
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +25,7 @@ class FcmUtil @Inject constructor(
 ) {
     companion object {
         const val TAG = "FcmUtil"
+        const val SWAP_MIND_FIREBASE_PROJECT_ID = "talkbuddy-33d19"
     }
 
     private val workerScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -65,8 +63,8 @@ class FcmUtil @Inject constructor(
                                     )
                                 )
 
-                            apiService.sendFcmMessageByDeviceToken( // talkbuddy-33d19 - (Firebase project ID)
-                                "https://fcm.googleapis.com/v1/projects/talkbuddy-33d19/messages:send",
+                            apiService.sendFcmMessageByDeviceToken(
+                                "https://fcm.googleapis.com/v1/projects/$SWAP_MIND_FIREBASE_PROJECT_ID/messages:send",
                                 headerMap,
                                 reqBody
                             )

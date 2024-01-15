@@ -15,7 +15,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
 
-        Log.i("Shuvo", "onNewToken arrived $token")
+        Log.i(TAG, "onNewToken arrived $token")
         // Store token in SharedPreference
         appPref.setFcmDeviceToken(token)
     }
@@ -25,6 +25,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     companion object {
-        private const val TAG = "MyFirebaseMessaging"
+        private const val TAG = "MyFirebaseMessagingService"
     }
 }
