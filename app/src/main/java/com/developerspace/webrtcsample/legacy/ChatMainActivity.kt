@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.model.FriendlyMessage
+import com.developerspace.webrtcsample.network.RestApiService
+import com.developerspace.webrtcsample.util.misc.FcmUtil
 import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +26,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChatMainActivity : AppCompatActivity() {
@@ -32,6 +35,7 @@ class ChatMainActivity : AppCompatActivity() {
     private lateinit var manager: LinearLayoutManager
     private lateinit var adapter: FriendlyMessageAdapter
     private var receiverUserID = ""
+    private var receiverUserName = ""
     private val openDocument = registerForActivityResult(MyOpenDocumentContract()) { uri ->
         uri?.let { onImageSelected(it) }
     }
@@ -41,6 +45,9 @@ class ChatMainActivity : AppCompatActivity() {
     private var sendButton: ImageView? = null
     private var messageEditText: EditText? = null
     private var addMessageImageView: ImageView? = null
+
+    @Inject
+    lateinit var fcmUtil: FcmUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +62,10 @@ class ChatMainActivity : AppCompatActivity() {
         auth = Firebase.auth
         db = Firebase.database
         receiverUserID = intent.getStringExtra("receiverUserID").toString()
+        receiverUserName = intent.getStringExtra("receiverUserName").toString()
 
-        val messagesRef = db.reference.child(ROOT).child(MESSAGES_CHILD).child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))
+        val messagesRef = db.reference.child(ROOT).child(MESSAGES_CHILD)
+            .child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))
 
         // The FirebaseRecyclerAdapter class and options come from the FirebaseUI library
         // See: https://github.com/firebase/FirebaseUI-Android
@@ -68,14 +77,14 @@ class ChatMainActivity : AppCompatActivity() {
         manager = WrapContentLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         manager.stackFromEnd = true
         messageRecyclerView?.layoutManager = manager
-         messageRecyclerView?.adapter = adapter
+        messageRecyclerView?.adapter = adapter
 
-//         Scroll down when a new message arrives, See MyScrollToBottomObserver for details
+        // Scroll down when a new message arrives, See MyScrollToBottomObserver for details
         adapter.registerAdapterDataObserver(
             MyScrollToBottomObserver(messageRecyclerView!!, adapter, manager)
         )
 
-       sendButton?.setOnClickListener {
+        sendButton?.setOnClickListener {
             val friendlyMessage = FriendlyMessage(
                 messageEditText!!.text.toString(),
                 getUserName(),
@@ -83,24 +92,31 @@ class ChatMainActivity : AppCompatActivity() {
                 null,
                 time = System.currentTimeMillis().toString()
             )
-           // message
-           db.reference.child(ROOT).child(MESSAGES_CHILD)
-               .child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))
-               .push()
-               .setValue(friendlyMessage)
-           messageEditText?.setText("")
 
-           // recent messages
-           db.reference.child(ROOT).child(MESSAGES_CHILD).child(RECENT_MESSAGES_CHILD)
-               .child(auth.uid.toString())
-               .child(receiverUserID)
-               .setValue(friendlyMessage)
-           db.reference.child(ROOT).child(MESSAGES_CHILD).child(RECENT_MESSAGES_CHILD)
-               .child(receiverUserID)
-               .child(auth.uid.toString())
-               .setValue(friendlyMessage)
+            // message
+            db.reference.child(ROOT).child(MESSAGES_CHILD)
+                .child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))
+                .push()
+                .setValue(friendlyMessage)
 
-           messageEditText?.setText("")
+            // recent messages
+            db.reference.child(ROOT).child(MESSAGES_CHILD).child(RECENT_MESSAGES_CHILD)
+                .child(auth.uid.toString())
+                .child(receiverUserID)
+                .setValue(friendlyMessage)
+            db.reference.child(ROOT).child(MESSAGES_CHILD).child(RECENT_MESSAGES_CHILD)
+                .child(receiverUserID)
+                .child(auth.uid.toString())
+                .setValue(friendlyMessage)
+
+            messageEditText?.setText("")
+
+            // notification send to device
+            fcmUtil.sendPushNotificationToReceiver(
+                receiverUserID,
+                receiverUserName,
+                friendlyMessage.text.toString()
+            )
         }
 
         addMessageImageView?.setOnClickListener {
