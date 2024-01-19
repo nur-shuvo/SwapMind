@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -47,6 +49,7 @@ fun AccountProfileScreen(profileUserID: String, navController: NavController? = 
     val activity = LocalContext.current as AppCompatActivity
     val viewmodel: AccountProfileViewModel = hiltViewModel()
     val userProfile by viewmodel.userProfileState.collectAsState()
+    val isProgressShow by viewmodel.isProgressLoading.collectAsState()
     viewmodel.setUserProfile(profileUserID)
     val openDocument = rememberLauncherForActivityResult(contract = MyOpenDocumentContract(),
         onResult = {
@@ -64,7 +67,6 @@ fun AccountProfileScreen(profileUserID: String, navController: NavController? = 
     val offset =
         (imagePickerIconSize / 2) + imagePickerIconPadding + imagePickerIconBorder + (profileImageSize / 12)
     val innerBoxSize = (imageBoxSize / sqrt(2.00)) + offset
-
     Scaffold(topBar = {
         AppBarWithBack(userProfile.userName!!) {
             navController?.navigateUp()
@@ -75,6 +77,12 @@ fun AccountProfileScreen(profileUserID: String, navController: NavController? = 
                 .fillMaxSize()
                 .padding(padding),
         ) {
+            if (isProgressShow) {
+                CircularProgressIndicator(modifier = Modifier
+                    .wrapContentSize()
+                    .size(80.dp)
+                )
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -95,8 +103,15 @@ fun AccountProfileScreen(profileUserID: String, navController: NavController? = 
                                     .clickable {
                                         openDocument.launch(arrayOf("image/*"))
                                     }
-                                    .background(color = lightGreen, shape = RoundedCornerShape(12.dp))
-                                    .border(imagePickerIconBorder.dp, Color.Black, RoundedCornerShape(12.dp))
+                                    .background(
+                                        color = lightGreen,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .border(
+                                        imagePickerIconBorder.dp,
+                                        Color.Black,
+                                        RoundedCornerShape(12.dp)
+                                    )
                                     .padding(imagePickerIconPadding.dp)
                                     .size(imagePickerIconSize.dp)
                                     .align(Alignment.BottomEnd)
@@ -127,7 +142,16 @@ fun AccountProfileScreen(profileUserID: String, navController: NavController? = 
 @Composable
 fun DefaultPreviewAccountProfile() {
     MyTheme {
-        AccountProfileScreen("")
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .size(80.dp)
+            )
+        }
     }
 }
 

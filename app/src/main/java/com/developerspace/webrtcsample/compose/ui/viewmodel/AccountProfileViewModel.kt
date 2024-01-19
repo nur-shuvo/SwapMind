@@ -41,6 +41,9 @@ class AccountProfileViewModel @Inject constructor(private val userListRepository
     private val _userProfileState = MutableStateFlow(User())
     val userProfileState: StateFlow<User> = _userProfileState.asStateFlow()
 
+    private val _isProgressLoading = MutableStateFlow(false)
+    val isProgressLoading: StateFlow<Boolean> = _isProgressLoading.asStateFlow()
+
     init {
         Firebase.database.reference.child(ChatMainActivity.ROOT)
             .child(MainActivity.ONLINE_USER_LIST_CHILD)
@@ -68,6 +71,7 @@ class AccountProfileViewModel @Inject constructor(private val userListRepository
     }
 
     fun onProfileImageEditSelected(activity: Activity, uri: Uri) {
+        _isProgressLoading.value = true
         val storageReference = Firebase.storage
             .getReference(Firebase.auth.uid!!)
             .child("profile_pic")
@@ -99,6 +103,7 @@ class AccountProfileViewModel @Inject constructor(private val userListRepository
         )?.addOnSuccessListener {
             Log.i(TAG, "updateProfile image successful")
             Toast.makeText(activity, "Profile image updated!", Toast.LENGTH_LONG).show()
+            _isProgressLoading.value = false
 
             val newUser = User(
                 _userProfileState.value.userID, _userProfileState.value.userName,

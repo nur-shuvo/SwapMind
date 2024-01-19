@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -47,6 +48,8 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
+import com.developerspace.webrtcsample.compose.ui.util.Topic
+import com.developerspace.webrtcsample.compose.ui.util.staticTopicList
 import com.developerspace.webrtcsample.compose.ui.viewmodel.HomeScreenViewModel
 import com.developerspace.webrtcsample.model.RemoteStory
 import com.developerspace.webrtcsample.model.User
@@ -78,8 +81,9 @@ fun HomeScreen() {
             }
             DividerText(text = "Top topics that you want to discuss")
         }
-        items(6) {
-            CategoryCardTuple()
+        var index = 0
+        items(staticTopicList.size / 3) {
+            CategoryCardTuple(index++, index++, index++)
             Divider(modifier = Modifier.fillMaxWidth(), 2.dp)
         }
     }
@@ -173,21 +177,21 @@ fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard:
 }
 
 @Composable
-fun CategoryCardTuple() {
+fun CategoryCardTuple(first: Int, second: Int, third: Int) {
     Row(
         Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        TopicCard()
-        TopicCard()
-        TopicCard()
+        TopicCard(topic = staticTopicList[first])
+        TopicCard(topic = staticTopicList[second])
+        TopicCard(topic = staticTopicList[third])
     }
 }
 
 @Composable
-fun TopicCard(color: Color = Color.White) {
+fun TopicCard(color: Color = Color.White, topic: Topic = Topic()) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
@@ -201,7 +205,7 @@ fun TopicCard(color: Color = Color.White) {
     ) {
         Column {
             Image(
-                painterResource(id = R.drawable.childhood),
+                painterResource(id = topic.drawableID),
                 modifier = Modifier
                     .width(120.dp)
                     .height(100.dp),
@@ -213,7 +217,7 @@ fun TopicCard(color: Color = Color.White) {
                     .fillMaxSize()
                     .wrapContentSize()
                     .padding(bottom = 1.5.dp),
-                text = "Childhood",
+                text = topic.topicTitle,
                 fontSize = 15.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -253,6 +257,6 @@ fun CircularButton() {
 @Composable
 fun DefaultPreviewHome() {
     MyTheme {
-        AddStoryCard()
+        CategoryCardTuple(0,0,0)
     }
 }
