@@ -44,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.developerspace.webrtcsample.R
@@ -54,9 +55,10 @@ import com.developerspace.webrtcsample.compose.ui.viewmodel.HomeScreenViewModel
 import com.developerspace.webrtcsample.model.RemoteStory
 import com.developerspace.webrtcsample.model.User
 import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
+import com.google.gson.Gson
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController? = null) {
     val activity = LocalContext.current as AppCompatActivity
     val viewModel: HomeScreenViewModel = hiltViewModel()
     val remoteStories = viewModel.remoteStoryList.collectAsState()
@@ -83,7 +85,7 @@ fun HomeScreen() {
         }
         var index = 0
         items(staticTopicList.size / 3) {
-            CategoryCardTuple(index++, index++, index++)
+            CategoryCardTuple(index++, index++, index++, navController)
             Divider(modifier = Modifier.fillMaxWidth(), 2.dp)
         }
     }
@@ -177,28 +179,41 @@ fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard:
 }
 
 @Composable
-fun CategoryCardTuple(first: Int, second: Int, third: Int) {
+fun CategoryCardTuple(first: Int, second: Int, third: Int, navController: NavController?) {
     Row(
         Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        TopicCard(topic = staticTopicList[first])
-        TopicCard(topic = staticTopicList[second])
-        TopicCard(topic = staticTopicList[third])
+        val gson = Gson()
+        TopicCard(topic = staticTopicList[first]) {
+            val json = gson.toJson(staticTopicList[first])
+            navController?.navigate("topic_screen/${json}")
+        }
+        TopicCard(topic = staticTopicList[second]) {
+            val json = gson.toJson(staticTopicList[second])
+            navController?.navigate("topic_screen/${json}")
+        }
+        TopicCard(topic = staticTopicList[third]) {
+            val json = gson.toJson(staticTopicList[third])
+            navController?.navigate("topic_screen/${json}")
+        }
     }
 }
 
 @Composable
-fun TopicCard(color: Color = Color.White, topic: Topic = Topic()) {
+fun TopicCard(color: Color = Color.White, topic: Topic = Topic(), onClickCard: () -> Unit) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
             .width(120.dp)
             .height(140.dp)
             .padding(2.dp)
-            .border(2.dp, Color.Blue, RoundedCornerShape(15.dp)),
+            .border(2.dp, Color.Blue, RoundedCornerShape(15.dp))
+            .clickable {
+                onClickCard.invoke()
+            },
         colors = CardDefaults.cardColors(
             containerColor = color,
         )
@@ -257,6 +272,6 @@ fun CircularButton() {
 @Composable
 fun DefaultPreviewHome() {
     MyTheme {
-        CategoryCardTuple(0,0,0)
+        // CategoryCardTuple(0,0,0)
     }
 }

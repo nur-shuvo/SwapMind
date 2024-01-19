@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -132,6 +133,11 @@ class AccountProfileViewModel @Inject constructor(private val userListRepository
         context.startActivity(Intent(context, SignInActivity::class.java))
         // finishing compose activity
         (context as AppCompatActivity).finish()
+    }
+
+    override fun onCleared() {
+        Timber.i("cleared")
+        super.onCleared()
     }
 
     companion object {

@@ -1,6 +1,8 @@
 package com.developerspace.webrtcsample.compose.repository
 
 import android.util.Log
+import androidx.core.util.Consumer
+import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.model.User
@@ -19,6 +21,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserListRepository @Inject constructor(private val userDao: UserDao) {
@@ -37,11 +40,11 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
         }
     }
 
-     fun getUserByUserID(userID: String): Flow<UserData> {
+    fun getUserByUserID(userID: String): Flow<UserData> {
         return userDao.getUserProfileData(userID)
     }
 
-    suspend fun fetchAllUsersRemote() {
+    fun fetchAllUsersRemote() {
         db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD)
             .addValueEventListener(
                 object : ValueEventListener {
@@ -54,6 +57,31 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
                                 saveUserInDb(user)
                             }
                             Log.i(TAG, "total users - ${resultList.size}")
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        // TODO("Not yet implemented")
+                    }
+                }
+            )
+    }
+
+    fun fetchAllActiveUsersByTopic(topic: Topic, consumer: Consumer<List<User>>) {
+        // TODO db path will change based on topic
+        db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD)
+            .addValueEventListener(
+                object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        snapshot.getValue<MutableMap<String, User>>()?.let {
+                            val resultList: MutableList<User> = mutableListOf()
+                            it.forEach { entry ->
+                                val user = entry.value
+                                resultList.add(user)
+                                saveUserInDb(user)
+                            }
+                            Timber.i("total users - ${resultList.size}")
+                            consumer.accept(resultList)
                         }
                     }
 
