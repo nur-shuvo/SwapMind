@@ -1,11 +1,18 @@
 package com.developerspace.webrtcsample.compose.ui.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.developerspace.webrtcsample.compose.repository.UserListRepository
 import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.worker.UpdateTopicOnlineUserWorker
+import com.developerspace.webrtcsample.worker.UpdateTopicOnlineUserWorker.Companion.ADD
+import com.developerspace.webrtcsample.worker.UpdateTopicOnlineUserWorker.Companion.DELETE
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TopicScreenViewModel @Inject constructor(
+    @ApplicationContext private val appContext: Context,
     private val userListRepository: UserListRepository
 ) : ViewModel() {
 
@@ -28,6 +36,10 @@ class TopicScreenViewModel @Inject constructor(
     val userListState: StateFlow<List<User>> = _userListState.asStateFlow()
 
     private var isStartedActiveUserGenerationTask = false
+    private val currentUserID = Firebase.auth.uid.toString()
+    private val currentPhotoUrl = Firebase.auth.currentUser?.photoUrl?.toString()
+    private val currentUserName = Firebase.auth.currentUser?.displayName
+    private var currentTopic: Topic? = null
 
     init {
         // Shuffle the list at every 5 seconds
@@ -55,6 +67,7 @@ class TopicScreenViewModel @Inject constructor(
      * if data at remote changes
      */
     fun startGeneratingActiveUserIfNeeded(topic: Topic) {
+        currentTopic = topic
         if (isStartedActiveUserGenerationTask.not()) {
             isStartedActiveUserGenerationTask = true
             viewModelScope.launch(Dispatchers.IO) {
@@ -62,10 +75,28 @@ class TopicScreenViewModel @Inject constructor(
                     _userListState.value = it.toMutableList()
                 }
             }
+            // Also request to add currentUserID to active-list on the remote
+            UpdateTopicOnlineUserWorker.enqueueWork(
+                appContext,
+                ADD,
+                User(currentUserID, currentUserName, currentPhotoUrl, true),
+                topic.topicTitle
+            )
         }
     }
 
+    override fun onCleared() {
+        // Also request to delete currentUserID to active-list on the remote
+        UpdateTopicOnlineUserWorker.enqueueWork(
+            appContext,
+            DELETE,
+            User(currentUserID, currentUserName, currentPhotoUrl, false),
+            currentTopic?.topicTitle ?: ""
+        )
+        super.onCleared()
+    }
+
     companion object {
-        const val INTERVAL = 5*1000L
+        const val INTERVAL = 5 * 1000L
     }
 }
