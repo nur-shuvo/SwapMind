@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.model.FriendlyMessage
-import com.developerspace.webrtcsample.network.RestApiService
 import com.developerspace.webrtcsample.util.misc.FcmUtil
 import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
 import com.firebase.ui.database.FirebaseRecyclerOptions
@@ -45,6 +44,7 @@ class ChatMainActivity : AppCompatActivity() {
     private var sendButton: ImageView? = null
     private var messageEditText: EditText? = null
     private var addMessageImageView: ImageView? = null
+    private var toolbar: androidx.appcompat.widget.Toolbar? = null
 
     @Inject
     lateinit var fcmUtil: FcmUtil
@@ -58,11 +58,15 @@ class ChatMainActivity : AppCompatActivity() {
         sendButton = findViewById(R.id.sendButton)
         messageEditText = findViewById(R.id.messageEditText)
         addMessageImageView = findViewById(R.id.addMessageImageView)
+        toolbar = findViewById(R.id.my_custom_toolbar)
 
         auth = Firebase.auth
         db = Firebase.database
         receiverUserID = intent.getStringExtra("receiverUserID").toString()
         receiverUserName = intent.getStringExtra("receiverUserName").toString()
+
+        toolbar?.title = receiverUserName
+        setSupportActionBar(toolbar)
 
         val messagesRef = db.reference.child(ROOT).child(MESSAGES_CHILD)
             .child(getUniqueIDForMessage(auth.uid.toString(), receiverUserID))

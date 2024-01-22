@@ -158,8 +158,7 @@ fun ProfilePicture(
         ),
         modifier = Modifier
             .padding(16.dp)
-            .clickable { onClicked.invoke() }
-            .then(modifier),
+            .then(modifier)
     ) {
         Image(
             painter = rememberImagePainter(
@@ -170,7 +169,7 @@ fun ProfilePicture(
                     transformations(CircleCropTransformation())
                 },
             ),
-            modifier = Modifier.size(size),
+            modifier = Modifier.size(size).clickable { onClicked.invoke() },
             contentScale = ContentScale.Crop,
             contentDescription = ""
         )
