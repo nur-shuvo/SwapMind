@@ -7,6 +7,12 @@ plugins {
 }
 apply plugin: 'com.google.gms.google-services'
 
+configurations {
+    all {
+        exclude module: 'httpclient'
+    }
+}
+
 android {
     compileSdk 34
     buildToolsVersion = "34.0.0"
@@ -22,6 +28,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -33,6 +43,7 @@ android {
     buildFeatures {
         compose true
         viewBinding true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4"
@@ -62,7 +73,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -145,8 +155,14 @@ dependencies {
     kapt "com.tickaroo.tikxml:auto-value-tikxml:$tikXml_version"
 
     //okhttp
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
 
     // Google Auth Lib (https://github.com/googleapis/google-auth-library-java)
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
+
+    // Logger
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    // worker
+    implementation "androidx.work:work-runtime-ktx:2.9.0"
 }

@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -43,17 +44,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
+import com.developerspace.webrtcsample.compose.ui.util.Topic
+import com.developerspace.webrtcsample.compose.ui.util.staticTopicList
 import com.developerspace.webrtcsample.compose.ui.viewmodel.HomeScreenViewModel
 import com.developerspace.webrtcsample.model.RemoteStory
 import com.developerspace.webrtcsample.model.User
 import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
+import com.google.gson.Gson
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController? = null) {
     val activity = LocalContext.current as AppCompatActivity
     val viewModel: HomeScreenViewModel = hiltViewModel()
     val remoteStories = viewModel.remoteStoryList.collectAsState()
@@ -78,8 +83,9 @@ fun HomeScreen() {
             }
             DividerText(text = "Top topics that you want to discuss")
         }
-        items(6) {
-            CategoryCardTuple()
+        var index = 0
+        items(staticTopicList.size / 3) {
+            CategoryCardTuple(index++, index++, index++, navController)
             Divider(modifier = Modifier.fillMaxWidth(), 2.dp)
         }
     }
@@ -173,35 +179,48 @@ fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard:
 }
 
 @Composable
-fun CategoryCardTuple() {
+fun CategoryCardTuple(first: Int, second: Int, third: Int, navController: NavController?) {
     Row(
         Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        TopicCard()
-        TopicCard()
-        TopicCard()
+        val gson = Gson()
+        TopicCard(topic = staticTopicList[first]) {
+            val json = gson.toJson(staticTopicList[first])
+            navController?.navigate("topic_screen/${json}")
+        }
+        TopicCard(topic = staticTopicList[second]) {
+            val json = gson.toJson(staticTopicList[second])
+            navController?.navigate("topic_screen/${json}")
+        }
+        TopicCard(topic = staticTopicList[third]) {
+            val json = gson.toJson(staticTopicList[third])
+            navController?.navigate("topic_screen/${json}")
+        }
     }
 }
 
 @Composable
-fun TopicCard(color: Color = Color.White) {
+fun TopicCard(color: Color = Color.White, topic: Topic = Topic(), onClickCard: () -> Unit) {
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
             .width(120.dp)
             .height(140.dp)
             .padding(2.dp)
-            .border(2.dp, Color.Blue, RoundedCornerShape(15.dp)),
+            .border(2.dp, Color.Blue, RoundedCornerShape(15.dp))
+            .clickable {
+                onClickCard.invoke()
+            },
         colors = CardDefaults.cardColors(
             containerColor = color,
         )
     ) {
         Column {
             Image(
-                painterResource(id = R.drawable.childhood),
+                painterResource(id = topic.drawableID),
                 modifier = Modifier
                     .width(120.dp)
                     .height(100.dp),
@@ -213,7 +232,7 @@ fun TopicCard(color: Color = Color.White) {
                     .fillMaxSize()
                     .wrapContentSize()
                     .padding(bottom = 1.5.dp),
-                text = "Childhood",
+                text = topic.topicTitle,
                 fontSize = 15.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -253,6 +272,6 @@ fun CircularButton() {
 @Composable
 fun DefaultPreviewHome() {
     MyTheme {
-        AddStoryCard()
+        // CategoryCardTuple(0,0,0)
     }
 }

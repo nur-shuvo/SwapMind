@@ -140,7 +140,7 @@ fun Tabs(pagerState: PagerState) {
 fun TabsContent(pagerState: PagerState, navController: NavController?) {
     HorizontalPager(state = pagerState) { page ->
         when (page) {
-            0 -> HomeScreen()
+            0 -> HomeScreen(navController)
             1 -> ActiveUsersScreen(navController)
             2 -> ChatListScreen()
             3 -> LiveStreamScreen()

@@ -10,8 +10,11 @@ import com.developerspace.webrtcsample.compose.ui.screens.AccountProfileEditScre
 import com.developerspace.webrtcsample.compose.ui.screens.AccountProfileScreen
 import com.developerspace.webrtcsample.compose.ui.screens.ActiveUsersScreen
 import com.developerspace.webrtcsample.compose.ui.screens.MainScreen
+import com.developerspace.webrtcsample.compose.ui.screens.TopicScreen
 import com.developerspace.webrtcsample.compose.ui.screens.UserDetailScreen
+import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.gson.Gson
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -44,6 +47,15 @@ fun TopLevelNavigation() {
             })
         ) { navBackStackEntry ->
             AccountProfileEditScreen(navBackStackEntry.arguments!!.getString("type") ?: "", navController)
+        }
+        composable("topic_screen/{topicJsonString}",
+            arguments = listOf(navArgument("topicJsonString") {
+                type = NavType.StringType
+            })
+        ) { navBackStackEntry ->
+            val jsonArg = navBackStackEntry.arguments!!.getString("topicJsonString")
+            val topic = Gson().fromJson(jsonArg, Topic::class.java)
+            TopicScreen(topic, navController)
         }
     }
 }
