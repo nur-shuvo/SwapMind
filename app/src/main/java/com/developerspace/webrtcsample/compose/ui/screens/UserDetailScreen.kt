@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -99,8 +99,15 @@ fun UserDetailScreen(userProfileID: String, navController: NavController? = null
                                     .clickable {
                                         openDocument.launch(arrayOf("image/*"))
                                     }
-                                    .background(color = lightGreen, shape = RoundedCornerShape(12.dp))
-                                    .border(imagePickerIconBorder.dp, Color.Black, RoundedCornerShape(12.dp))
+                                    .background(
+                                        color = lightGreen,
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .border(
+                                        imagePickerIconBorder.dp,
+                                        Color.Black,
+                                        RoundedCornerShape(12.dp)
+                                    )
                                     .padding(imagePickerIconPadding.dp)
                                     .size(imagePickerIconSize.dp)
                                     .align(Alignment.BottomEnd)
@@ -120,17 +127,19 @@ fun UserDetailScreen(userProfileID: String, navController: NavController? = null
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBarWithBack(text: String, onBackPressed: () -> Unit) {
-    TopAppBar(title = { Text(text) }, navigationIcon = {
-        Icon(
-            Icons.Default.ArrowBack,
-            contentDescription = "",
-            modifier = Modifier
-                .padding(horizontal = 12.dp)
-                .clickable {
-                    onBackPressed.invoke()
-                },
-        )
-    })
+    TopAppBar(backgroundColor = Color.White,
+        title = { Text(text) },
+        navigationIcon = {
+            Icon(
+                Icons.Default.ArrowBack,
+                contentDescription = "",
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .clickable {
+                        onBackPressed.invoke()
+                    },
+            )
+        })
 }
 
 @Composable
@@ -151,9 +160,12 @@ fun ProfileSection(type: String, isEditable: Boolean, user: User, onClicked: () 
                 .padding(20.dp)
         )
         if (!type.contains("Phone")) {
-            Image(painter = painterResource(id = R.drawable.edit_24px), contentDescription = "", modifier = Modifier.clickable {
-                onClicked.invoke()
-            })
+            Image(
+                painter = painterResource(id = R.drawable.edit_24px),
+                contentDescription = "",
+                modifier = Modifier.clickable {
+                    onClicked.invoke()
+                })
         } else {
             Spacer(
                 modifier = Modifier

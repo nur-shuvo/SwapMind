@@ -67,24 +67,27 @@ fun AccountProfileScreen(profileUserID: String, navController: NavController? = 
     val offset =
         (imagePickerIconSize / 2) + imagePickerIconPadding + imagePickerIconBorder + (profileImageSize / 12)
     val innerBoxSize = (imageBoxSize / sqrt(2.00)) + offset
-    Scaffold(topBar = {
-        AppBarWithBack(userProfile.userName!!) {
-            navController?.navigateUp()
-        }
-    }) { padding ->
+    Scaffold(Modifier.background(Color.White),
+        topBar = {
+            AppBarWithBack(userProfile.userName!!) {
+                navController?.navigateUp()
+            }
+        }) { padding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
+                .padding(padding)
+                .background(Color.White),
         ) {
             if (isProgressShow) {
-                CircularProgressIndicator(modifier = Modifier
-                    .wrapContentSize()
-                    .size(80.dp)
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .size(80.dp)
                 )
             }
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(Color.White),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -145,6 +148,7 @@ fun DefaultPreviewAccountProfile() {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color.White)
         ) {
             CircularProgressIndicator(
                 modifier = Modifier
