@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample.compose.repository
+package com.developerspace.webrtcsample.compose.data.repository
 
 import android.util.Log
 import com.developerspace.webrtcsample.legacy.ChatMainActivity

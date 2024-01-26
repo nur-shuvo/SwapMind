@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample.compose.repository
+package com.developerspace.webrtcsample.compose.data.repository
 
 import android.util.Log
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
@@ -6,11 +6,11 @@ import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.model.FriendlyMessage
 import com.developerspace.webrtcsample.model.RecentMessage
 import com.developerspace.webrtcsample.model.User
-import com.developerspace.webrtcsample.util.db.dao.RecentChatDao
-import com.developerspace.webrtcsample.util.db.dao.UserDao
-import com.developerspace.webrtcsample.util.db.entity.MessageData
-import com.developerspace.webrtcsample.util.db.entity.RecentChatData
-import com.developerspace.webrtcsample.util.db.entity.UserData
+import com.developerspace.webrtcsample.compose.data.db.dao.RecentChatDao
+import com.developerspace.webrtcsample.compose.data.db.dao.UserDao
+import com.developerspace.webrtcsample.compose.data.db.entity.MessageData
+import com.developerspace.webrtcsample.compose.data.db.entity.RecentChatData
+import com.developerspace.webrtcsample.compose.data.db.entity.UserData
 import com.developerspace.webrtcsample.util.misc.TimeUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth

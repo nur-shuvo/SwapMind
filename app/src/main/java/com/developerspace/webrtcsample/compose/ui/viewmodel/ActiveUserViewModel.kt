@@ -3,7 +3,7 @@ package com.developerspace.webrtcsample.compose.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.developerspace.webrtcsample.compose.repository.UserListRepository
+import com.developerspace.webrtcsample.compose.data.repository.UserListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted

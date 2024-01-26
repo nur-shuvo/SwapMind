@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample.util.db.entity
+package com.developerspace.webrtcsample.compose.data.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

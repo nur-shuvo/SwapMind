@@ -1,11 +1,11 @@
-package com.developerspace.webrtcsample.util.db.di
+package com.developerspace.webrtcsample.compose.data.db.di
 
 import android.content.Context
 import androidx.room.Room
 import com.developerspace.webrtcsample.util.Constants.APP_DATABASE_NAME
-import com.developerspace.webrtcsample.util.db.AppDatabase
-import com.developerspace.webrtcsample.util.db.dao.RecentChatDao
-import com.developerspace.webrtcsample.util.db.dao.UserDao
+import com.developerspace.webrtcsample.compose.data.db.AppDatabase
+import com.developerspace.webrtcsample.compose.data.db.dao.RecentChatDao
+import com.developerspace.webrtcsample.compose.data.db.dao.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -3,7 +3,7 @@ package com.developerspace.webrtcsample.compose.ui.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.developerspace.webrtcsample.compose.repository.UserListRepository
+import com.developerspace.webrtcsample.compose.data.repository.UserListRepository
 import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.developerspace.webrtcsample.model.User
 import com.developerspace.webrtcsample.worker.UpdateTopicOnlineUserWorker

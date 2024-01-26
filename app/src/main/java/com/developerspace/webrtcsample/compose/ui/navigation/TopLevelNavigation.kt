@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample.compose.navigation
+package com.developerspace.webrtcsample.compose.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
