@@ -5,7 +5,7 @@ import androidx.core.util.Consumer
 import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.legacy.MainActivity
-import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.developerspace.webrtcsample.compose.data.db.dao.UserDao
 import com.developerspace.webrtcsample.compose.data.db.entity.UserData
 import com.google.firebase.database.DataSnapshot

@@ -16,9 +16,9 @@ import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.util.REQUEST_LOCATION_PERMISSION
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
 import com.developerspace.webrtcsample.compose.ui.util.tryToSetUserLocation
-import com.developerspace.webrtcsample.fcm.UserFcmTokenUpdateUtil
+import com.developerspace.webrtcsample.compose.fcm.UserFcmTokenUpdateUtil
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
-import com.developerspace.webrtcsample.preference.AppPref
+import com.developerspace.webrtcsample.compose.data.preference.AppPref
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.google.firebase.auth.ktx.auth

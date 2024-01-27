@@ -2,7 +2,7 @@ package com.developerspace.webrtcsample
 
 import android.app.Application
 import android.util.Log
-import com.developerspace.webrtcsample.util.misc.ReleaseTree
+import com.developerspace.webrtcsample.compose.util.misc.ReleaseTree
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 

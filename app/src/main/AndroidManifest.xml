@@ -60,7 +60,7 @@
             android:theme="@style/Theme.WebRTCSample"/>
 
         <service
-            android:name=".fcm.MyFirebaseMessagingService"
+            android:name=".compose.fcm.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

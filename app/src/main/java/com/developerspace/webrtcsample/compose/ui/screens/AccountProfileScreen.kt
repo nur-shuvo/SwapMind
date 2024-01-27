@@ -39,7 +39,7 @@ import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
 import com.developerspace.webrtcsample.compose.ui.viewmodel.AccountProfileViewModel
-import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
+import com.developerspace.webrtcsample.compose.util.misc.MyOpenDocumentContract
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlin.math.sqrt

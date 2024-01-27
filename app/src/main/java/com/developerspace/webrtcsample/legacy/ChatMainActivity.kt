@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.developerspace.webrtcsample.R
-import com.developerspace.webrtcsample.model.FriendlyMessage
-import com.developerspace.webrtcsample.util.misc.FcmUtil
-import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
+import com.developerspace.webrtcsample.compose.data.model.FriendlyMessage
+import com.developerspace.webrtcsample.compose.util.misc.FcmUtil
+import com.developerspace.webrtcsample.compose.util.misc.MyOpenDocumentContract
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth

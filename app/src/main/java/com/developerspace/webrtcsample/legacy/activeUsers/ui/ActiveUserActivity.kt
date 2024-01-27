@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.R
-import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue

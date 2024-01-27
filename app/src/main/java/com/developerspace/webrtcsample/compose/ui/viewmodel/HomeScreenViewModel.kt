@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.developerspace.webrtcsample.compose.data.repository.RemoteStoriesRepository
 import com.developerspace.webrtcsample.compose.data.repository.UserListRepository
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
-import com.developerspace.webrtcsample.model.RemoteStory
-import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.compose.data.model.RemoteStory
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase

@@ -3,9 +3,9 @@ package com.developerspace.webrtcsample.compose.ui.util
 import android.util.Log
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.legacy.MainActivity
-import com.developerspace.webrtcsample.model.RemoteStory
-import com.developerspace.webrtcsample.model.STORIES_REMOTE_PATH
-import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.compose.data.model.RemoteStory
+import com.developerspace.webrtcsample.compose.data.model.STORIES_REMOTE_PATH
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 

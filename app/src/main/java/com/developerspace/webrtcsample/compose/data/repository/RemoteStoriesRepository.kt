@@ -2,8 +2,8 @@ package com.developerspace.webrtcsample.compose.data.repository
 
 import android.util.Log
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
-import com.developerspace.webrtcsample.model.RemoteStory
-import com.developerspace.webrtcsample.model.STORIES_REMOTE_PATH
+import com.developerspace.webrtcsample.compose.data.model.RemoteStory
+import com.developerspace.webrtcsample.compose.data.model.STORIES_REMOTE_PATH
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

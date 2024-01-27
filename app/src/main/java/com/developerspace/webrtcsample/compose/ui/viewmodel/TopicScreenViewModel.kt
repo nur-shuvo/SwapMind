@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.developerspace.webrtcsample.compose.data.repository.UserListRepository
 import com.developerspace.webrtcsample.compose.ui.util.Topic
-import com.developerspace.webrtcsample.model.User
-import com.developerspace.webrtcsample.worker.UpdateTopicOnlineUserWorker
-import com.developerspace.webrtcsample.worker.UpdateTopicOnlineUserWorker.Companion.ADD
-import com.developerspace.webrtcsample.worker.UpdateTopicOnlineUserWorker.Companion.DELETE
+import com.developerspace.webrtcsample.compose.data.model.User
+import com.developerspace.webrtcsample.compose.worker.UpdateTopicOnlineUserWorker
+import com.developerspace.webrtcsample.compose.worker.UpdateTopicOnlineUserWorker.Companion.ADD
+import com.developerspace.webrtcsample.compose.worker.UpdateTopicOnlineUserWorker.Companion.DELETE
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.lifecycle.HiltViewModel

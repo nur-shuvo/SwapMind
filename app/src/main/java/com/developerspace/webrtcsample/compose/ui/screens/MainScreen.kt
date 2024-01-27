@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
-import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState

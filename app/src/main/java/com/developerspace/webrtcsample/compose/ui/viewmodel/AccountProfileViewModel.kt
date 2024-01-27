@@ -14,7 +14,7 @@ import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.legacy.SignInActivity
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
-import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth

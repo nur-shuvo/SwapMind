@@ -28,7 +28,7 @@ import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.legacy.ChatMainActivity.Companion.ANONYMOUS
 import com.developerspace.webrtcsample.databinding.ImageMessageBinding
 import com.developerspace.webrtcsample.databinding.MessageBinding
-import com.developerspace.webrtcsample.model.FriendlyMessage
+import com.developerspace.webrtcsample.compose.data.model.FriendlyMessage
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.ktx.Firebase

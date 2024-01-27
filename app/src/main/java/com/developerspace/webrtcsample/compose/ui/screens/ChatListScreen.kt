@@ -31,8 +31,8 @@ import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightBlue
 import com.developerspace.webrtcsample.compose.ui.viewmodel.ChatListViewModel
-import com.developerspace.webrtcsample.model.RecentMessage
-import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.compose.data.model.RecentMessage
+import com.developerspace.webrtcsample.compose.data.model.User
 
 @Composable
 fun ChatListScreen() {
