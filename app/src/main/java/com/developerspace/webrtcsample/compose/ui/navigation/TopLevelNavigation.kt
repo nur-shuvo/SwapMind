@@ -24,9 +24,6 @@ fun TopLevelNavigation() {
         composable("main_screen") {
             MainScreen(navController)
         }
-        composable("active_users_screen") {
-            ActiveUsersScreen(navController)
-        }
         composable("user_detail_screen/{profileUserID}",
             arguments = listOf(navArgument("profileUserID") {
                 type = NavType.StringType

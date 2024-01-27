@@ -24,9 +24,11 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class ChatRepository @Inject constructor(
@@ -42,7 +44,7 @@ class ChatRepository @Inject constructor(
     private val workerScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     fun getChatListFromDbFlow(): Flow<List<RecentMessage>> {
-        Log.i(TAG,"getChatListFromDbFlow")
+        Timber.i("getChatListFromDbFlow")
         val res = recentChatDao.getRecentChatList().map { recentChatList ->
             recentChatList.map { recentChatData ->
                 RecentMessage(
@@ -61,16 +63,16 @@ class ChatRepository @Inject constructor(
                 )
             }
         }
-        Log.i(TAG,"getChatListFromDbFlow done")
+        Timber.i("getChatListFromDbFlow done")
         return res
     }
 
     suspend fun fetchChatListRemote() {
-        Log.i(TAG,"fetchChatListRemote")
+        Timber.i(TAG, "fetchChatListRemote")
         db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.i(TAG, "fetchChatListRemote onDataChange")
+                    Timber.i("fetchChatListRemote onDataChange")
                     snapshot.getValue<MutableMap<String, User>>()?.forEach { entry ->
                         workerScope.launch {
                             userDao.insertUser(
@@ -94,29 +96,31 @@ class ChatRepository @Inject constructor(
     }
 
     private fun observeForRecentChanges() {
-        Log.i(TAG,"observeForRecentChanges started")
+        Timber.i("observeForRecentChanges started")
         db.reference.child(ChatMainActivity.ROOT).child(ChatMainActivity.MESSAGES_CHILD)
             .child(ChatMainActivity.RECENT_MESSAGES_CHILD).child(auth.uid.toString())
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.i(TAG, "observeForRecentChanges onDataChange")
+                    Timber.i("observeForRecentChanges onDataChange")
                     snapshot.getValue<MutableMap<String, FriendlyMessage>>()?.forEach { entry ->
                         workerScope.launch {
                             userDao.getUserProfileData(entry.key).collect { userData ->
-                                Log.i(TAG, "UserData collected")
-                                val recentChatData = RecentChatData(
-                                    entry.key,
-                                    userData.userName!!,
-                                    userData.profileUrl!!,
-                                    MessageData(
-                                        entry.value.text,
-                                        entry.value.name,
-                                        entry.value.photoUrl,
-                                        entry.value.imageUrl,
-                                        entry.value.time,
+                                Timber.i("UserData collected $userData")
+                                if (userData != null) { // don't remove the null check
+                                    val recentChatData = RecentChatData(
+                                        entry.key,
+                                        userData.userName!!,
+                                        userData.profileUrl!!,
+                                        MessageData(
+                                            entry.value.text,
+                                            entry.value.name,
+                                            entry.value.photoUrl,
+                                            entry.value.imageUrl,
+                                            entry.value.time,
+                                        )
                                     )
-                                )
-                                saveRecentChatInDb(recentChatData)
+                                    saveRecentChatInDb(recentChatData)
+                                }
                             }
                         }
                     }

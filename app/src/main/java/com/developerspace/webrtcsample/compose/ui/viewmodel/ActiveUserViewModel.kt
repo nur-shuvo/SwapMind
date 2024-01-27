@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +26,7 @@ class ActiveUserViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.i(TAG, "fetchAllUsersRemote start")
+            Timber.i("fetchAllUsersRemote start")
             userListRepository.fetchAllUsersRemote()
         }
     }
