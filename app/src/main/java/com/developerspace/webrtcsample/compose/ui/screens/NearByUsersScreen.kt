@@ -40,7 +40,7 @@ import com.developerspace.webrtcsample.legacy.ChatMainActivity
 @Composable
 fun NearByUsersScreen(navController: NavController? = null) {
     val viewModel: NearByUsersViewModel = hiltViewModel()
-    val nearByUsers = viewModel.nearByUserListState.collectAsState()
+    val nearByUsers by viewModel.nearByUserListState.collectAsState()
     val isProgressShow by viewModel.isProgressLoading.collectAsState()
 
     if (isProgressShow) {
@@ -58,7 +58,7 @@ fun NearByUsersScreen(navController: NavController? = null) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(nearByUsers.value) {
+        items(nearByUsers) {
             ProfileCardWithDistance(it, navController)
         }
     }

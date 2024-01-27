@@ -1,6 +1,7 @@
 package com.developerspace.webrtcsample.compose
 
 import android.Manifest.permission.POST_NOTIFICATIONS
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -19,6 +20,7 @@ import com.developerspace.webrtcsample.compose.ui.util.tryToSetUserLocation
 import com.developerspace.webrtcsample.compose.fcm.UserFcmTokenUpdateUtil
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.compose.data.preference.AppPref
+import com.developerspace.webrtcsample.compose.ui.util.REQUEST_GPS
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.google.firebase.auth.ktx.auth
@@ -99,12 +101,7 @@ class ComposeMainActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
-                // FCM SDK (and your app) can post notifications.
             } else if (shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
-                // TODO: display an educational UI explaining to the user the features that will be enabled
-                //       by them granting the POST_NOTIFICATION permission. This UI should provide the user
-                //       "OK" and "No thanks" buttons. If the user selects "OK," directly request the permission.
-                //       If the user selects "No thanks," allow the user to continue without notifications.
             } else {
                 // Directly ask for the permission
                 requestPermissionLauncher.launch(POST_NOTIFICATIONS)
@@ -125,6 +122,13 @@ class ComposeMainActivity : AppCompatActivity() {
             } else {
                 Timber.i("Location Permission denied")
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_GPS) {
+            tryToSetUserLocation()
         }
     }
 }
