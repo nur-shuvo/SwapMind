@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import com.developerspace.webrtcsample.R
@@ -46,7 +47,7 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun MainScreen(navController: NavController? = null) {
-    val pagerState = rememberPagerState(pageCount = 4)
+    val pagerState = rememberPagerState(pageCount = 5)
     Column(
         modifier = Modifier
             .background(Color.White)
@@ -94,6 +95,7 @@ fun Tabs(pagerState: PagerState) {
         "Home" to Icons.Default.Home,
         "Active" to Icons.Default.Face,
         "Chat" to Icons.Default.Email,
+        "Nearby" to Icons.Default.LocationOn, // change when creation
         "Live" to Icons.Default.Home // change when creation
     )
     val scope = rememberCoroutineScope()
@@ -112,7 +114,11 @@ fun Tabs(pagerState: PagerState) {
         list.forEachIndexed { index, _ ->
             Tab(
                 icon = {
-                    if (index == 3) Icon(
+//                    if (index == 3) Icon(
+//                        painterResource(id = R.drawable.live_cast_24px),
+//                        contentDescription = null
+//                    )
+                    if (index == 4) Icon(
                         painterResource(id = R.drawable.live_cast_24px),
                         contentDescription = null
                     )
@@ -121,7 +127,8 @@ fun Tabs(pagerState: PagerState) {
                 text = {
                     Text(
                         list[index].first,
-                        color = if (pagerState.currentPage == index) Color.Blue else Color.Black
+                        color = if (pagerState.currentPage == index) Color.Blue else Color.Black,
+                        fontSize = 10.sp
                     )
                 },
                 selected = pagerState.currentPage == index,
@@ -143,7 +150,8 @@ fun TabsContent(pagerState: PagerState, navController: NavController?) {
             0 -> HomeScreen(navController)
             1 -> ActiveUsersScreen(navController)
             2 -> ChatListScreen()
-            3 -> LiveStreamScreen()
+            3 -> NearByUsersScreen(navController)
+            4 -> LiveStreamScreen()
         }
     }
 }

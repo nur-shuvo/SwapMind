@@ -1,13 +1,20 @@
 package com.developerspace.webrtcsample.compose.data.repository
 
+import android.location.Location
 import android.util.Log
 import androidx.core.util.Consumer
-import com.developerspace.webrtcsample.compose.ui.util.Topic
-import com.developerspace.webrtcsample.legacy.ChatMainActivity
-import com.developerspace.webrtcsample.legacy.MainActivity
-import com.developerspace.webrtcsample.compose.data.model.User
 import com.developerspace.webrtcsample.compose.data.db.dao.UserDao
 import com.developerspace.webrtcsample.compose.data.db.entity.UserData
+import com.developerspace.webrtcsample.compose.data.model.User
+import com.developerspace.webrtcsample.compose.ui.util.Topic
+import com.developerspace.webrtcsample.compose.ui.util.USER_LOCATION_PATH
+import com.developerspace.webrtcsample.legacy.ChatMainActivity
+import com.developerspace.webrtcsample.legacy.MainActivity
+import com.firebase.geofire.GeoFire
+import com.firebase.geofire.GeoLocation
+import com.firebase.geofire.GeoQueryEventListener
+import com.firebase.geofire.LocationCallback
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -18,15 +25,19 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+
 class UserListRepository @Inject constructor(private val userDao: UserDao) {
     private var db: FirebaseDatabase = Firebase.database
     private val workerScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val mainScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     companion object {
         private const val TAG = "UserListRepository"
@@ -56,7 +67,7 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
                                 resultList.add(user)
                                 saveUserInDb(user)
                             }
-                            Log.i(TAG, "total users - ${resultList.size}")
+                            Timber.i("total users - ${resultList.size}")
                         }
                     }
 
@@ -103,5 +114,81 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
                 )
             )
         }
+    }
+
+    fun fetchAllNearByUsers(distanceInKm: Long, consumer: Consumer<List<Pair<User, Long>>>) {
+        val geoFire = GeoFire(
+            Firebase.database.reference.child(ChatMainActivity.ROOT).child(USER_LOCATION_PATH)
+        )
+        geoFire.getLocation(Firebase.auth.uid, object : LocationCallback {
+            override fun onLocationResult(key: String?, location: GeoLocation?) {
+                if (location != null) {
+                    val currentNearByUsers: MutableList<Pair<User, Long>> = mutableListOf()
+                    // now query with the distanceInKm
+                    val geoQuery = geoFire.queryAtLocation(location, distanceInKm.toDouble())
+                    geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
+                        override fun onKeyEntered(key: String?, location1: GeoLocation?) {
+                            if (location1 != null) {
+                                workerScope.launch(Dispatchers.IO) {
+                                    getUserByUserID(key!!).collect { userData ->
+                                        currentNearByUsers.add(
+                                            User(
+                                                userData.userId,
+                                                userData.userName,
+                                                userData.profileUrl,
+                                                userData.onlineStatus
+                                            ) to
+                                                    distanceInKiloMeter(
+                                                        location.latitude,
+                                                        location.longitude,
+                                                        location1.latitude,
+                                                        location1.longitude
+                                                    )
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        override fun onKeyExited(key: String?) {
+
+                        }
+
+                        override fun onKeyMoved(key: String?, location: GeoLocation?) {
+                            TODO("Not yet implemented")
+                        }
+
+                        override fun onGeoQueryReady() {
+                            workerScope.launch(Dispatchers.IO) {
+                                delay(5000)
+                                consumer.accept(currentNearByUsers)
+                            }
+                        }
+
+                        override fun onGeoQueryError(error: DatabaseError?) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+                } else {
+                    println(String.format("There is no location for key %s in GeoFire", key))
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Timber.e("There was an error getting the GeoFire location: $databaseError")
+            }
+        })
+    }
+
+    private fun distanceInKiloMeter(
+        startLat: Double,
+        startLon: Double,
+        endLat: Double,
+        endLon: Double
+    ): Long {
+        val results = FloatArray(1)
+        Location.distanceBetween(startLat, startLon, endLat, endLon, results)
+        return (results[0] / 1000).toLong()
     }
 }
