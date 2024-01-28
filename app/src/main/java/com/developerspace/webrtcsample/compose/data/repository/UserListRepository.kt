@@ -1,7 +1,6 @@
 package com.developerspace.webrtcsample.compose.data.repository
 
 import android.location.Location
-import android.util.Log
 import androidx.core.util.Consumer
 import com.developerspace.webrtcsample.compose.data.db.dao.UserDao
 import com.developerspace.webrtcsample.compose.data.db.entity.UserData
@@ -25,9 +24,9 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -117,6 +116,7 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
     }
 
     fun fetchAllNearByUsers(distanceInKm: Long, consumer: Consumer<List<Pair<User, Long>>>) {
+        val workerScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         val geoFire = GeoFire(
             Firebase.database.reference.child(ChatMainActivity.ROOT).child(USER_LOCATION_PATH)
         )
@@ -129,7 +129,7 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
                     geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
                         override fun onKeyEntered(key: String?, location1: GeoLocation?) {
                             if (location1 != null) {
-                                workerScope.launch(Dispatchers.IO) {
+                                workerScope.launch {
                                     getUserByUserID(key!!).collect { userData ->
                                         currentNearByUsers.add(
                                             User(
@@ -159,9 +159,10 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
                         }
 
                         override fun onGeoQueryReady() {
-                            workerScope.launch(Dispatchers.IO) {
+                            workerScope.launch {
                                 delay(5000)
                                 consumer.accept(currentNearByUsers)
+                                workerScope.cancel()
                             }
                         }
 

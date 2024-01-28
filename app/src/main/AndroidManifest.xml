@@ -20,6 +20,9 @@
         android:theme="@style/Theme.SwapMind.NoActionBar">
         <activity
             android:name=".compose.ComposeMainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:forceDarkAllowed="false"
             android:exported="false" />
         <activity
             android:name=".legacy.SignInActivity"

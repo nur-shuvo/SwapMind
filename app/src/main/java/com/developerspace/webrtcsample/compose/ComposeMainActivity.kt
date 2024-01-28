@@ -3,6 +3,7 @@ package com.developerspace.webrtcsample.compose
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -59,6 +60,10 @@ class ComposeMainActivity : AppCompatActivity() {
         // user is offline now
         UserUpdateRemoteUtil().makeUserOfflineRemote(Firebase.database, Firebase.auth)
         super.onDestroy()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
     }
 
     private fun updateFcmTokenToRemote() {

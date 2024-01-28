@@ -19,7 +19,7 @@ class NearByUsersViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _nearByUserListState: MutableStateFlow<List<Pair<User, Long>>> =
-        MutableStateFlow(mutableListOf())
+        MutableStateFlow(emptyList())
     val nearByUserListState = _nearByUserListState.asStateFlow()
 
     private val _isProgressLoading = MutableStateFlow(false)
