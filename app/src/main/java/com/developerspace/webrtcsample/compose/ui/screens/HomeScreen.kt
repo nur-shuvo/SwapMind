@@ -52,9 +52,9 @@ import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.developerspace.webrtcsample.compose.ui.util.staticTopicList
 import com.developerspace.webrtcsample.compose.ui.viewmodel.HomeScreenViewModel
-import com.developerspace.webrtcsample.model.RemoteStory
-import com.developerspace.webrtcsample.model.User
-import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
+import com.developerspace.webrtcsample.compose.data.model.RemoteStory
+import com.developerspace.webrtcsample.compose.data.model.User
+import com.developerspace.webrtcsample.compose.util.misc.MyOpenDocumentContract
 import com.google.gson.Gson
 
 @Composable

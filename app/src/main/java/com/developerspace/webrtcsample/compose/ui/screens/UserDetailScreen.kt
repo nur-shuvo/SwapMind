@@ -41,11 +41,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.developerspace.webrtcsample.R
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
 import com.developerspace.webrtcsample.compose.ui.viewmodel.UserDetailViewModel
-import com.developerspace.webrtcsample.model.User
-import com.developerspace.webrtcsample.util.misc.MyOpenDocumentContract
+import com.developerspace.webrtcsample.compose.util.misc.MyOpenDocumentContract
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlin.math.sqrt
@@ -64,7 +64,7 @@ fun UserDetailScreen(userProfileID: String, navController: NavController? = null
     val imagePickerIconSize = profileImageSize / 7
     val imagePickerIconPadding = imagePickerIconSize / 5
     val imagePickerIconBorder = imagePickerIconPadding / 5
-    val imageBoxSize = profileImageSize;
+    val imageBoxSize = profileImageSize
     val offset =
         (imagePickerIconSize / 2) + imagePickerIconPadding + imagePickerIconBorder + (profileImageSize / 12)
     val innerBoxSize = (imageBoxSize / sqrt(2.00)) + offset

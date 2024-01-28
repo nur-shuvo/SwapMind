@@ -52,7 +52,7 @@ import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
 import com.developerspace.webrtcsample.compose.ui.viewmodel.ActiveUserViewModel
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
-import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.compose.data.model.User
 
 @Composable
 fun ActiveUsersScreen(navController: NavController? = null) {

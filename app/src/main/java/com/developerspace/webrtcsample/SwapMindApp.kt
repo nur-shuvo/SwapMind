@@ -1,12 +1,10 @@
 package com.developerspace.webrtcsample
 
 import android.app.Application
-import android.os.Build
 import android.util.Log
+import com.developerspace.webrtcsample.compose.util.misc.ReleaseTree
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
-import com.developerspace.webrtcsample.BuildConfig
-import com.developerspace.webrtcsample.util.misc.ReleaseTree
 
 @HiltAndroidApp
 class SwapMindApp: Application() {

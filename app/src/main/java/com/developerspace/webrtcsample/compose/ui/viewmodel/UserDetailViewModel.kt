@@ -6,9 +6,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.developerspace.webrtcsample.compose.repository.UserListRepository
+import com.developerspace.webrtcsample.compose.data.repository.UserListRepository
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
-import com.developerspace.webrtcsample.model.User
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database

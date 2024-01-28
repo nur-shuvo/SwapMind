@@ -165,4 +165,10 @@ dependencies {
 
     // worker
     implementation "androidx.work:work-runtime-ktx:2.9.0"
+
+    // Full GeoFire library for Realtime Database users
+    implementation 'com.firebase:geofire-android:3.2.0'
+
+    // play service location
+    implementation 'com.google.android.gms:play-services-location:21.1.0'
 }
