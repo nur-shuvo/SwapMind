@@ -118,7 +118,7 @@ class ChatMainActivity : AppCompatActivity() {
             // notification send to device
             fcmUtil.sendPushNotificationToReceiver(
                 receiverUserID,
-                receiverUserName,
+                getUserName().toString(),
                 friendlyMessage.text.toString()
             )
         }
