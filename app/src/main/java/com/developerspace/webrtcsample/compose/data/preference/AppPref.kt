@@ -8,7 +8,6 @@ class AppPref @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private val pref = context.getSharedPreferences("AppPref", Context.MODE_PRIVATE)
-
     fun setFcmDeviceToken(token: String) {
         with(pref.edit()) {
             putString(KEY_FCM_DEVICE_TOKEN, token)
@@ -18,6 +17,13 @@ class AppPref @Inject constructor(
 
     fun getFcmDeviceToken(): String {
         return pref.getString(KEY_FCM_DEVICE_TOKEN, "") ?: ""
+    }
+
+    fun clearALl() {
+        with(pref.edit()) {
+            clear()
+            apply()
+        }
     }
 
     companion object {

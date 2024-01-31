@@ -15,6 +15,7 @@ import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.legacy.SignInActivity
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
 import com.developerspace.webrtcsample.compose.data.model.User
+import com.developerspace.webrtcsample.compose.worker.SignOutWorker
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -94,7 +95,7 @@ class AccountProfileViewModel @Inject constructor(private val userListRepository
                     }
             }
             .addOnFailureListener(activity) { e ->
-                Log.e(TAG, "Image upload task was unsuccessful.", e)
+                Timber.e("Image upload task was unsuccessful.", e)
             }
     }
 
@@ -102,7 +103,7 @@ class AccountProfileViewModel @Inject constructor(private val userListRepository
         Firebase.auth.currentUser?.updateProfile(
             UserProfileChangeRequest.Builder().setPhotoUri(uri).build()
         )?.addOnSuccessListener {
-            Log.i(TAG, "updateProfile image successful")
+            Timber.i("updateProfile image successful")
             Toast.makeText(activity, "Profile image updated!", Toast.LENGTH_LONG).show()
             _isProgressLoading.value = false
 
@@ -119,11 +120,12 @@ class AccountProfileViewModel @Inject constructor(private val userListRepository
                 uri.toString()
             )
         }?.addOnFailureListener {
-            Log.e(TAG, "updateProfile image error")
+            Timber.e("updateProfile image error")
         }
     }
 
     fun signOut(context: Context) {
+        SignOutWorker.enqueueWork(context)
         AuthUI.getInstance().signOut(context).addOnSuccessListener {
             gotoSignInActivity(context)
         }

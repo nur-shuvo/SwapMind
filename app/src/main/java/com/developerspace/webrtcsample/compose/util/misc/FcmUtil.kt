@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class FcmUtil @Inject constructor(
@@ -38,14 +39,14 @@ class FcmUtil @Inject constructor(
     ) {
         workerScope.launch(Dispatchers.IO) {
             val token = FcmV1ApiToken.getAccessToken(context)
-            Log.i(TAG, "access-token $token")
+            Timber.i("access-token $token")
 
             // get receiverUserId Device-token
             Firebase.database.reference.child(ChatMainActivity.ROOT).child(DEVICE_FCM_TOKEN_PATH)
                 .child(receiverUserID).get()
                 .addOnSuccessListener { snapShot ->
                     snapShot.getValue<String>()?.let { receiverDeviceToken ->
-                        Log.i(TAG, "Received device-token $receiverDeviceToken")
+                        Timber.i("Received device-token $receiverDeviceToken")
                         workerScope.launch(Dispatchers.IO) {
                             // create headers
                             val headerMap: MutableMap<String, String> = mutableMapOf()
@@ -70,6 +71,8 @@ class FcmUtil @Inject constructor(
                             )
                         }
                     }
+                }.addOnFailureListener {
+                    Timber.e("Firebase token of the receiver does not exist in remote")
                 }
         }
     }
