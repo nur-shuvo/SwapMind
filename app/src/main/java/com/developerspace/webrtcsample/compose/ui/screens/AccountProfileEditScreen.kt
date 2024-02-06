@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -47,12 +48,20 @@ fun AccountProfileEditScreen(type: String, navController: NavController? = null)
             }
         }
     } else if (type == "about") {
-
+        About("about", navController, isProgressShow) {
+            // update about
+            navController?.navigateUp()
+        }
     }
 }
 
 @Composable
-fun Name(type: String, navController: NavController? = null, isProgressShow: Boolean = false, onClicked: (newName: String) -> Unit) {
+fun Name(
+    type: String,
+    navController: NavController? = null,
+    isProgressShow: Boolean = false,
+    onClicked: (newName: String) -> Unit
+) {
     Scaffold(topBar = {
         AppBarWithBack(text = "Edit your $type") {
             navController?.navigateUp()
@@ -91,6 +100,54 @@ fun Name(type: String, navController: NavController? = null, isProgressShow: Boo
                 Spacer(modifier = Modifier.weight(1.0f))
                 Button(onClick = {
                     onClicked.invoke("$text1 $text2")
+                }, modifier = Modifier.align(Alignment.End)) {
+                    Text("Done")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun About(
+    type: String,
+    navController: NavController? = null,
+    isProgressShow: Boolean = false,
+    onClicked: (newAbout: String) -> Unit
+) {
+    Scaffold(topBar = {
+        AppBarWithBack(text = "Edit your $type") {
+            navController?.navigateUp()
+        }
+    }) { innerPadding ->
+        var text by remember { mutableStateOf("") }
+
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
+        ) {
+            // TODO Need to check why this is not showing?
+            if (isProgressShow) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .size(80.dp)
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .background(Color.White)
+                    .padding(10.dp)
+            ) {
+                EditTextView(text, "About", "Update your status $type") {
+                    text = it
+                }
+                Spacer(modifier = Modifier.weight(1.0f))
+                Button(onClick = {
+                    onClicked.invoke(text)
                 }, modifier = Modifier.align(Alignment.End)) {
                     Text("Done")
                 }

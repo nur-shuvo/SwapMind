@@ -133,7 +133,7 @@ fun AccountProfileScreen(profileUserID: String, navController: NavController? = 
                     navController?.navigate("account_profile_edit_screen/name")
                 }
                 ProfileSection("About", true, userProfile) {
-
+                    navController?.navigate("account_profile_edit_screen/about")
                 }
                 ProfileSection("Phone Number or Email", false, userProfile)
                 Spacer(Modifier.weight(1.0f))

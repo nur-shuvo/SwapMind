@@ -185,12 +185,13 @@ fun ProfileContent(
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .wrapContentWidth(),
+            .fillMaxWidth(0.8f),
         horizontalAlignment = horizontalAlignment
     ) {
         Text(
             text = user.userName!!,
-            style = tStyle
+            style = tStyle,
+            maxLines = 1
         )
         Text(
             text = "Active now",

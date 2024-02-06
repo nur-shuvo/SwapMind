@@ -196,7 +196,7 @@ fun getBottomText(type: String): String {
         }
 
         else -> {
-            ""
+            "Note that it is public"
         }
     }
 }
@@ -207,7 +207,7 @@ fun getMiddleText(type: String, user: User): String {
     } else if (type == "About") {
         "Doing nothing is great" // TODO user bio
     } else {
-        "8801537227217"
+        "Add your email or phone number"
     }
 }
 
