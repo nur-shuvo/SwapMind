@@ -71,6 +71,9 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 
     namespace "com.developerspace.webrtcsample"
 }
@@ -178,4 +181,11 @@ dependencies {
 
     // play service location
     implementation 'com.google.android.gms:play-services-location:21.1.0'
+
+    // unit tests
+    testImplementation 'org.mockito:mockito-core:4.8.0'
+    testImplementation "org.robolectric:robolectric:4.11.1"
+    testImplementation 'androidx.test:core-ktx:1.5.0'
+    testImplementation 'androidx.test.ext:junit-ktx:1.1.5'
+    testImplementation ("com.google.guava:guava:32.0.1-android")
 }

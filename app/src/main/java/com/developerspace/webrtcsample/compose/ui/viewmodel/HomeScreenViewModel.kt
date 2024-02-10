@@ -16,6 +16,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
@@ -35,7 +37,10 @@ class HomeScreenViewModel @Inject constructor(
 
     // ui state
     private val _remoteStoryList = MutableStateFlow<MutableList<RemoteStory>>(mutableListOf())
-    val remoteStoryList: StateFlow<List<RemoteStory>> = _remoteStoryList.asStateFlow()
+    val remoteStoryList = _remoteStoryList.asStateFlow()
+
+    private val _isProgressShow = MutableStateFlow(true)
+    val isProgressShow = _isProgressShow.asStateFlow()
 
     // userID vs User
     val userMap = userListRepository.getUserListFromDbFlow().map { userList ->
@@ -53,6 +58,7 @@ class HomeScreenViewModel @Inject constructor(
     init {
         remoteStoriesRepository.fetchAllStoriesRemote {
             _remoteStoryList.value = it.toMutableList()
+            _isProgressShow.value = false
         }
     }
 

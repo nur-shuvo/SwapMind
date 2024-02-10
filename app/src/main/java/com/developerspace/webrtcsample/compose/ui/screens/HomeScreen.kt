@@ -21,14 +21,16 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,12 +50,12 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.developerspace.webrtcsample.R
+import com.developerspace.webrtcsample.compose.data.model.RemoteStory
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.developerspace.webrtcsample.compose.ui.util.staticTopicList
 import com.developerspace.webrtcsample.compose.ui.viewmodel.HomeScreenViewModel
-import com.developerspace.webrtcsample.compose.data.model.RemoteStory
-import com.developerspace.webrtcsample.compose.data.model.User
 import com.developerspace.webrtcsample.compose.util.misc.MyOpenDocumentContract
 import com.google.gson.Gson
 
@@ -63,6 +65,7 @@ fun HomeScreen(navController: NavController? = null) {
     val viewModel: HomeScreenViewModel = hiltViewModel()
     val remoteStories = viewModel.remoteStoryList.collectAsState()
     val userMap = viewModel.userMap.collectAsState()
+    val isProgressShow by viewModel.isProgressShow.collectAsState()
 
     val openDocument = rememberLauncherForActivityResult(contract = MyOpenDocumentContract(),
         onResult = {
@@ -70,23 +73,40 @@ fun HomeScreen(navController: NavController? = null) {
                 viewModel.onAddStoryImageSelected(activity, it)
             }
         })
-    LazyColumn(
+
+    Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .background(Color.White)
     ) {
-        item {
-            DividerText(text = "Top stories")
-            ListOfStory(userMap.value, remoteStories.value) {
-                // Add story clicked
-                openDocument.launch(arrayOf("image/*"))
-            }
-            DividerText(text = "Top topics that you want to discuss")
+        if (isProgressShow) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .size(80.dp)
+            )
         }
-        var index = 0
-        items(staticTopicList.size / 3) {
-            CategoryCardTuple(index++, index++, index++, navController)
-            Divider(modifier = Modifier.fillMaxWidth(), 2.dp)
+        if (isProgressShow.not()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(10.dp)
+            ) {
+                item {
+                    DividerText(text = "Top stories")
+                    ListOfStory(userMap.value, remoteStories.value) {
+                        // Add story clicked
+                        openDocument.launch(arrayOf("image/*"))
+                    }
+                    DividerText(text = "Top topics that you want to discuss")
+                }
+                var index = 0
+                items(staticTopicList.size / 3) {
+                    CategoryCardTuple(index++, index++, index++, navController)
+                    Divider(modifier = Modifier.fillMaxWidth(), 2.dp)
+                }
+            }
         }
     }
 }

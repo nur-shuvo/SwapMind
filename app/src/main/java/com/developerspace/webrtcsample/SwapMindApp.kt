@@ -13,7 +13,7 @@ class SwapMindApp: Application() {
     }
     override fun onCreate() {
         super.onCreate()
-        Log.i(TAG, "onCreate")
+        Timber.i(TAG, "onCreate")
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

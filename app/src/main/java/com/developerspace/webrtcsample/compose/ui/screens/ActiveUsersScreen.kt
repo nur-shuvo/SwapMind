@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -25,7 +24,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -48,11 +46,12 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.developerspace.webrtcsample.R
+import com.developerspace.webrtcsample.compose.data.model.User
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.theming.lightGreen
+import com.developerspace.webrtcsample.compose.ui.theming.shadeGreen
 import com.developerspace.webrtcsample.compose.ui.viewmodel.ActiveUserViewModel
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
-import com.developerspace.webrtcsample.compose.data.model.User
 
 @Composable
 fun ActiveUsersScreen(navController: NavController? = null) {
@@ -71,9 +70,11 @@ fun ActiveUsersScreen(navController: NavController? = null) {
                 .background(Color.White)
         ) {
             item {
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(12.dp))
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(12.dp)
+                )
             }
             itemsIndexed(userListState) { index, it ->
                 ProfileCard(it,
@@ -169,7 +170,9 @@ fun ProfilePicture(
                     transformations(CircleCropTransformation())
                 },
             ),
-            modifier = Modifier.size(size).clickable { onClicked.invoke() },
+            modifier = Modifier
+                .size(size)
+                .clickable { onClicked.invoke() },
             contentScale = ContentScale.Crop,
             contentDescription = ""
         )
@@ -191,11 +194,14 @@ fun ProfileContent(
         Text(
             text = user.userName!!,
             style = tStyle,
-            maxLines = 1
+            maxLines = 1,
+            fontWeight = FontWeight.Bold
         )
         Text(
             text = "Active now",
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
+            color = shadeGreen,
+            fontWeight = FontWeight.Bold
         )
     }
 }

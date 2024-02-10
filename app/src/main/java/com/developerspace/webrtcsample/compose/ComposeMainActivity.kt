@@ -32,7 +32,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
 
-// This is the entry point of all composes. Single activity to handle all screen/destinations.
 @AndroidEntryPoint
 class ComposeMainActivity : AppCompatActivity() {
 
