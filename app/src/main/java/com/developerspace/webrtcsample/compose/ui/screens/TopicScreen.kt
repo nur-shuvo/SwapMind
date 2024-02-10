@@ -2,6 +2,10 @@ package com.developerspace.webrtcsample.compose.ui.screens
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,8 +24,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +56,8 @@ import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.developerspace.webrtcsample.compose.ui.util.staticTopicList
 import com.developerspace.webrtcsample.compose.ui.viewmodel.TopicScreenViewModel
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
+import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun TopicScreen(topic: Topic, navController: NavController? = null) {
@@ -80,7 +91,7 @@ fun TopicScreen(topic: Topic, navController: NavController? = null) {
                     ImageContent(topic = topic)
                 }
                 item {
-                    QuoteText(topic.quoteText)
+                    QuoteText(topic.quoteText,  topic.quoteText)
                 }
                 item {
                     Spacer(modifier = Modifier
@@ -138,20 +149,45 @@ fun HeaderText(modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             color = Color.Blue,
-            fontFamily = FontFamily.Serif
+            fontFamily = FontFamily.Serif,
+            fontSize = 17.sp
         )
     )
 }
 
 @Composable
-fun QuoteText(contentText: String, modifier: Modifier = Modifier) {
+fun QuoteText(contentText1: String, contentText2: String,  modifier: Modifier = Modifier) {
+    var visible by remember { mutableStateOf(true) }
+    val alpha by animateFloatAsState(
+        targetValue = if(visible) 1f else 0f,
+        animationSpec = tween(2000, easing = LinearEasing),
+        label = ""
+    )
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(2.seconds)
+            visible = !visible
+        }
+    }
+
+    Crossfade(targetState = visible, label = "") {
+        if (it) {
+            TextWithFade(contentText1, alpha)
+        } else {
+            TextWithFade(contentText2, alpha)
+        }
+    }
+}
+
+@Composable
+fun TextWithFade(contentText: String, alpha: Float) {
     Text(
-        contentText,
+        text = contentText,
+        modifier = Modifier.padding(horizontal = 15.dp),
         style = TextStyle(
             textAlign = TextAlign.Justify,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            fontFamily = FontFamily.Monospace
+            color = Color.Black.copy(alpha = alpha),
+            fontStyle = FontStyle.Italic
         )
     )
 }
