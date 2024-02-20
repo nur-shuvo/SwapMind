@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.developerspace.webrtcsample">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,9 +14,9 @@
     <application
         android:allowBackup="false"
         android:name=".SwapMindApp"
-        android:icon="@mipmap/swap_mind_launcher"
+        android:icon="@drawable/swap_mind_new_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/swap_mind_launcher"
+        android:roundIcon="@drawable/swap_mind_new_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.SwapMind.NoActionBar"
         android:forceDarkAllowed="false">
@@ -69,6 +70,10 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="com.dwarsh.webrtcsample.androidx-startup"
+            tools:node="remove" />
     </application>
 
 </manifest>

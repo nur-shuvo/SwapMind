@@ -175,6 +175,8 @@ dependencies {
 
     // worker
     implementation "androidx.work:work-runtime-ktx:2.9.0"
+    implementation "androidx.hilt:hilt-work:1.1.0"
+    kapt "androidx.hilt:hilt-compiler:1.1.0"
 
     // Full GeoFire library for Realtime Database users
     implementation 'com.firebase:geofire-android:3.2.0'
@@ -188,4 +190,5 @@ dependencies {
     testImplementation 'androidx.test:core-ktx:1.5.0'
     testImplementation 'androidx.test.ext:junit-ktx:1.1.5'
     testImplementation ("com.google.guava:guava:32.0.1-android")
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0-RC2"
 }
