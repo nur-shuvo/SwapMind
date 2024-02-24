@@ -10,7 +10,8 @@ data class RecentChatData(
     @PrimaryKey @ColumnInfo(name = "receiver_user_id") val toUserId: String = "",
     @ColumnInfo(name = "receiver_user_name") val toUserName: String = "",
     @ColumnInfo(name = "receiver_photo_url") val toPhotoUrl: String = "",
-    @Embedded val messageData: MessageData?
+    @ColumnInfo(name = "unread_count") var unreadCount: Int = 0,
+    @Embedded val messageData: MessageData
 )
 
 data class MessageData(

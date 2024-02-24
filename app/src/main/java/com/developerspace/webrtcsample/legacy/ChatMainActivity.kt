@@ -1,12 +1,14 @@
 package com.developerspace.webrtcsample.legacy
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +17,7 @@ import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.data.model.FriendlyMessage
 import com.developerspace.webrtcsample.compose.util.misc.FcmUtil
 import com.developerspace.webrtcsample.compose.util.misc.MyOpenDocumentContract
+import com.developerspace.webrtcsample.compose.worker.UpsertRecentChatWorker
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -25,6 +28,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -141,6 +145,22 @@ class ChatMainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         adapter.startListening()
+    }
+
+    override fun onDestroy() {
+        resetUnreadCountUsingWorker(this, receiverUserID)
+        super.onDestroy()
+    }
+
+    private fun resetUnreadCountUsingWorker(context: Context, readMessageFromUser: String) {
+        val bundle = Bundle().apply {
+            putString("toUserId", readMessageFromUser)
+        }
+        UpsertRecentChatWorker.enqueueWork(
+            context,
+            UpsertRecentChatWorker.RESET_UNREAD_COUNT,
+            bundle
+        )
     }
 
     private fun getPhotoUrl(): String? {

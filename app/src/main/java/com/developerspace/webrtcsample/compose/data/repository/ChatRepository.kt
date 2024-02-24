@@ -51,12 +51,13 @@ class ChatRepository @Inject constructor(
                     recentChatData.toUserId,
                     recentChatData.toUserName,
                     recentChatData.toPhotoUrl,
+                    recentChatData.unreadCount,
                     FriendlyMessage(
-                        recentChatData.messageData?.text,
-                        recentChatData.messageData?.senderName,
-                        recentChatData.messageData?.senderPhotoUrl,
-                        recentChatData.messageData?.imageUrl,
-                        recentChatData.messageData?.time?.let {
+                        recentChatData.messageData.text,
+                        recentChatData.messageData.senderName,
+                        recentChatData.messageData.senderPhotoUrl,
+                        recentChatData.messageData.imageUrl,
+                        recentChatData.messageData.time?.let {
                             TimeUtil.formatMillisecondToHourMinute(it)
                         },
                     )
@@ -111,6 +112,7 @@ class ChatRepository @Inject constructor(
                                         entry.key,
                                         userData.userName!!,
                                         userData.profileUrl!!,
+                                        if(userData.userName == entry.value.name) 0 else 1,
                                         MessageData(
                                             entry.value.text,
                                             entry.value.name,
@@ -119,7 +121,21 @@ class ChatRepository @Inject constructor(
                                             entry.value.time,
                                         )
                                     )
-                                    saveRecentChatInDb(recentChatData)
+
+                                    Timber.tag(TAG).i("update/insert chat into db or skip")
+                                    val recentChatDataSaved = recentChatDao.getRecentChat(entry.key)
+                                    if(recentChatDataSaved == null) { // no chat history, insert data
+                                        insertRecentChatInDb(recentChatData)
+                                    } else {
+                                        if(recentChatDataSaved.messageData.time == entry.value.time) {
+                                            // skip as db is synced already with server
+                                        } else { // has chat history, update into db
+                                            recentChatData.apply {
+                                                unreadCount = recentChatDataSaved.unreadCount + 1
+                                            }
+                                            updateRecentChatInDb(recentChatData)
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -133,14 +149,32 @@ class ChatRepository @Inject constructor(
     }
 
 
-    private suspend fun saveRecentChatInDb(recentChatData: RecentChatData) {
+    private suspend fun insertRecentChatInDb(recentChatData: RecentChatData) {
         recentChatDao.insertRecentChat(
             RecentChatData(
                 recentChatData.toUserId,
                 recentChatData.toUserName,
                 recentChatData.toPhotoUrl,
+                recentChatData.unreadCount,
                 recentChatData.messageData
             )
         )
+    }
+
+    private suspend fun updateRecentChatInDb(recentChatData: RecentChatData) {
+        Timber.i("recentChatData to update = $recentChatData")
+        recentChatDao.updateRecentChat(
+            RecentChatData(
+                recentChatData.toUserId,
+                recentChatData.toUserName,
+                recentChatData.toPhotoUrl,
+                recentChatData.unreadCount,
+                recentChatData.messageData
+            )
+        )
+    }
+
+    suspend fun resetUnreadCountInDb(readMessageFromUser: String) {
+        recentChatDao.resetUnreadCount(readMessageFromUser)
     }
 }
