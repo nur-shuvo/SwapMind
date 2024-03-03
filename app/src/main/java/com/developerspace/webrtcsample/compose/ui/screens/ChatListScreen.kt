@@ -1,9 +1,12 @@
 package com.developerspace.webrtcsample.compose.ui.screens
 
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,10 +23,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,35 +51,39 @@ fun ChatListScreen() {
         verticalArrangement = Arrangement.Top
     ) {
         items(recentMessageList) { recentMessage ->
-            ChatListItem(recentMessage)
+            ChatListItem(recentMessage, viewModel)
         }
     }
 }
 
 @Composable
-fun ChatListItem(recentMessage: RecentMessage) {
+fun ChatListItem(recentMessage: RecentMessage, viewModel: ChatListViewModel) {
     val context = LocalContext.current
+    val activity = LocalContext.current as AppCompatActivity
     Row(
-        modifier = Modifier.fillMaxWidth().clickable {
-            // Go to chat screen
-            val intent = Intent(context, ChatMainActivity::class.java)
-            intent.putExtra("receiverUserID", recentMessage.toUserId)
-            intent.putExtra("receiverUserName", recentMessage.toUserName)
-            context.startActivity(intent)
-        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                // Go to chat screen
+                val intent = Intent(context, ChatMainActivity::class.java)
+                intent.putExtra("receiverUserID", recentMessage.toUserId)
+                intent.putExtra("receiverUserName", recentMessage.toUserName)
+                context.startActivity(intent)
+                viewModel.resetUnreadCountUsingWorker(activity, recentMessage.toUserId)
+            },
         horizontalArrangement = Arrangement.Start
     ) {
         ProfilePicture(user = User(photoUrl = recentMessage.toPhotoUrl), 45.dp)
         NameAndLastText(
+            recentMessage,
             Modifier
                 .fillMaxWidth(0.80f)
                 .height(80.dp),
-            recentMessage
         )
         Spacer(Modifier.weight(1f))
         TimeAndUnreadIcon(
-            time = recentMessage.friendlyMessage.time,
-            modifier = Modifier
+            recentMessage,
+            Modifier
                 .height(80.dp)
                 .padding(end = 8.dp)
         )
@@ -80,7 +91,7 @@ fun ChatListItem(recentMessage: RecentMessage) {
 }
 
 @Composable
-fun NameAndLastText(modifier: Modifier, recentMessage: RecentMessage) {
+fun NameAndLastText(recentMessage: RecentMessage, modifier: Modifier) {
     Column(verticalArrangement = Arrangement.Center, modifier = modifier) {
         Text(recentMessage.toUserName)
         Text(
@@ -93,15 +104,33 @@ fun NameAndLastText(modifier: Modifier, recentMessage: RecentMessage) {
 
 @Composable
 fun TimeAndUnreadIcon(
-    time: String?,
+    recentMessage: RecentMessage,
     modifier: Modifier
 ) {
     Column(verticalArrangement = Arrangement.SpaceEvenly, modifier = modifier) {
         Text(
-            time ?: "",
+            recentMessage.friendlyMessage.time ?: "",
             style = TextStyle(Color.Gray, fontSize = 10.sp)
         )
-        UnreadIcon()
+
+        if (recentMessage.unreadCount != 0 &&
+            recentMessage.toUserName == recentMessage.friendlyMessage.name
+        ) Box(
+            modifier = Modifier
+                .height(22.dp)
+                .width(22.dp)
+                .clip(shape = RoundedCornerShape(50))
+                .background(Color(0xFF25D366))
+        ) {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text =  recentMessage.unreadCount.toString(),
+                fontSize = 10.sp,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+        }
+
     }
 }
 
