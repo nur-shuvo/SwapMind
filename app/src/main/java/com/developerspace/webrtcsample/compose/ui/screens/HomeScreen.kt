@@ -41,6 +41,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -99,7 +100,7 @@ fun HomeScreen(navController: NavController? = null) {
                         // Add story clicked
                         openDocument.launch(arrayOf("image/*"))
                     }
-                    DividerText(text = "Top topics that you want to discuss")
+                    DividerText(text = "Swap your mind with online users based on topics")
                 }
                 var index = 0
                 items(staticTopicList.size / 3) {
@@ -267,13 +268,13 @@ fun DividerText(text: String) {
         text,
         modifier = Modifier
             .padding(bottom = 5.dp)
-            .fillMaxWidth()
-            .wrapContentWidth(),
+            .fillMaxWidth(),
         style = TextStyle(
             fontStyle = FontStyle.Italic,
             fontFamily = FontFamily.Serif,
             fontWeight = FontWeight.Bold,
-            fontSize = 15.sp
+            fontSize = 15.sp,
+            textAlign = TextAlign.Center
         )
     )
 }
@@ -292,6 +293,6 @@ fun CircularButton() {
 @Composable
 fun DefaultPreviewHome() {
     MyTheme {
-        // CategoryCardTuple(0,0,0)
+        DividerText("Swap your mind with online users based on topics")
     }
 }

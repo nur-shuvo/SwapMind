@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -93,6 +94,13 @@ class ChatMainActivity : AppCompatActivity() {
         )
 
         sendButton?.setOnClickListener {
+            if (messageEditText?.text.isNullOrBlank()) {
+                Toast.makeText(
+                    this,
+                    "Please enter something!",
+                    Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             val friendlyMessage = FriendlyMessage(
                 messageEditText!!.text.toString(),
                 getUserName(),
