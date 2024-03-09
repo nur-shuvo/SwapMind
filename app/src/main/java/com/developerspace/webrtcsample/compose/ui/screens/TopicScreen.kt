@@ -91,7 +91,7 @@ fun TopicScreen(topic: Topic, navController: NavController? = null) {
                     ImageContent(topic = topic)
                 }
                 item {
-                    QuoteText(topic.quoteText,  topic.quoteText)
+                    QuoteText(topic.quoteText,  topic.extraQuoteText)
                 }
                 item {
                     Spacer(modifier = Modifier
