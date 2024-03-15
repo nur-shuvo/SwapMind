@@ -9,25 +9,21 @@ import com.developerspace.webrtcsample.compose.data.repository.RemoteStoriesRepo
 import com.developerspace.webrtcsample.compose.data.repository.UserListRepository
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
 import com.developerspace.webrtcsample.compose.data.model.RemoteStory
+import com.developerspace.webrtcsample.compose.data.model.StoryDetailViewData
 import com.developerspace.webrtcsample.compose.data.model.User
+import com.developerspace.webrtcsample.compose.data.repository.MonitorSelectedStoryRepository
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
@@ -67,6 +63,10 @@ class HomeScreenViewModel @Inject constructor(
             .getReference(Firebase.auth.uid!!)
             .child("story_pic")
         putImageInStorage(activity, storageReference, uri)
+    }
+
+    fun updateSelectedStory(user: User, story: RemoteStory) {
+        MonitorSelectedStoryRepository.storyDetailViewData = StoryDetailViewData(user, story)
     }
 
     private fun putImageInStorage(

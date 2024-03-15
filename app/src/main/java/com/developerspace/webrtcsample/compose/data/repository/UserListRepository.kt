@@ -123,7 +123,7 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
         geoFire.getLocation(Firebase.auth.uid, object : LocationCallback {
             override fun onLocationResult(key: String?, location: GeoLocation?) {
                 if (location != null) {
-                    val currentNearByUsers: MutableList<Pair<User, Long>> = mutableListOf()
+                    val currentNearByUsers: MutableSet<Pair<User, Long>> = mutableSetOf()
                     // now query with the distanceInKm
                     val geoQuery = geoFire.queryAtLocation(location, distanceInKm.toDouble())
                     geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
@@ -154,21 +154,17 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
 
                         }
 
-                        override fun onKeyMoved(key: String?, location: GeoLocation?) {
-                            TODO("Not yet implemented")
-                        }
+                        override fun onKeyMoved(key: String?, location: GeoLocation?) {}
 
                         override fun onGeoQueryReady() {
                             workerScope.launch {
                                 delay(5000)
-                                consumer.accept(currentNearByUsers)
+                                consumer.accept(currentNearByUsers.toMutableList())
                                 workerScope.cancel()
                             }
                         }
 
-                        override fun onGeoQueryError(error: DatabaseError?) {
-                            TODO("Not yet implemented")
-                        }
+                        override fun onGeoQueryError(error: DatabaseError?) {}
 
                     })
                 } else {

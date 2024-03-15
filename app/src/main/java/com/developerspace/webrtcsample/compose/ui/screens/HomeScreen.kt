@@ -52,7 +52,9 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.data.model.RemoteStory
+import com.developerspace.webrtcsample.compose.data.model.StoryDetailViewData
 import com.developerspace.webrtcsample.compose.data.model.User
+import com.developerspace.webrtcsample.compose.data.repository.MonitorSelectedStoryRepository
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.developerspace.webrtcsample.compose.ui.util.staticTopicList
@@ -96,7 +98,7 @@ fun HomeScreen(navController: NavController? = null) {
             ) {
                 item {
                     DividerText(text = "Top stories")
-                    ListOfStory(userMap.value, remoteStories.value) {
+                    ListOfStory(viewModel, userMap.value, remoteStories.value, navController) {
                         // Add story clicked
                         openDocument.launch(arrayOf("image/*"))
                     }
@@ -114,8 +116,10 @@ fun HomeScreen(navController: NavController? = null) {
 
 @Composable
 fun ListOfStory(
+    viewModel: HomeScreenViewModel,
     userMap: Map<String, User>,
     remoteStoryList: List<RemoteStory>,
+    navController: NavController?,
     onClickCard: () -> Unit = {}
 ) {
     LazyRow {
@@ -123,7 +127,10 @@ fun ListOfStory(
             AddStoryCard(onClickCard)
         }
         items(remoteStoryList) {
-            StoryCard(userMap, it) {}
+            StoryCard(userMap, it) { (story, user) ->
+                viewModel.updateSelectedStory(user, story)
+                navController?.navigate("story_detail_view")
+            }
         }
     }
 }
@@ -157,7 +164,8 @@ fun AddStoryCard(onClickCard: () -> Unit = {}) {
 }
 
 @Composable
-fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard: () -> Unit) {
+fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard: (Pair<RemoteStory, User>) -> Unit) {
+    val user = userMap[remoteStory.userID!!] ?: User()
     Card(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
@@ -165,10 +173,9 @@ fun StoryCard(userMap: Map<String, User>, remoteStory: RemoteStory, onClickCard:
             .height(180.dp)
             .padding(2.dp)
             .border(2.dp, Color.Blue, RoundedCornerShape(15.dp))
-            .clickable { onClickCard.invoke() }
+            .clickable { onClickCard.invoke(remoteStory to user) }
     ) {
         Box {
-            val user = userMap[remoteStory.userID!!] ?: User()
             Image(
                 painter = rememberImagePainter(
                     data = remoteStory.storyUrl,
