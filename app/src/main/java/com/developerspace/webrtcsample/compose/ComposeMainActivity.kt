@@ -97,6 +97,7 @@ class ComposeMainActivity : AppCompatActivity() {
         } else {
             // TODO: Inform user that that your app will not show notifications.
         }
+        tryToSetUserLocation()
     }
 
     private fun askNotificationPermission() {
@@ -105,6 +106,7 @@ class ComposeMainActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
+                tryToSetUserLocation()
             } else if (shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
             } else {
                 // Directly ask for the permission

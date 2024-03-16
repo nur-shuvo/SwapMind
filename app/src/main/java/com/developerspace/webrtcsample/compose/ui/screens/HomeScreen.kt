@@ -94,7 +94,7 @@ fun HomeScreen(navController: NavController? = null) {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White)
-                    .padding(10.dp)
+                    .padding(5.dp)
             ) {
                 item {
                     DividerText(text = "Top stories")
@@ -102,6 +102,7 @@ fun HomeScreen(navController: NavController? = null) {
                         // Add story clicked
                         openDocument.launch(arrayOf("image/*"))
                     }
+                    Divider(modifier = Modifier.fillMaxWidth().padding(top = 3.dp), 3.dp)
                     DividerText(text = "Swap your mind with online users based on topics")
                 }
                 var index = 0
