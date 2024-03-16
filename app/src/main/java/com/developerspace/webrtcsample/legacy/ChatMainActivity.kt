@@ -184,7 +184,7 @@ class ChatMainActivity : AppCompatActivity() {
     }
 
     private fun onImageSelected(uri: Uri) {
-        Log.d(TAG, "Uri: $uri")
+        Timber.tag(TAG).d("Uri: %s", uri)
         val user = auth.currentUser
         val tempMessage = FriendlyMessage(null, getUserName(), getPhotoUrl(), LOADING_IMAGE_URL)
 
@@ -195,10 +195,8 @@ class ChatMainActivity : AppCompatActivity() {
                 tempMessage,
                 DatabaseReference.CompletionListener { databaseError, databaseReference ->
                     if (databaseError != null) {
-                        Log.w(
-                            TAG, "Unable to write message to database.",
-                            databaseError.toException()
-                        )
+                        Timber.tag(TAG)
+                            .w(databaseError.toException(), "Unable to write message to database.")
                         return@CompletionListener
                     }
 
@@ -230,11 +228,7 @@ class ChatMainActivity : AppCompatActivity() {
                     }
             }
             .addOnFailureListener(this) { e ->
-                Log.w(
-                    TAG,
-                    "Image upload task was unsuccessful.",
-                    e
-                )
+                Timber.tag(TAG).w(e, "Image upload task was unsuccessful.")
             }
     }
 
@@ -250,7 +244,7 @@ class ChatMainActivity : AppCompatActivity() {
             try {
                 super.onLayoutChildren(recycler, state)
             } catch (e: IndexOutOfBoundsException) {
-                Log.e("TAG", "meet a IOOBE in RecyclerView")
+                Timber.tag("TAG").e("meet a IOOBE in RecyclerView")
             }
         }
     }

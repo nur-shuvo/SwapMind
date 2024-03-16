@@ -37,4 +37,7 @@
     <style name="Theme.ProfileCardLayout.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.ProfileCardLayout.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

@@ -11,7 +11,8 @@
         android:id="@+id/my_custom_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white">
+        android:background="@color/white"
+        ads:titleTextAppearance="@style/ToolbarTitle">
     </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout

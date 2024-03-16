@@ -64,11 +64,15 @@ class FcmUtil @Inject constructor(
                                     )
                                 )
 
-                            apiService.sendFcmMessageByDeviceToken(
-                                "https://fcm.googleapis.com/v1/projects/$SWAP_MIND_FIREBASE_PROJECT_ID/messages:send",
-                                headerMap,
-                                reqBody
-                            )
+                            try {
+                                apiService.sendFcmMessageByDeviceToken(
+                                    "https://fcm.googleapis.com/v1/projects/$SWAP_MIND_FIREBASE_PROJECT_ID/messages:send",
+                                    headerMap,
+                                    reqBody
+                                )
+                            } catch (e: Exception) {
+                                Timber.e("Exception in sending fcm msg by device token $e")
+                            }
                         }
                     }
                 }.addOnFailureListener {
