@@ -17,14 +17,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -52,9 +51,7 @@ import coil.compose.rememberImagePainter
 import coil.transform.RoundedCornersTransformation
 import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.data.model.RemoteStory
-import com.developerspace.webrtcsample.compose.data.model.StoryDetailViewData
 import com.developerspace.webrtcsample.compose.data.model.User
-import com.developerspace.webrtcsample.compose.data.repository.MonitorSelectedStoryRepository
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.util.Topic
 import com.developerspace.webrtcsample.compose.ui.util.staticTopicList

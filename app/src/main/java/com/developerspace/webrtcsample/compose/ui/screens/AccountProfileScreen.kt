@@ -19,8 +19,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -80,67 +80,72 @@ fun AccountProfileScreen(profileUserID: String, navController: NavController? = 
                 .padding(padding)
                 .background(Color.White),
         ) {
-            if (isProgressShow) {
-                CircularProgressIndicator(
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)) {
+                Column(
                     modifier = Modifier
-                        .wrapContentSize()
-                        .size(80.dp)
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-                    .verticalScroll(
-                        rememberScrollState()
-                    ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
-            ) {
-                Box {
-                    ProfilePicture(userProfile, profileImageSize.dp, color = Color.Blue)
-                    Box(
-                        modifier = Modifier
-                            .height(innerBoxSize.dp)
-                            .width(innerBoxSize.dp)
-                            .align(Alignment.Center)
-                    ) {
-                        if (userProfile.userID == Firebase.auth.uid) {
-                            Image(
-                                painterResource(id = R.drawable.photo_camera_24px), "",
-                                Modifier
-                                    .clickable {
-                                        openDocument.launch(arrayOf("image/*"))
-                                    }
-                                    .background(
-                                        color = lightGreen,
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                                    .border(
-                                        imagePickerIconBorder.dp,
-                                        Color.Black,
-                                        RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(imagePickerIconPadding.dp)
-                                    .size(imagePickerIconSize.dp)
-                                    .align(Alignment.BottomEnd)
-                            )
+                        .fillMaxSize()
+                        .background(Color.White)
+                        .verticalScroll(
+                            rememberScrollState()
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top
+                ) {
+                    Box {
+                        ProfilePicture(userProfile, profileImageSize.dp, color = Color.Blue)
+                        Box(
+                            modifier = Modifier
+                                .height(innerBoxSize.dp)
+                                .width(innerBoxSize.dp)
+                                .align(Alignment.Center)
+                        ) {
+                            if (userProfile.userID == Firebase.auth.uid) {
+                                Image(
+                                    painterResource(id = R.drawable.photo_camera_24px), "",
+                                    Modifier
+                                        .clickable {
+                                            openDocument.launch(arrayOf("image/*"))
+                                        }
+                                        .background(
+                                            color = lightGreen,
+                                            shape = RoundedCornerShape(12.dp)
+                                        )
+                                        .border(
+                                            imagePickerIconBorder.dp,
+                                            Color.Black,
+                                            RoundedCornerShape(12.dp)
+                                        )
+                                        .padding(imagePickerIconPadding.dp)
+                                        .size(imagePickerIconSize.dp)
+                                        .align(Alignment.BottomEnd)
+                                )
+                            }
                         }
                     }
+                    ProfileContent(userProfile, Alignment.CenterHorizontally)
+                    ProfileSection("Name", true, userProfile) {
+                        navController?.navigate("account_profile_edit_screen/name")
+                    }
+                    ProfileSection("About", true, userProfile) {
+                        navController?.navigate("account_profile_edit_screen/about")
+                    }
+                    ProfileSection("Phone Number or Email", false, userProfile)
+                    Spacer(Modifier.weight(1.0f))
+                    Button(onClick = {
+                        viewmodel.signOut(activity)
+                    }, modifier = Modifier.padding(bottom = 15.dp)) {
+                        Text("Sign Out")
+                    }
                 }
-                ProfileContent(userProfile, Alignment.CenterHorizontally)
-                ProfileSection("Name", true, userProfile) {
-                    navController?.navigate("account_profile_edit_screen/name")
-                }
-                ProfileSection("About", true, userProfile) {
-                    navController?.navigate("account_profile_edit_screen/about")
-                }
-                ProfileSection("Phone Number or Email", false, userProfile)
-                Spacer(Modifier.weight(1.0f))
-                Button(onClick = {
-                    viewmodel.signOut(activity)
-                }, modifier = Modifier.padding(bottom = 15.dp)) {
-                    Text("Sign Out")
+                if (isProgressShow) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.Center)
+                            .size(80.dp)
+                    )
                 }
             }
         }

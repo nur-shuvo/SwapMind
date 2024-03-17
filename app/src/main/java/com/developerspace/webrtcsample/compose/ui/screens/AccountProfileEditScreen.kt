@@ -2,19 +2,18 @@ package com.developerspace.webrtcsample.compose.ui.screens
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -75,33 +74,38 @@ fun Name(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            // TODO Need to check why this is not showing?
-            if (isProgressShow) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .size(80.dp)
-                )
-            }
-            Column(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .background(Color.White)
-                    .padding(10.dp)
+                    .fillMaxSize()
             ) {
-                EditTextView(text1, "First Name", "Enter your first $type") {
-                    text1 = it
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .background(Color.White)
+                        .padding(10.dp)
+                ) {
+                    EditTextView(text1, "First Name", "Enter your first $type") {
+                        text1 = it
+                    }
+                    Spacer(modifier = Modifier.height(20.dp))
+                    EditTextView(text2, "Last Name", "Enter your last $type") {
+                        text2 = it
+                    }
+                    Spacer(modifier = Modifier.weight(1.0f))
+                    Button(onClick = {
+                        onClicked.invoke("$text1 $text2")
+                    }, modifier = Modifier.align(Alignment.End)) {
+                        Text("Done")
+                    }
                 }
-                Spacer(modifier = Modifier.height(20.dp))
-                EditTextView(text2, "Last Name", "Enter your last $type") {
-                    text2 = it
-                }
-                Spacer(modifier = Modifier.weight(1.0f))
-                Button(onClick = {
-                    onClicked.invoke("$text1 $text2")
-                }, modifier = Modifier.align(Alignment.End)) {
-                    Text("Done")
+                if (isProgressShow) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.Center)
+                            .size(80.dp)
+                    )
                 }
             }
         }
@@ -127,29 +131,34 @@ fun About(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            // TODO Need to check why this is not showing?
-            if (isProgressShow) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .size(80.dp)
-                )
-            }
-            Column(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .background(Color.White)
-                    .padding(10.dp)
+                    .fillMaxSize()
             ) {
-                EditTextView(text, "About", "Update your status $type") {
-                    text = it
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .background(Color.White)
+                        .padding(10.dp)
+                ) {
+                    EditTextView(text, "About", "Update your status $type") {
+                        text = it
+                    }
+                    Spacer(modifier = Modifier.weight(1.0f))
+                    Button(onClick = {
+                        onClicked.invoke(text)
+                    }, modifier = Modifier.align(Alignment.End)) {
+                        Text("Done")
+                    }
                 }
-                Spacer(modifier = Modifier.weight(1.0f))
-                Button(onClick = {
-                    onClicked.invoke(text)
-                }, modifier = Modifier.align(Alignment.End)) {
-                    Text("Done")
+                if (isProgressShow) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.Center)
+                            .size(80.dp)
+                    )
                 }
             }
         }
