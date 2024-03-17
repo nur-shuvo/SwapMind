@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import com.developerspace.webrtcsample.R
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
+import com.developerspace.webrtcsample.R
 import com.developerspace.webrtcsample.compose.data.model.User
+import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 @ExperimentalPagerApi
 @Composable
 fun MainScreen(navController: NavController? = null) {
-    val pagerState = rememberPagerState(pageCount = 5)
+    val pagerState = rememberPagerState()
     Column(
         modifier = Modifier
             .background(Color.White)
@@ -114,10 +114,6 @@ fun Tabs(pagerState: PagerState) {
         list.forEachIndexed { index, _ ->
             Tab(
                 icon = {
-//                    if (index == 3) Icon(
-//                        painterResource(id = R.drawable.live_cast_24px),
-//                        contentDescription = null
-//                    )
                     if (index == 4) Icon(
                         painterResource(id = R.drawable.live_cast_24px),
                         contentDescription = null
@@ -134,7 +130,7 @@ fun Tabs(pagerState: PagerState) {
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {
-                        pagerState.animateScrollToPage(index)
+                        pagerState.scrollToPage(index)
                     }
                 }
             )
@@ -145,7 +141,7 @@ fun Tabs(pagerState: PagerState) {
 @ExperimentalPagerApi
 @Composable
 fun TabsContent(pagerState: PagerState, navController: NavController?) {
-    HorizontalPager(state = pagerState) { page ->
+    HorizontalPager(5, state = pagerState) { page ->
         when (page) {
             0 -> HomeScreen(navController)
             1 -> ActiveUsersScreen(navController)
