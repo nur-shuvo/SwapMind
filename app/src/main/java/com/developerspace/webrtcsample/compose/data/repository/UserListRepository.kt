@@ -31,15 +31,30 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class UserListRepository @Inject constructor(private val userDao: UserDao) {
     private var db: FirebaseDatabase = Firebase.database
     private val workerScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val mainScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     companion object {
         private const val TAG = "UserListRepository"
+    }
+
+    fun prePopulateAllUsersInDb() {
+        db.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD).get()
+            .addOnSuccessListener { snapShot ->
+                snapShot.getValue<MutableMap<String, User>>()?.let {
+                    val resultList: MutableList<User> = mutableListOf()
+                    it.forEach { entry ->
+                        val user = entry.value
+                        resultList.add(user)
+                        saveUserInDb(user)
+                    }
+                    Timber.i("total users - ${resultList.size}")
+                }
+            }
     }
 
     fun getUserListFromDbFlow(): Flow<List<User>> {
@@ -117,65 +132,69 @@ class UserListRepository @Inject constructor(private val userDao: UserDao) {
 
     fun fetchAllNearByUsers(distanceInKm: Long, consumer: Consumer<List<Pair<User, Long>>>) {
         val workerScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-        val geoFire = GeoFire(
-            Firebase.database.reference.child(ChatMainActivity.ROOT).child(USER_LOCATION_PATH)
-        )
-        geoFire.getLocation(Firebase.auth.uid, object : LocationCallback {
-            override fun onLocationResult(key: String?, location: GeoLocation?) {
-                if (location != null) {
-                    val currentNearByUsers: MutableSet<Pair<User, Long>> = mutableSetOf()
-                    // now query with the distanceInKm
-                    val geoQuery = geoFire.queryAtLocation(location, distanceInKm.toDouble())
-                    geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
-                        override fun onKeyEntered(key: String?, location1: GeoLocation?) {
-                            if (location1 != null) {
-                                workerScope.launch {
-                                    getUserByUserID(key!!).collect { userData ->
-                                        currentNearByUsers.add(
-                                            User(
-                                                userData.userId,
-                                                userData.userName,
-                                                userData.profileUrl,
-                                                userData.onlineStatus
-                                            ) to
-                                                    distanceInKiloMeter(
-                                                        location.latitude,
-                                                        location.longitude,
-                                                        location1.latitude,
-                                                        location1.longitude
-                                                    )
-                                        )
+        try {
+            val geoFire = GeoFire(
+                Firebase.database.reference.child(ChatMainActivity.ROOT).child(USER_LOCATION_PATH)
+            )
+            geoFire.getLocation(Firebase.auth.uid, object : LocationCallback {
+                override fun onLocationResult(key: String?, location: GeoLocation?) {
+                    if (location != null) {
+                        val currentNearByUsers: MutableSet<Pair<User, Long>> = mutableSetOf()
+                        // now query with the distanceInKm
+                        val geoQuery = geoFire.queryAtLocation(location, distanceInKm.toDouble())
+                        geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
+                            override fun onKeyEntered(key: String?, location1: GeoLocation?) {
+                                if (location1 != null) {
+                                    workerScope.launch {
+                                        if (key != null) {
+                                            getUserByUserID(key).collect { userData ->
+                                                currentNearByUsers.add(
+                                                    User(
+                                                        userData.userId,
+                                                        userData.userName,
+                                                        userData.profileUrl,
+                                                        userData.onlineStatus
+                                                    ) to
+                                                            distanceInKiloMeter(
+                                                                location.latitude,
+                                                                location.longitude,
+                                                                location1.latitude,
+                                                                location1.longitude
+                                                            )
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        override fun onKeyExited(key: String?) {
+                            override fun onKeyExited(key: String?) {
 
-                        }
-
-                        override fun onKeyMoved(key: String?, location: GeoLocation?) {}
-
-                        override fun onGeoQueryReady() {
-                            workerScope.launch {
-                                delay(5000)
-                                consumer.accept(currentNearByUsers.toMutableList())
-                                workerScope.cancel()
                             }
-                        }
 
-                        override fun onGeoQueryError(error: DatabaseError?) {}
+                            override fun onKeyMoved(key: String?, location: GeoLocation?) {}
 
-                    })
-                } else {
-                    println(String.format("There is no location for key %s in GeoFire", key))
+                            override fun onGeoQueryReady() {
+                                workerScope.launch {
+                                    delay(5000)
+                                    consumer.accept(currentNearByUsers.toMutableList())
+                                    workerScope.cancel()
+                                }
+                            }
+
+                            override fun onGeoQueryError(error: DatabaseError?) {}
+
+                        })
+                    } else {
+                        println(String.format("There is no location for key %s in GeoFire", key))
+                    }
                 }
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                Timber.e("There was an error getting the GeoFire location: $databaseError")
-            }
-        })
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Timber.e("There was an error getting the GeoFire location: $databaseError")
+                }
+            })
+        } catch (_: Exception) {}
     }
 
     private fun distanceInKiloMeter(

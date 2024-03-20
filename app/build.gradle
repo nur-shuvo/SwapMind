@@ -31,6 +31,12 @@ android {
         debug {
             storeFile file('../debug.keystore')
         }
+        release {
+            storeFile file('../release.jks')
+            keyAlias 'key0'
+            storePassword 'truepass1@'
+            keyPassword 'truepass1@'
+        }
     }
 
     buildTypes {
@@ -42,6 +48,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable false
+            signingConfig signingConfigs.release
         }
     }
     dataBinding {
@@ -183,6 +191,10 @@ dependencies {
 
     // play service location
     implementation 'com.google.android.gms:play-services-location:21.1.0'
+
+    // Moshi
+    implementation "com.squareup.moshi:moshi:1.15.0"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:1.15.0"
 
     // unit tests
     testImplementation 'org.mockito:mockito-core:4.8.0'

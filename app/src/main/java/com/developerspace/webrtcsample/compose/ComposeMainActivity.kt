@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.developerspace.webrtcsample.compose.ui.navigation.TopLevelNavigation
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.util.REQUEST_LOCATION_PERMISSION
@@ -21,6 +22,7 @@ import com.developerspace.webrtcsample.compose.ui.util.tryToSetUserLocation
 import com.developerspace.webrtcsample.compose.fcm.UserFcmTokenUpdateUtil
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.compose.data.preference.AppPref
+import com.developerspace.webrtcsample.compose.data.repository.UserListRepository
 import com.developerspace.webrtcsample.compose.ui.util.REQUEST_GPS
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
@@ -29,6 +31,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -42,8 +45,14 @@ class ComposeMainActivity : AppCompatActivity() {
     @Inject
     lateinit var appPref: AppPref
 
+    @Inject
+    lateinit var userListRepository: UserListRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            userListRepository.prePopulateAllUsersInDb()
+        }
         setContent {
             MyTheme {
                 TopLevelNavigation()
