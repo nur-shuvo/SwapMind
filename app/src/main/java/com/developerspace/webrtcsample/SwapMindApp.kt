@@ -23,6 +23,8 @@ class SwapMindApp: Application(), Configuration.Provider {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            // Just for experiment
+            BuildConfig.apiKey
         } else {
             Timber.plant(ReleaseTree())
         }
