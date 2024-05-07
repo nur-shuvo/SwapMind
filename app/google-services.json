@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "958405343407",
+    "firebase_url": "https://talkbuddy-33d19-default-rtdb.firebaseio.com",
     "project_id": "talkbuddy-33d19",
     "storage_bucket": "talkbuddy-33d19.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "958405343407-reg78r30lqsks9i7mk951mf64bfv300r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dwarsh.webrtcsample",
+            "certificate_hash": "d7b187b2006efda3bea8bef433c59a11781ce2f2"
+          }
+        },
         {
           "client_id": "958405343407-t16so4m16p1a3hv0btffrm0t43qsa71p.apps.googleusercontent.com",
           "client_type": 1,
