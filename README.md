@@ -1,4 +1,4 @@
-**Swap Mind is an interesting android application that connects nearby people to start conversation in a very constructive way.**
+Swap Mind is an interesting android mobile application that connects nearby people to start conversation in a very constructive and unique way.
 
 ## Core Features
 
