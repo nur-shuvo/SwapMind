@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -14,18 +13,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.developerspace.webrtcsample.compose.ui.navigation.TopLevelNavigation
+import com.developerspace.webrtcsample.compose.ui.navigation.NavHost
 import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
 import com.developerspace.webrtcsample.compose.ui.util.REQUEST_LOCATION_PERMISSION
 import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
 import com.developerspace.webrtcsample.compose.ui.util.tryToSetUserLocation
 import com.developerspace.webrtcsample.compose.fcm.UserFcmTokenUpdateUtil
-import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.compose.data.preference.AppPref
 import com.developerspace.webrtcsample.compose.data.repository.UserListRepository
 import com.developerspace.webrtcsample.compose.ui.util.REQUEST_GPS
-import com.firebase.geofire.GeoFire
-import com.firebase.geofire.GeoLocation
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -55,7 +51,7 @@ class ComposeMainActivity : AppCompatActivity() {
         }
         setContent {
             MyTheme {
-                TopLevelNavigation()
+                NavHost()
             }
         }
         UserUpdateRemoteUtil().makeUserOnlineRemote(Firebase.database, Firebase.auth)
