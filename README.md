@@ -33,6 +33,5 @@ This application is under development.
 ### Firebase realtime db. Firestore, Cloud
 ### Web Rtc
 ### GeoFire
-
-### Encryption of data by AES.
+### Retrofit/Hilt/Coroutines/Flow/AES.
 
