@@ -30,11 +30,9 @@ This application is under development.
 # Framework/Libraries used
 
 ### Jetpack Compose
-### Firebase realtime databse, firestore, cloud storage
+### Firebase realtime db. Firestore, Cloud
 ### Web Rtc
 ### GeoFire
-
-### Web Rtc for video streaming
 
 ### Encryption of data by AES.
 
