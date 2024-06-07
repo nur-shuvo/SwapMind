@@ -1,9 +1,8 @@
 package com.developerspace.webrtcsample.compose.data.repository
 
-import android.util.Log
-import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.compose.data.model.RemoteStory
 import com.developerspace.webrtcsample.compose.data.model.STORIES_REMOTE_PATH
+import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -12,19 +11,20 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteStoriesRepository @Inject constructor() {
     private var db: FirebaseDatabase = Firebase.database
 
     fun fetchAllStoriesRemote(callback: (List<RemoteStory>) -> Unit) {
-        Log.i(TAG, "fetchAllStoriesRemote start")
+        Timber.i("fetchAllStoriesRemote start")
         val resultListStory: MutableList<RemoteStory> = mutableListOf()
         db.reference.child(ChatMainActivity.ROOT).child(STORIES_REMOTE_PATH)
             .addValueEventListener(
                 object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        Log.i(TAG, "fetchAllStoriesRemote data received")
+                        Timber.i("fetchAllStoriesRemote data received")
                         snapshot.getValue<MutableMap<String, RemoteStory>>()?.let { returnedMap ->
                             // filter list so that my own story comes first
                             var myRemoteStory: RemoteStory? = null
@@ -47,6 +47,15 @@ class RemoteStoriesRepository @Inject constructor() {
                     }
                 }
             )
+    }
+
+    fun deleteMyStory() {
+        kotlin.runCatching {
+            db.reference.child(ChatMainActivity.ROOT).child(STORIES_REMOTE_PATH)
+                .child(Firebase.auth.uid!!).removeValue()
+        }.onFailure {
+            Timber.e("Exception deleting my story")
+        }
     }
 
     companion object {
