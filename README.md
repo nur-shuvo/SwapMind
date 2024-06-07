@@ -29,9 +29,6 @@ This application is under development.
 
 <h2 align="left">
 <sub>
-<img  src="fastlane/metadata/android/en-US/images/readme/community.svg"
-      height="30"
-      width="30">
 </sub>
 Contributing
 </h2>
