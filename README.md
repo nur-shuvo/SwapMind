@@ -27,17 +27,12 @@
 
 This application is under development.
 
-# Technologies used
+# Framework/Libraries used
 
-### Jetpack Compose for UI
-
-### Retrofit for HTTP client
-
-### Hilt for Dependency Injection
-
-### Coroutines, Flow for Async Programming
-
+### Jetpack Compose
 ### Firebase realtime databse, firestore, cloud storage
+### Web Rtc
+### GeoFire
 
 ### Web Rtc for video streaming
 
