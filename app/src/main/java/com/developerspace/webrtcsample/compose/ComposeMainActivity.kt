@@ -3,25 +3,22 @@ package com.developerspace.webrtcsample.compose
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.developerspace.webrtcsample.compose.ui.navigation.NavHost
-import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
-import com.developerspace.webrtcsample.compose.ui.util.REQUEST_LOCATION_PERMISSION
-import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
-import com.developerspace.webrtcsample.compose.ui.util.tryToSetUserLocation
-import com.developerspace.webrtcsample.compose.fcm.UserFcmTokenUpdateUtil
 import com.developerspace.webrtcsample.compose.data.preference.AppPref
 import com.developerspace.webrtcsample.compose.data.repository.UserListRepository
-import com.developerspace.webrtcsample.compose.ui.util.REQUEST_GPS
+import com.developerspace.webrtcsample.compose.fcm.UserFcmTokenUpdateUtil
+import com.developerspace.webrtcsample.compose.ui.navigation.NavHost
+import com.developerspace.webrtcsample.compose.ui.theming.MyTheme
+import com.developerspace.webrtcsample.compose.extension.REQUEST_GPS
+import com.developerspace.webrtcsample.compose.extension.REQUEST_LOCATION_PERMISSION
+import com.developerspace.webrtcsample.compose.ui.util.UserUpdateRemoteUtil
+import com.developerspace.webrtcsample.compose.extension.tryToSetUserLocation
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -34,15 +31,17 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ComposeMainActivity : AppCompatActivity() {
 
-    companion object {
-        const val TAG = "ComposeMainActivity"
-    }
-
     @Inject
     lateinit var appPref: AppPref
 
     @Inject
     lateinit var userListRepository: UserListRepository
+
+    @Inject
+    lateinit var userUpdateRemoteUtil: UserUpdateRemoteUtil
+
+    @Inject
+    lateinit var userFcmTokenUpdateUtil: UserFcmTokenUpdateUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,27 +53,25 @@ class ComposeMainActivity : AppCompatActivity() {
                 NavHost()
             }
         }
-        UserUpdateRemoteUtil().makeUserOnlineRemote(Firebase.database, Firebase.auth)
+        userUpdateRemoteUtil.makeUserOnlineRemote(
+            Firebase.database,
+            Firebase.auth
+        )
         askNotificationPermission()
         updateFcmTokenToRemote()
         tryToSetUserLocation()
     }
 
     override fun onDestroy() {
-        // user is offline now
-        UserUpdateRemoteUtil().makeUserOfflineRemote(Firebase.database, Firebase.auth)
+        userUpdateRemoteUtil.makeUserOfflineRemote(Firebase.database, Firebase.auth)
         super.onDestroy()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
     }
 
     private fun updateFcmTokenToRemote() {
         appPref.getFcmDeviceToken().run {
             Timber.i("token in local-$this")
             if (isNotEmpty()) {
-                UserFcmTokenUpdateUtil().updateFcmDeviceTokenToRemote(
+                userFcmTokenUpdateUtil.updateFcmDeviceTokenToRemote(
                     Firebase.database,
                     Firebase.auth,
                     this
@@ -82,7 +79,7 @@ class ComposeMainActivity : AppCompatActivity() {
             } else {
                 FirebaseMessaging.getInstance().token.addOnSuccessListener {
                     Timber.i("token from firebase-api call-$it")
-                    UserFcmTokenUpdateUtil().updateFcmDeviceTokenToRemote(
+                    userFcmTokenUpdateUtil.updateFcmDeviceTokenToRemote(
                         Firebase.database,
                         Firebase.auth,
                         it
@@ -93,12 +90,10 @@ class ComposeMainActivity : AppCompatActivity() {
         }
     }
 
-    // permission
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) { isGranted: Boolean ->
         if (isGranted) {
-            // FCM SDK (and your app) can post notifications.
         } else {
             // TODO: Inform user that that your app will not show notifications.
         }
@@ -106,7 +101,6 @@ class ComposeMainActivity : AppCompatActivity() {
     }
 
     private fun askNotificationPermission() {
-        // This is only necessary for API level >= 33 (TIRAMISU)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED
@@ -114,7 +108,6 @@ class ComposeMainActivity : AppCompatActivity() {
                 tryToSetUserLocation()
             } else if (shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
             } else {
-                // Directly ask for the permission
                 requestPermissionLauncher.launch(POST_NOTIFICATIONS)
             }
         }
@@ -141,13 +134,5 @@ class ComposeMainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_GPS) {
             tryToSetUserLocation()
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MyTheme {
-        // MainScreen()
     }
 }

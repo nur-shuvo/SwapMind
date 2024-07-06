@@ -1,25 +1,26 @@
 package com.developerspace.webrtcsample.compose.ui.util
 
-import android.util.Log
-import com.developerspace.webrtcsample.legacy.ChatMainActivity
-import com.developerspace.webrtcsample.legacy.MainActivity
 import com.developerspace.webrtcsample.compose.data.model.RemoteStory
 import com.developerspace.webrtcsample.compose.data.model.STORIES_REMOTE_PATH
 import com.developerspace.webrtcsample.compose.data.model.User
+import com.developerspace.webrtcsample.legacy.ChatMainActivity
+import com.developerspace.webrtcsample.legacy.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * Update current firebase user remote
  */
-class UserUpdateRemoteUtil {
+class UserUpdateRemoteUtil @Inject constructor() {
 
     fun makeUserOnlineRemote(realTimeDb: FirebaseDatabase, auth: FirebaseAuth) {
         realTimeDb.reference.child(ChatMainActivity.ROOT).child(MainActivity.ONLINE_USER_LIST_CHILD)
             .child(auth.uid.toString())
             .setValue(User(auth.uid.toString(), getUserName(auth), getPhotoUrl(auth), true))
             .addOnFailureListener {
-                Log.i("MainActivity", it.message.toString())
+                Timber.i(it.message.toString())
             }
     }
 
@@ -28,7 +29,7 @@ class UserUpdateRemoteUtil {
             .child(auth.uid.toString())
             .setValue(User(auth.uid.toString(), getUserName(auth), getPhotoUrl(auth), false))
             .addOnFailureListener {
-                Log.i("MainActivity", it.message.toString())
+                Timber.i(it.message.toString())
             }
     }
 
@@ -37,7 +38,7 @@ class UserUpdateRemoteUtil {
             .child(auth.uid.toString())
             .setValue(User(auth.uid.toString(), newName, getPhotoUrl(auth), false))
             .addOnFailureListener {
-                Log.i("MainActivity", it.message.toString())
+                Timber.i(it.message.toString())
             }
     }
 
@@ -50,7 +51,7 @@ class UserUpdateRemoteUtil {
             .child(auth.uid.toString())
             .setValue(User(auth.uid.toString(), getUserName(auth), newProfileUrl, false))
             .addOnFailureListener {
-                Log.i("MainActivity", it.message.toString())
+                Timber.i(it.message.toString())
             }
     }
 

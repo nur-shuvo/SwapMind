@@ -6,7 +6,7 @@ import com.developerspace.webrtcsample.compose.data.db.dao.UserDao
 import com.developerspace.webrtcsample.compose.data.db.entity.UserData
 import com.developerspace.webrtcsample.compose.data.model.User
 import com.developerspace.webrtcsample.compose.ui.util.Topic
-import com.developerspace.webrtcsample.compose.ui.util.USER_LOCATION_PATH
+import com.developerspace.webrtcsample.compose.extension.USER_LOCATION_PATH
 import com.developerspace.webrtcsample.legacy.ChatMainActivity
 import com.developerspace.webrtcsample.legacy.MainActivity
 import com.firebase.geofire.GeoFire

@@ -1,4 +1,4 @@
-package com.developerspace.webrtcsample.compose.ui.util
+package com.developerspace.webrtcsample.compose.extension
 
 import android.annotation.SuppressLint
 import android.content.Context
