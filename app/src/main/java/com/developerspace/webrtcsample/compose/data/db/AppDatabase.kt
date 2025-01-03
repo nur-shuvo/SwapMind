@@ -9,7 +9,8 @@ import com.developerspace.webrtcsample.compose.data.db.entity.UserData
 
 @Database(
     entities = [UserData::class, RecentChatData::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {
     abstract fun userDao(): UserDao

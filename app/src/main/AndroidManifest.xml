@@ -53,10 +53,7 @@
             <!--                <category android:name="android.intent.category.LAUNCHER" />-->
             <!--            </intent-filter>-->
         </activity>
-        <activity
-            android:name=".legacy.RTCActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.WebRTCSample"/>
+
         <activity
             android:name=".legacy.activeUsers.ui.ActiveUserActivity"
             android:screenOrientation="portrait"

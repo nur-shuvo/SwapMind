@@ -55,10 +55,10 @@ class MainActivity : AppCompatActivity() {
                         if (it["type"] == "OFFER" || it["type"] == "ANSWER" || it["type"] == "END_CALL") {
                             meeting_id?.error = "Please enter new meeting ID"
                         } else {
-                            val intent = Intent(this@MainActivity, RTCActivity::class.java)
-                            intent.putExtra("meetingID", meeting_id?.text.toString())
-                            intent.putExtra("isJoin", false)
-                            startActivity(intent)
+//                            val intent = Intent(this@MainActivity, RTCActivity::class.java)
+//                            intent.putExtra("meetingID", meeting_id?.text.toString())
+//                            intent.putExtra("isJoin", false)
+//                            startActivity(intent)
                         }
                     }
                     .addOnFailureListener {
@@ -70,10 +70,10 @@ class MainActivity : AppCompatActivity() {
             if (meeting_id?.text.toString().trim().isNullOrEmpty())
                 meeting_id?.error = "Please enter meeting id"
             else {
-                val intent = Intent(this@MainActivity, RTCActivity::class.java)
-                intent.putExtra("meetingID", meeting_id?.text.toString())
-                intent.putExtra("isJoin", true)
-                startActivity(intent)
+//                val intent = Intent(this@MainActivity, RTCActivity::class.java)
+//                intent.putExtra("meetingID", meeting_id?.text.toString())
+//                intent.putExtra("isJoin", true)
+//                startActivity(intent)
             }
         }
         only_chat?.setOnClickListener {
