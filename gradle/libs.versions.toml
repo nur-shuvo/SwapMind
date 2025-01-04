@@ -1,5 +1,6 @@
 [versions]
 agp = "8.7.3"
+fullSdkVersion = "4.5.0"
 kotlin = "2.0.20"
 coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.8.7"
@@ -54,6 +55,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-gson-converter = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+rtc-full-sdk = { module = "io.agora.rtc:full-sdk", version.ref = "fullSdkVersion" }
 tikxml-annotation = { module = "com.tickaroo.tikxml:annotation", version.ref = "tikxml" }
 tikxml-core = { module = "com.tickaroo.tikxml:core", version.ref = "tikxml" }
 tikxml-retrofit-converter = { module = "com.tickaroo.tikxml:retrofit-converter", version.ref = "tikxml" }

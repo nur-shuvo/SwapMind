@@ -5,30 +5,42 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!--Optional permissions-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <!-- For devices running Android 12 (API level 32) or higher and integrating Agora Video SDK version v4.1.0 or lower, you also need to add the following permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <!-- For Android 12.0 or higher, the following permissions are also required -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
     <application
-        android:allowBackup="false"
         android:name=".SwapMindApp"
+        android:allowBackup="false"
+        android:forceDarkAllowed="false"
         android:icon="@drawable/swap_mind_new_logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/swap_mind_new_logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WebRTCSample"
-        android:forceDarkAllowed="false">
+        android:theme="@style/Theme.WebRTCSample">
         <activity
             android:name=".compose.ComposeMainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:launchMode="singleTop"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".legacy.SignInActivity"
             android:exported="false"
-            android:theme="@style/Theme.WebRTCSample"/>
+            android:theme="@style/Theme.WebRTCSample" />
         <activity
             android:name=".legacy.LaunchActivity"
             android:exported="true"
@@ -42,7 +54,7 @@
         <activity
             android:name=".legacy.ChatMainActivity"
             android:exported="false"
-            android:theme="@style/Theme.WebRTCSample"/>
+            android:theme="@style/Theme.WebRTCSample" />
         <activity
             android:name=".legacy.MainActivity"
             android:screenOrientation="portrait"
@@ -56,9 +68,14 @@
 
         <activity
             android:name=".legacy.activeUsers.ui.ActiveUserActivity"
-            android:screenOrientation="portrait"
             android:label="Active Users"
-            android:theme="@style/Theme.WebRTCSample"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.WebRTCSample" />
+
+        <activity
+            android:name=".streaming.StreamingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.WebRTCSample" />
 
         <service
             android:name=".compose.fcm.MyFirebaseMessagingService"
