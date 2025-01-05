@@ -106,7 +106,7 @@ fun TopicScreen(topic: Topic, navController: NavController? = null) {
                         onClickCard = {
                             navController?.navigate("user_detail_screen/${it.userID}")
                         },
-                        onCLickMessage = {
+                        onClickMessage = {
                             // Go to chat screen
                             val intent = Intent(context, ChatMainActivity::class.java)
                             intent.putExtra("receiverUserID", it.userID)

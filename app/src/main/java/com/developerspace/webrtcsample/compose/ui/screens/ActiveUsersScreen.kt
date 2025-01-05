@@ -81,7 +81,7 @@ fun ActiveUsersScreen(navController: NavController? = null) {
                     onClickCard = {
                         navController?.navigate("user_detail_screen/${it.userID}")
                     },
-                    onCLickMessage = {
+                    onClickMessage = {
                         // Go to chat screen
                         val intent = Intent(context, ChatMainActivity::class.java)
                         intent.putExtra("receiverUserID", it.userID)
@@ -93,38 +93,33 @@ fun ActiveUsersScreen(navController: NavController? = null) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(text: String) {
-    TopAppBar(title = { Text(text, fontWeight = FontWeight.Bold) })
-}
-
-@Composable
-fun ProfileCard(user: User, onClickCard: () -> Unit, onCLickMessage: () -> Unit) {
+fun ProfileCard(user: User, onClickCard: () -> Unit, onClickMessage: () -> Unit) {
     Card(
-        elevation = CardDefaults.cardElevation(2.dp, 2.dp, 2.dp, 2.dp),
-        shape = RoundedCornerShape(15.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .background(Color.White)
-            .padding(8.dp)
             .fillMaxWidth()
-            .border(1.dp, Color.Blue, RoundedCornerShape(15.dp))
-            .clickable { onClickCard.invoke() }
-
+            .clickable { onClickCard() }
+            .padding(12.dp)
+            .border(1.dp, Color.Gray.copy(alpha = 0.2f), RoundedCornerShape(20.dp))
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(12.dp)
                 .background(Color.White),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
+            horizontalArrangement = Arrangement.Start
         ) {
             ProfilePicture(user) {
-                onClickCard.invoke()
+                onClickCard()
             }
-            ProfileContent(user, tStyle = MaterialTheme.typography.headlineSmall)
-            Spacer(Modifier.weight(1f))
-            MessageSection(onCLickMessage)
+            Spacer(modifier = Modifier.width(16.dp))
+            ProfileContent(user, tStyle = MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.weight(1f))
+            MessageSection(onClickMessage)
         }
     }
 }

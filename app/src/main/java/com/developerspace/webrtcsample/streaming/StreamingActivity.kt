@@ -18,6 +18,7 @@ import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.RtcEngineConfig
 import io.agora.rtc2.video.VideoCanvas
 
+// TODO Move to composable
 
 class StreamingActivity : AppCompatActivity() {
     // Fill in the App ID obtained from the Agora Console
@@ -70,8 +71,7 @@ class StreamingActivity : AppCompatActivity() {
             throw RuntimeException("Check the error.")
         }
         mRtcEngine?.enableVideo()
-        // Enable local preview
-        mRtcEngine?.startPreview()
+        mRtcEngine?.startPreview()  // Enable local preview
         // Create a SurfaceView object and make it a child object of FrameLayout
         val container = findViewById<FrameLayout>(R.id.local_video_view_container)
         val surfaceView = SurfaceView(applicationContext)
@@ -155,9 +155,7 @@ class StreamingActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // Stop local video preview
         mRtcEngine?.stopPreview()
-        // Leave the channel
         mRtcEngine?.leaveChannel()
     }
 }
