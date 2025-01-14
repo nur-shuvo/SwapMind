@@ -2,4 +2,7 @@
     <string name="app_name">Swap Mind</string>
     <string name="pref_speakerphone_key">speakerphone_preference</string>
     <string name="pref_speakerphone_default">auto</string>
+    <string name="channel_name">Channel Name</string>
+    <string name="leave">Leave</string>
+    <string name="join">Join</string>
 </resources>

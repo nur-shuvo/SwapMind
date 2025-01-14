@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.developerspace.webrtcsample.compose.ui.screens.AccountProfileEditScreen
 import com.developerspace.webrtcsample.compose.ui.screens.AccountProfileScreen
+import com.developerspace.webrtcsample.compose.ui.screens.LiveStreamRunningScreen
 import com.developerspace.webrtcsample.compose.ui.screens.MainScreen
 import com.developerspace.webrtcsample.compose.ui.screens.StoryDetailView
 import com.developerspace.webrtcsample.compose.ui.screens.TopicScreen
@@ -71,6 +72,18 @@ fun NavHost() {
             "story_detail_view"
         ) { navBackStackEntry ->
             StoryDetailView(navController)
+        }
+        composable(
+            "live_stream_running/{clientRole}/{cnlName}",
+            arguments = listOf(navArgument("clientRole") {
+                type = NavType.IntType
+            }, navArgument("cnlName") {
+                type = NavType.StringType
+            })
+        ) { navBackStackEntry ->
+            val role = navBackStackEntry.arguments!!.getInt("clientRole")
+            val cnlName = navBackStackEntry.arguments!!.getString("cnlName") ?: ""
+            LiveStreamRunningScreen(navController, role, cnlName)
         }
     }
 }

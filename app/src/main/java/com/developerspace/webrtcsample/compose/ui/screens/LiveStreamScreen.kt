@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.developerspace.webrtcsample.R
@@ -45,14 +46,24 @@ import com.developerspace.webrtcsample.compose.ui.viewmodel.LiveStreamViewModel
 import com.developerspace.webrtcsample.compose.ui.viewmodel.Stream
 
 @Composable
-fun LiveStreamScreen(viewModel: LiveStreamViewModel = hiltViewModel()) {
+fun LiveStreamScreen(
+    navController: NavController? = null,
+    viewModel: LiveStreamViewModel = hiltViewModel()
+) {
     val streams by viewModel.streams.collectAsStateWithLifecycle()
-    LiveStreamScreenContent(streams)
+    LiveStreamScreenContent(streams, {
+        navController?.navigate("live_stream_running/${io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER}/hello")
+    }, {
+        navController?.navigate("live_stream_running/${io.agora.rtc2.Constants.CLIENT_ROLE_BROADCASTER}/hello")
+    })
 }
 
 @Composable
-fun LiveStreamScreenContent(streams: List<Stream>) {
-    val context = LocalContext.current
+fun LiveStreamScreenContent(
+    streams: List<Stream>,
+    startStream: () -> Unit,
+    joinStreamAudience: () -> Unit
+) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -61,31 +72,33 @@ fun LiveStreamScreenContent(streams: List<Stream>) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Stream List Section
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .padding(16.dp) // Added padding for overall content spacing
+                    .padding(16.dp)
             ) {
                 items(streams) { stream ->
                     StreamCard(
                         broadcasterName = stream.broadcasterName,
                         channelId = stream.channelId,
-                        profileImageUrl = stream.profileImageUrl
+                        profileImageUrl = stream.profileImageUrl,
+                        joinStreamAudience = joinStreamAudience
                     )
                 }
             }
 
             Button(
                 onClick = {
-                    // TODO Host joining channel
+                    startStream.invoke()
+                    // TODO Host broadcasting channel
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(16.dp)
-                    .fillMaxWidth(), // Make button more prominent
-                shape = RoundedCornerShape(50.dp) // Rounded button corners
+                    .padding(bottom = 10.dp)
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(50.dp)
             ) {
                 Text(
                     text = "Start Stream",
@@ -101,17 +114,19 @@ fun LiveStreamScreenContent(streams: List<Stream>) {
 fun StreamCard(
     broadcasterName: String,
     channelId: String,
-    profileImageUrl: String
+    profileImageUrl: String,
+    joinStreamAudience: () -> Unit,
 ) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                // TODO: Audience join channel
+                joinStreamAudience.invoke()
             },
-        elevation = 6.dp, // Increased elevation for more emphasis
-        shape = RoundedCornerShape(16.dp), // Rounded corners for a modern look
+        elevation = 6.dp,
+        shape = RoundedCornerShape(16.dp),
     ) {
         Row(
             modifier = Modifier
@@ -136,7 +151,7 @@ fun StreamCard(
             Spacer(modifier = Modifier.width(16.dp))
 
             Column(
-                modifier = Modifier.weight(1f) // Make column expand to take available space
+                modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = broadcasterName,
@@ -144,18 +159,11 @@ fun StreamCard(
                     color = MaterialTheme.colors.onSurface,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(4.dp)) // Added space between name and channel
-                Text(
-                    text = "Channel: $channelId",
-                    style = MaterialTheme.typography.body2,
-                    color = Color.Gray
-                )
             }
 
-            // Add "Join" button to each stream card
             Button(
                 onClick = {
-                    // TODO: Audience join channel
+                    joinStreamAudience.invoke()
                 },
                 modifier = Modifier
                     .height(36.dp)
@@ -182,7 +190,7 @@ fun PreviewStreamScreen() {
             listOf(
                 Stream("Shuvo", "first_channel", ""),
                 Stream("Wakil", "second_channel", "")
-            )
+            ), {}, {}
         )
     }
 }

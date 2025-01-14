@@ -147,7 +147,7 @@ fun TabsContent(pagerState: PagerState, navController: NavController?) {
             1 -> ActiveUsersScreen(navController)
             2 -> ChatListScreen()
             3 -> NearByUsersScreen(navController)
-            4 -> LiveStreamScreen()
+            4 -> LiveStreamScreen(navController)
         }
     }
 }
